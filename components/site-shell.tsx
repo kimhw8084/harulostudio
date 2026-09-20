@@ -1,27 +1,37 @@
 import Link from "@/components/site-link";
-import { ArrowUp, Sun } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import { studio } from "@/lib/site-content";
 import { ThemeControl, MotionControl } from "./experience-provider";
-import { PublisherMark, Direction } from "./publisher-mark";
-
+import { PublisherMark, Direction, FoldMark } from "./publisher-mark";
 export function SiteHeader() {
   return (
     <>
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <header className="site-header page-width" id="top">
+      <header className="site-header" id="top">
         <Link className="wordmark" href="/" aria-label="Harulo Studio home">
-          <Sun aria-hidden="true" />
+          <FoldMark />
           <span>
-            harulo<span className="wordmark-studio">studio</span>
+            HARULO
+            <span>
+              STUDIO / <span lang="ko">하루로</span>
+            </span>
           </span>
         </Link>
         <nav aria-label="Main navigation">
-          <Link href="/software">Software</Link>
-          <Link href="/releases">Releases</Link>
-          <Link href="/studio">Studio</Link>
-          <Link href="/support">Support</Link>
+          <Link href="/software">
+            Software<span aria-hidden="true">01</span>
+          </Link>
+          <Link href="/releases">
+            Releases<span aria-hidden="true">02</span>
+          </Link>
+          <Link href="/studio">
+            Studio<span aria-hidden="true">03</span>
+          </Link>
+          <Link href="/support">
+            Support<span aria-hidden="true">04</span>
+          </Link>
         </nav>
         <ThemeControl />
       </header>
@@ -31,33 +41,36 @@ export function SiteHeader() {
 export function SiteFooter() {
   return (
     <footer className="site-footer">
-      <div className="page-width">
-        <div className="footer-top">
-          <div>
-            <PublisherMark />
-            <p>A little better, every day.</p>
-            <p lang="ko">조금 더 나은 하루로.</p>
-          </div>
-          <nav aria-label="Publisher navigation">
-            <Link href="/software">Software</Link>
-            <Link href="/releases">Releases</Link>
-            <Link href="/support">Support</Link>
-            <Link href="/press">Press</Link>
-            <a href={studio.github}>
-              GitHub <Direction />
-            </a>
-            <a href={`mailto:${studio.email}`}>
-              Contact <Direction />
-            </a>
-          </nav>
-        </div>
-        <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} Harulo Studio</span>
-          <MotionControl />
-          <a href="#top" className="back-top" aria-label="Back to top">
-            <ArrowUp aria-hidden="true" />
+      <div className="footer-top">
+        <PublisherMark />
+        <nav aria-label="Publisher navigation">
+          <Link href="/software">Software</Link>
+          <Link href="/releases">Releases</Link>
+          <Link href="/support">Support</Link>
+          <Link href="/press">Press</Link>
+          <a href={studio.github}>
+            GitHub
+            <Direction />
           </a>
+          <a href={`mailto:${studio.email}`}>
+            Contact
+            <Direction />
+          </a>
+        </nav>
+      </div>
+      <p className="footer-philosophy">A little better, every day.</p>
+      <div className="footer-wordmark" aria-hidden="true">
+        HARULO<span>↗</span>
+      </div>
+      <div className="footer-bottom">
+        <div>
+          <span>© {new Date().getFullYear()} Harulo Studio</span>
+          <p lang="ko">조금 더 나은 하루로.</p>
         </div>
+        <MotionControl />
+        <a href="#top" className="back-top" aria-label="Back to top">
+          <ArrowUp aria-hidden="true" />
+        </a>
       </div>
     </footer>
   );

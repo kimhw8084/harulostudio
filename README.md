@@ -1,8 +1,8 @@
 # Harulo Studio · 하루로
 
-An independent software publisher. **Software, brought into daylight.** Warm editorial typography, a tactile solar identity and precise publication metadata belong to the same system. The homepage leads with what Harulo does: design, build, publish and maintain software for everyday life.
+An independent software publisher. **A day, unfolded.** Harulo 2.0 is a complete visual break: signal yellow, ink, cobalt, an oversized Syne masthead and a 24-slat Dayfold that transforms into a working instrument. The homepage leads with what Harulo does: design, build, publish and maintain software for everyday life.
 
-The public content is deliberately honest: no products have been announced. The working hero interaction is explicitly a small studio study, not a released application. It keeps one intention in this tab's React memory; nothing is sent or saved by the study.
+The public content is deliberately honest: no products have been announced. The working hero interaction is explicitly a studio experiment, not a released application. Open the Dayfold for a one-minute focus timer. It uses a wall-clock deadline, supports pause/resume/reset and sends or saves nothing.
 
 ## Develop and verify
 
@@ -18,19 +18,20 @@ Every preview carries a fictional-content notice and noindex metadata. The entir
 
 ## Content architecture
 
-| Source                               | Responsibility                                                                      |
-| ------------------------------------ | ----------------------------------------------------------------------------------- |
-| `lib/site-content.ts`                | Studio identity, contact, philosophy and principles                                 |
-| `lib/publishing/types.ts`            | Products, releases, downloads, media, privacy notices, support and press records    |
-| `lib/publishing/catalog.ts`          | Verified production records; public visibility, querying, pagination and validation |
-| `lib/publishing/fixtures.ts`         | Isolated synthetic catalog and growth fixtures                                      |
-| `lib/publishing/metadata.ts`         | Record-driven SEO, canonical URLs and structured data                               |
-| `components/publishing-views.tsx`    | Reusable catalog, product, archive, release, support and privacy views              |
-| `components/product-edition.tsx`     | Publisher shelf, media and release rows                                             |
-| `components/harulo-site.tsx`         | Server-rendered homepage narrative and studio sections                              |
-| `components/software-sunrise.tsx`    | Small, real, client-side hero study                                                 |
-| `components/experience-provider.tsx` | Persistent manual theme, device preferences and global motion pause                 |
-| `app/globals.css`                    | Semantic color, typography, spacing, surface, product and motion tokens             |
+| Source                                  | Responsibility                                                                      |
+| --------------------------------------- | ----------------------------------------------------------------------------------- |
+| `lib/site-content.ts`                   | Studio identity, contact, philosophy and principles                                 |
+| `lib/publishing/types.ts`               | Products, releases, downloads, media, privacy notices, support and press records    |
+| `lib/publishing/catalog.ts`             | Verified production records; public visibility, querying, pagination and validation |
+| `lib/publishing/fixtures.ts`            | Isolated synthetic catalog and growth fixtures                                      |
+| `lib/publishing/metadata.ts`            | Record-driven SEO, canonical URLs and structured data                               |
+| `components/publishing-views.tsx`       | Reusable catalog, product, archive, release, support and privacy views              |
+| `components/product-edition.tsx`        | Publisher shelf, media and release rows                                             |
+| `components/harulo-site.tsx`            | Server-rendered homepage narrative and studio sections                              |
+| `components/dayfold.tsx`                | Transforming 24-slat centerpiece and working minute timer                           |
+| `components/application-instrument.tsx` | Interactive, explicitly fictional product concepts                                  |
+| `components/experience-provider.tsx`    | Persistent manual theme, device preferences and global motion pause                 |
+| `app/globals.css`                       | Semantic color, typography, spacing, surface, product and motion tokens             |
 
 Use static typed records until a CMS or release API is justified. A future adapter can return `PublisherCatalog` without rewriting views. Translation fields are prepared; localized routing and reviewed translations are intentionally not pretended to exist. Optional download, store, documentation, status, security and developer links render only when provided. Media records support screenshots, artwork and videos; use verified media, not concept interfaces, for real products.
 
@@ -46,9 +47,9 @@ Routes: `/software`, `/software/[slug]`, `/releases`, `/releases/[product]/[vers
 
 ## Design and quality
 
-Read `docs/design-synthesis.md` for the inspection, creative thesis and deliberate exclusions. `docs/ui-contract.md` maps supported tasks to the supplied Golden UI Engineering Lawbook. `docs/verification.md` distinguishes observed evidence from untested claims. `docs/assets.md` records artwork/font provenance.
+Read `docs/design-synthesis.md` for the selected Harulo 2.0 direction and deliberate exclusions. `docs/ui-contract.md` maps supported tasks to the supplied Golden UI Engineering Lawbook. `docs/verification.md` distinguishes observed evidence from untested claims. `docs/assets.md` records artwork/font provenance.
 
-Essential reading/navigation/contact is server rendered. Device reduced motion overrides decorative motion; pause and manual theme persist when storage is available. Artwork illumination and shadows transition between environments while text/surface colors change together to retain contrast. Optional controls appear once ready. No scroll hijacking, tracking, account system, analytics, CMS or database is installed for this site.
+Essential reading/navigation/contact is server rendered. Device reduced motion overrides decorative motion; pause and manual theme persist when storage is available. High signal and Low light share a geometric identity; text/surface colors change together to retain contrast. The same 24 SVG slats transform from folded object to timer ticks. Publication spines open through native details/summary controls, including without JavaScript. Timer rendering stops offscreen or in hidden tabs; its deadline remains accurate on return. Optional controls appear once ready. No scroll hijacking, tracking, account system, analytics, CMS or database is installed for this site.
 
 Internal links use `components/site-link.tsx`, a native anchor wrapper. Production tests exposed a navigation/prefetch exception in the pinned Vinext client Link helper, so the site deliberately uses native document navigation. This preserves real destinations, browser history and no-JS behavior without modifying the supplied runtime or adding another router.
 

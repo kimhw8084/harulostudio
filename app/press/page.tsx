@@ -43,15 +43,15 @@ export default function Press() {
         <div className="press-asset">
           <img
             src="/favicon.svg"
-            alt="Harulo sun mark"
+            alt="Harulo Dayfold mark"
             width="64"
             height="64"
           />
-          <p>Harulo sun mark</p>
+          <p>Harulo Dayfold mark</p>
           <a
             className="text-link"
             href="/favicon.svg"
-            download="harulo-sun.svg"
+            download="harulo-dayfold.svg"
           >
             Download SVG <Direction />
           </a>

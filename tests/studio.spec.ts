@@ -5,6 +5,14 @@ export async function expectReflow(page: Page) {
   const geometry = await page.evaluate(() => ({
     page: document.documentElement.scrollWidth,
     viewport: document.documentElement.clientWidth,
+    overflowing: [...document.querySelectorAll<HTMLElement>("body *")]
+      .filter((el) => el.clientWidth > 0 && el.scrollWidth > el.clientWidth + 2)
+      .map((el) => ({
+        tag: el.tagName,
+        class: el.className,
+        width: el.clientWidth,
+        scroll: el.scrollWidth,
+      })),
     clipped: [
       ...document.querySelectorAll("h1,h2,h3,p,nav,a,button,input,select"),
     ]
@@ -28,7 +36,7 @@ test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ colorScheme: "light" });
 });
 
-test("publisher identity, real study, navigation and theme persistence", async ({
+test("publisher identity, working Dayfold, navigation and theme persistence", async ({
   page,
 }, info) => {
   const errors: string[] = [];
@@ -40,23 +48,26 @@ test("publisher identity, real study, navigation and theme persistence", async (
   await expect(page.locator(".hero-description")).toContainText(
     "design, build, publish and maintain",
   );
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "Software for a little better day.",
-  );
-  await page.getByLabel("One thing for today").fill("Take a walk after lunch");
-  await page.getByRole("button", { name: "Keep in view" }).click();
-  await expect(page.locator(".study-result")).toContainText(
-    "Take a walk after lunch",
-  );
-  await page.getByRole("button", { name: "Clear your thought" }).click();
-  await expect(page.getByLabel("One thing for today")).toBeFocused();
-  await expect(page.getByLabel("One thing for today")).toHaveValue("");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("HARULO");
+  await page.getByRole("button", { name: "Open the day" }).click();
+  await expect(page.getByRole("timer")).toHaveText("01:00");
+  await page.getByRole("button", { name: "Start minute" }).click();
+  await expect(page.getByRole("button", { name: "Pause timer" })).toBeVisible();
+  await page.getByRole("button", { name: "Pause timer" }).click();
+  await page.getByRole("button", { name: "Reset minute" }).click();
+  await expect(page.getByRole("timer")).toHaveText("01:00");
+  await page.getByRole("button", { name: "Fold it back" }).focus();
+  await page.keyboard.press("Enter");
+  await expect(
+    page.getByRole("button", { name: "Open the day" }),
+  ).toBeFocused();
+  await expect(page.getByRole("timer")).toHaveCount(0);
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.screenshot({
     path: `work/${info.project.name}-publisher-daylight.png`,
     fullPage: true,
   });
-  await page.getByRole("button", { name: "Evening theme" }).click();
+  await page.getByRole("button", { name: "Low-light mode" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "evening");
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "evening");
@@ -107,6 +118,10 @@ test("320px, landscape, enlarged text and spacing retain content", async ({
       "* { line-height:1.5 !important; letter-spacing:.12em !important; word-spacing:.16em !important; } p { margin-bottom:2em !important; }",
   });
   await expectReflow(page);
+  await page.getByRole("button", { name: "Open the day" }).click();
+  await expectReflow(page);
+  await page.getByRole("button", { name: "Start minute" }).click();
+  await expect(page.getByRole("button", { name: "Pause timer" })).toBeVisible();
   await page.getByRole("link", { name: "Say hello", exact: true }).click();
   const email = page.getByRole("link", {
     name: "harulostudio@gmail.com",
@@ -146,7 +161,7 @@ test("automated accessibility in both environments and useful pages", async ({
     await page.goto(path);
     for (const theme of ["daylight", "evening"]) {
       if (theme === "evening")
-        await page.getByRole("button", { name: "Evening theme" }).click();
+        await page.getByRole("button", { name: "Low-light mode" }).click();
       await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
       const result = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
@@ -161,11 +176,11 @@ test("automated accessibility in both environments and useful pages", async ({
         })),
       ).toEqual([]);
     }
-    await page.getByRole("button", { name: "Evening theme" }).click();
+    await page.getByRole("button", { name: "Low-light mode" }).click();
   }
 });
 
-test("keyboard skip, native links and study controls", async ({
+test("keyboard skip, native links and Dayfold controls", async ({
   page,
   browserName,
 }) => {
@@ -176,19 +191,48 @@ test("keyboard skip, native links and study controls", async ({
   ).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
-  const theme = page.getByRole("button", { name: "Evening theme" });
+  const theme = page.getByRole("button", { name: "Low-light mode" });
   await theme.focus();
   await page.keyboard.press("Space");
   await expect(theme).toHaveAttribute("aria-pressed", "true");
   expect(
     await theme.evaluate((el) => getComputedStyle(el).outlineStyle),
   ).not.toBe("none");
-  await page.getByLabel("One thing for today").focus();
-  await page.keyboard.type("Finish one useful thing");
+  await page.getByRole("button", { name: "Open the day" }).focus();
   await page.keyboard.press("Enter");
-  await expect(page.locator(".study-result")).toContainText(
-    "Finish one useful thing",
+  await page.getByRole("button", { name: "Start minute" }).focus();
+  await page.keyboard.press("Space");
+  await expect(page.getByRole("button", { name: "Pause timer" })).toBeFocused();
+  await page.keyboard.press("Space");
+  await expect(page.getByRole("timer")).toBeVisible();
+  const a = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+    .analyze();
+  expect(a.violations).toEqual([]);
+});
+
+test("minute timer pauses, resumes, completes and resets without drift", async ({
+  page,
+}) => {
+  await page.clock.install();
+  await page.goto("/");
+  await page.getByRole("button", { name: "Open the day" }).click();
+  await page.getByRole("button", { name: "Start minute" }).click();
+  await page.clock.fastForward(12000);
+  await expect(page.getByRole("timer")).toHaveText("00:48");
+  await page.getByRole("button", { name: "Pause timer" }).click();
+  await page.clock.fastForward(10000);
+  await expect(page.getByRole("timer")).toHaveText("00:48");
+  await page.getByRole("button", { name: "Resume timer" }).click();
+  await page.clock.fastForward(48000);
+  await expect(page.getByRole("timer")).toHaveText("00:00");
+  await expect(page.locator(".minute-message")).toContainText(
+    "A little space, made.",
   );
+  await expect(page.locator(".fold-slat[data-spent=true]")).toHaveCount(24);
+  await page.getByRole("button", { name: "Reset minute" }).click();
+  await expect(page.getByRole("timer")).toHaveText("01:00");
+  await expect(page.locator(".fold-slat[data-spent=true]")).toHaveCount(0);
 });
 
 test("motion preference, pause, resume and offscreen animation", async ({
@@ -197,28 +241,28 @@ test("motion preference, pause, resume and offscreen animation", async ({
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("data-motion", "running");
-  await expect(page.locator(".software-sunrise")).toHaveAttribute(
+  await expect(page.locator(".dayfold")).toHaveAttribute(
     "data-in-view",
     "true",
   );
   expect(
     await page
-      .locator(".solar-art picture")
+      .locator(".fold-breath")
       .evaluate((el) => getComputedStyle(el).animationName),
-  ).toBe("daylight-breathe");
+  ).toBe("fold-breathe");
   await page.getByRole("button", { name: "Pause motion" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-motion", "paused");
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-motion", "paused");
   await page.getByRole("button", { name: "Resume motion" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-motion", "running");
-  await expect(page.locator(".software-sunrise")).toHaveAttribute(
+  await expect(page.locator(".dayfold")).toHaveAttribute(
     "data-in-view",
     "false",
   );
   expect(
     await page
-      .locator(".solar-art picture")
+      .locator(".fold-breath")
       .evaluate((el) => getComputedStyle(el).animationName),
   ).toBe("none");
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -261,7 +305,7 @@ test("clipboard rejection, retry and actual readback", async ({
   );
 });
 
-test("storage denial and failed artwork do not block tasks or override manual theme", async ({
+test("storage denial and failed fonts do not block tasks or override manual theme", async ({
   page,
 }) => {
   await page.addInitScript(() => {
@@ -272,18 +316,16 @@ test("storage denial and failed artwork do not block tasks or override manual th
       throw new Error("denied");
     };
   });
-  await page.route("**/images/daylight*", (r) => r.abort());
+  await page.route("**/fonts/*.woff2", (r) => r.abort());
   await page.goto("/");
-  await page.getByRole("button", { name: "Evening theme" }).click();
+  await page.getByRole("button", { name: "Low-light mode" }).click();
   await page.emulateMedia({ colorScheme: "dark" });
   await page.emulateMedia({ colorScheme: "light" });
   await expect(page.locator("html")).toHaveAttribute("data-theme", "evening");
   await expectReflow(page);
-  await page.getByLabel("One thing for today").fill("A clear next step");
-  await page.getByRole("button", { name: "Keep in view" }).click();
-  await expect(page.locator(".study-result")).toContainText(
-    "A clear next step",
-  );
+  await page.getByRole("button", { name: "Open the day" }).click();
+  await page.getByRole("button", { name: "Start minute" }).click();
+  await expect(page.getByRole("button", { name: "Pause timer" })).toBeVisible();
 });
 
 test("forced colors retains control focus and layout", async ({
@@ -296,7 +338,7 @@ test("forced colors retains control focus and layout", async ({
   );
   await page.emulateMedia({ forcedColors: "active" });
   await page.goto("/");
-  const theme = page.getByRole("button", { name: "Evening theme" });
+  const theme = page.getByRole("button", { name: "Low-light mode" });
   await theme.focus();
   expect(
     await theme.evaluate((el) => getComputedStyle(el).outlineStyle),

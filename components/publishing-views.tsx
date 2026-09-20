@@ -1,5 +1,5 @@
 import Link from "@/components/site-link";
-import { Sun, ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -26,7 +26,7 @@ import {
   formatDate,
   releasePath,
 } from "@/lib/publishing/catalog";
-import { Direction, PublisherMark } from "./publisher-mark";
+import { Direction, PublisherMark, FoldMark } from "./publisher-mark";
 import {
   ProductEdition,
   ProductIcon,
@@ -60,7 +60,7 @@ export function EmptyPublication({
 }) {
   return (
     <div className="empty-publication">
-      <Sun aria-hidden="true" />
+      <FoldMark />
       <div>
         <h2>{title}</h2>
         <p>{children}</p>

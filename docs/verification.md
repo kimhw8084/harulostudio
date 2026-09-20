@@ -1,4 +1,25 @@
-# Verification — Publisher system, 2026-09-20 (America/Chicago)
+# Verification — Harulo 2.0 / The Dayfold
+
+Candidate: complete visual reinvention, 2026-09-20. The application/data routes are retained; the visual system, hero, publication presentation, icon family, fonts and motion are replaced. Historical records follow this section.
+
+- Production Worker build and TypeScript pass. Authored TS/TSX lint reports zero errors and two existing native-image recommendations (press SVG and record-driven product media).
+- Chromium and WebKit: **35 production checks passed, 13 explicitly skipped; 42 development checks passed, 6 explicitly skipped.** Counts include repeated data tests across browser projects, not unique journeys. No unexpected failures or retries in these runs.
+- Production skips: ten development-only mature scenarios plus WebKit clipboard permissions, forced colors and CDP throttling. Development skips: two production truth gates, two throttling cases and WebKit clipboard/forced-colors cases.
+- Verified the Dayfold opens, starts, pauses, resumes, reaches zero, restores all 24 segments on reset, and closes with keyboard focus retained. Clock-controlled testing checks elapsed-time behavior without a real minute-long wait.
+- All six fictional applications exercised: mixer/quiet mode, Korean note editing, focus timer, forecast period, spending period and planning checkbox. Native edition disclosures support keyboard activation. Existing catalog/archive/growth/support journeys still pass.
+- Both themes, 320px through desktop, landscape, 200% root text plus spacing overrides, touch, forced colors, no-JS reading/navigation, blocked fonts, denied storage and clipboard recovery covered. Axe scans report no tagged A/AA violations on six live and six representative mature routes, plus open instruments. This is not an accessibility certification.
+- The decorative fold stops offscreen, when the document is hidden, or when reduced motion/global pause applies. Functional timer rendering uses an intersection/visibility subscription; the deadline is wall-clock based. No scroll ownership, animation library, canvas, WebGL, raster hero or new package dependency.
+- Production preview/product/release/support fiction returns 404; current pages and sitemap exclude the synthetic catalog.
+
+Visual review included both engines' desktop/mobile captures, Low light, Sori/Namu product pages, all opening publication spines and the Dayfold's open state. Review caught cramped enlarged-text timer buttons beyond the geometry assertions; container-aware spacing and stacked controls resolve that case. The old sunrise component was removed and remains recoverable in Git.
+
+Local throttled Chromium observation: 390px/DPR1, cache disabled, 150ms latency, 750 kbit/s download, 4× CPU throttling. FCP and recorded LCP: **1,600ms**. Encoded JavaScript, including module-preloads: **132,638 bytes** (200,000-byte test ceiling). Subresource transfer: **225,143 bytes**, excluding HTML. No daylight image request. These are a single local run, not field Core Web Vitals or a real-device guarantee.
+
+Limits: physical low-power devices, native VoiceOver/Narrator speech, real Korean IME composition and field performance remain unverified. Publication remains owner-private through Sites; custom-domain DNS/public launch are separate. The 2036 laboratory remains development-only, not a launch forecast.
+
+---
+
+# Historical verification — Publisher system, 2026-09-20 (America/Chicago)
 
 Candidate: Software Sunrise / independent software-publisher redesign. Tested the compiled Cloudflare Worker at port 8791 and, separately, the development-only mature edition at port 5173. Earlier failed runs are diagnostic evidence, not passing evidence. The historical initial-site record is retained below.
 

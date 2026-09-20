@@ -120,12 +120,12 @@ export function ThemeControl() {
       variant="ghost"
       type="button"
       disabled={!ready}
-      aria-label="Evening theme"
+      aria-label="Low-light mode"
       aria-pressed={evening}
       onClick={() => setEvening(!evening)}
     >
       {evening ? <Moon aria-hidden="true" /> : <Sun aria-hidden="true" />}
-      <span>{evening ? "Evening" : "Daylight"}</span>
+      <span>Low-light mode</span>
     </Button>
   );
 }

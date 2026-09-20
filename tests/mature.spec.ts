@@ -16,6 +16,7 @@ test("mature catalog to product, release and support", async ({
     page.getByRole("complementary", { name: "Fictional design edition" }),
   ).toContainText("Fictional products and releases");
   await expect(page.locator(".product-edition")).toHaveCount(6);
+  await page.locator('html[data-enhanced="true"]').waitFor();
   await page.screenshot({
     path: `work/${info.project.name}-mature-home.png`,
     fullPage: true,
@@ -25,6 +26,7 @@ test("mature catalog to product, release and support", async ({
   await expect(
     page.getByText("No software is available to download.", { exact: false }),
   ).toBeVisible();
+  await page.locator('html[data-enhanced="true"]').waitFor();
   await page.screenshot({
     path: `work/${info.project.name}-sori-detail.png`,
     fullPage: true,
@@ -43,6 +45,7 @@ test("mature catalog to product, release and support", async ({
   );
   await page.goto("/preview/2036/software/namu");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Namu");
+  await page.locator('html[data-enhanced="true"]').waitFor();
   await page.screenshot({
     path: `work/${info.project.name}-namu-detail.png`,
     fullPage: true,
@@ -54,7 +57,7 @@ test("catalog filtering and release archive combinations", async ({ page }) => {
   await page.getByLabel("Platforms").selectOption("Windows");
   await page.getByRole("button", { name: "Filter software" }).click();
   await expect(page.locator(".product-edition")).toHaveCount(1);
-  await expect(page.locator(".product-edition h3")).toHaveText("Sori");
+  await expect(page.locator(".product-edition h3")).toContainText("Sori");
   await page.getByLabel("Find software").fill("No such edition");
   await page.getByRole("button", { name: "Filter software" }).click();
   await expect(
@@ -75,6 +78,7 @@ test("growth browsing and pagination preserve working destinations", async ({
   await expect(page.locator(".product-edition")).toHaveCount(12);
   await page.getByRole("link", { name: "Next", exact: true }).click();
   await expect(page.locator(".product-edition")).toHaveCount(8);
+  await page.getByLabel("Toggle Edition 20 edition").click();
   await page.getByRole("link", { name: "Explore Edition 20" }).click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Edition 20",
@@ -112,7 +116,7 @@ test("mature pages retain accessible mobile layouts and theme contrast", async (
     ).toBe(true);
     for (const theme of ["daylight", "evening"]) {
       if (theme === "evening")
-        await page.getByRole("button", { name: "Evening theme" }).click();
+        await page.getByRole("button", { name: "Low-light mode" }).click();
       const a = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
         .analyze();
@@ -124,12 +128,70 @@ test("mature pages retain accessible mobile layouts and theme contrast", async (
         `${path} ${theme}`,
       ).toEqual([]);
     }
-    await page.getByRole("button", { name: "Evening theme" }).click();
+    await page.getByRole("button", { name: "Low-light mode" }).click();
   }
   await page.goto("/preview/2036");
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator('html[data-enhanced="true"]').waitFor();
   await page.screenshot({
     path: `work/${info.project.name}-mature-mobile.png`,
     fullPage: true,
   });
+});
+
+test("publication spines open to usable, clearly fictional applications", async ({
+  page,
+}) => {
+  await page.goto("/preview/2036");
+  await page.getByRole("button", { name: "Increase Music volume" }).click();
+  await expect(page.getByLabel("Music volume", { exact: true })).toHaveText(
+    "69%",
+  );
+  await page.getByRole("button", { name: "Quiet mode" }).click();
+  await expect(page.getByLabel("Music volume", { exact: true })).toHaveText(
+    "0%",
+  );
+  await page.getByRole("button", { name: "Quiet mode" }).click();
+  await expect(page.getByLabel("Music volume", { exact: true })).toHaveText(
+    "69%",
+  );
+  await page.getByLabel("Toggle Namu edition").focus();
+  await page.keyboard.press("Enter");
+  await page.getByLabel("Try a Namu note").fill("조금 더 나은 하루로.");
+  await expect(page.getByLabel("Try a Namu note")).toHaveValue(
+    "조금 더 나은 하루로.",
+  );
+  await page.getByLabel("Toggle Goyo edition").click();
+  const goyo = page
+    .locator(".product-edition")
+    .filter({ has: page.getByRole("heading", { name: "Goyo" }) });
+  await goyo.getByRole("button", { name: "Start minute" }).click();
+  await expect(goyo.getByRole("button", { name: "Pause timer" })).toBeVisible();
+  await goyo.getByRole("button", { name: "Reset minute" }).click();
+  await page.getByLabel("Toggle Haru Weather edition").click();
+  await page.getByRole("button", { name: "Tomorrow", exact: true }).click();
+  await expect(page.locator(".weather-temperature")).toHaveText("21°");
+  await page.getByLabel("Toggle Dami edition").click();
+  await page.getByRole("button", { name: "Last week" }).click();
+  await expect(page.locator(".spending-amount")).toHaveText("$312.00");
+  await page.getByLabel("Toggle Morrow edition").click();
+  await page.getByRole("checkbox", { name: "Step outside" }).check();
+  await expect(
+    page.getByRole("checkbox", { name: "Step outside" }),
+  ).toBeChecked();
+  await page.setViewportSize({ width: 320, height: 720 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth + 1,
+    ),
+  ).toBe(true);
+  const a = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+    .analyze();
+  expect(
+    a.violations.map((v) => ({
+      id: v.id,
+      nodes: v.nodes.map((n) => n.target),
+    })),
+  ).toEqual([]);
 });
