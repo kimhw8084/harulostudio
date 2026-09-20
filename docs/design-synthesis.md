@@ -1,44 +1,40 @@
-# Harulo 2.0 — The Dayfold
+# Harulo — four pieces, one world
 
-## Decision
+## The decision
 
-The retained soul: Harulo Studio / 하루로, independent software publishing, a little better every day. The retained engineering: typed catalogs, release histories, routes, provenance gates, native navigation and accessibility foundations.
+The owner selected **06 · High Tension**, an abstraction rooted in ㅎ. This is a permanent identity integration, not another candidate round. The master mark in `lib/brand/geometry.ts` is immutable: ring (47.5, 41.5, r18.25, stroke7.25), satellite (68.9, 29.2, r4.35), primary tier (30,58.5,40,6.8,rx3.4), secondary tier (39.2,67.6,21.6,5.5,rx2.75). All rest states and generated assets use it.
 
-The replaced visual system: cream/forest/terracotta, serif pairing, photography, two-column hero, sun mark, cards and the Software Sunrise study. Baseline for this reinvention: `e2db1caf0cfe2acc38176d5cbfd80fcbaec14c2b`.
+The preserved engineering includes typed publishing records, lifecycle visibility, native routes and GET filters, provenance validation, release/support/privacy/press views, SEO and growth fixtures. None of the fictional products became live records.
 
-Three territories were considered: atmospheric cinema, hyper-editorial publication, and a transforming digital instrument. Cinema depended too heavily on decorative media. Hyper-editorial typography alone risked another design-studio identity. The selected synthesis is **The Dayfold: a day opens into useful software.**
+## A day becomes a useful space
 
-## The signature
+Carbon, luminous daylight yellow and an open neutral field set the environment. Manrope moves from large human-scale statements to readable interface copy. Syne is concentrated in the wordmark. The site leads with “Independent software publisher” and what Harulo actually does.
 
-Twenty-four slats form one folded graphic object. Open it, and those same slats register as a timer's progress marks. The poster becomes a working one-minute instrument. No image with an unrelated interface on top, no blocking intro, no announced product claim.
+The hero is a functional origin story. Its four persistent shapes open into the one-minute instrument: the ring becomes the viewport, the satellite its registration point, and the tiers become publication rails. On an unhurried, visible visit it opens once; interaction takes priority. There is no splash, waiting screen, automatic timer start or claimed product launch.
 
-This graphic system repeats at every scale: favicon, publisher mark, masthead, edition spines and the making section. Signal yellow, ink and cobalt supply the house identity. Syne makes the name a spatial object; Manrope carries reading and controls. Korean and technical metadata remain meaningful rather than ornamental.
+The .54 relationship between the two tiers repeats in publication baselines, links and page hierarchy. Products use related application glyphs, never substitute master logos. Native edition disclosures open into usable, clearly fictional interfaces in the future preview. Actual product records will use actual screenshots.
 
-## Journey and rhythm
+## Rhythm
 
-Immediate publisher label and design/build/publish/maintain line → enormous name → transforming instrument → software/publications → latest releases where real records exist → quieter 하루 → 하루로 story → cobalt MAKE / RELEASE / REPEAT → signal-yellow contact → publisher footer.
+Direct publisher identity → living mark / useful experiment → software → recent releases when records exist → quiet name story → ongoing practice → direct human contact → four primitives return to one mark.
 
-The present-day site says the first product is still ahead. The 2036 laboratory proves the full house: six colored publication spines unfold into distinct, usable concept applications. These remain marked fictional, noindex and absent from production. Utility pages retain the typography and house identity with denser, calmer layouts.
+The stronger functional moments are the hero opening, publication-to-application disclosures, product-surface route continuity, mobile navigation portal, and copy confirmation settling into the publisher mark. Footer reconstruction closes the sequence without an endless decorative loop.
 
 ## Motion grammar
 
-- **Fold:** shared geometry changes role; sequential slats become functional timer marks.
-- **Register:** publication contents open through a directional mask. No repeated opacity/translate-Y reveals.
-- **Advance:** arrows move a few pixels toward their destinations; 로 extends toward its destination where native scroll-driven CSS is supported.
-- **Breathe:** slow compression/skew of the folded object, only onscreen in a visible document.
+- **Orbit:** the satellite carries destination, progress or selection.
+- **Open:** the ring becomes a viewport, software frame or page reveal.
+- **Publish:** primary and secondary tiers organize title, version and supporting metadata.
+- **Assemble:** four pieces acquire a useful structural role.
+- **Settle:** geometry aligns and returns exactly to the master.
+- **Next day:** releases make continuity visible rather than simulating a clock.
 
-Tokens centralize timing and easing. Reduced motion and manual pause remove choreography, not content or function. Native scrolling is untouched. Functional timers continue to represent elapsed time; decorative-motion pause does not pause a user-started timer.
+The official lab exposes twelve individually inspectable transformations with finite play, pause, replay, slow motion, scrubbing, and intentional static destinations. Continuous coordinate interpolation retains shape identity. The ring is an exact circle at rest and a true arc-based rounded contour in transit—not a polygon approximation. No animation/3D library was added.
 
-## Curation
+The default mark remains strong with motion disabled. Reduced motion, a manual global pause, offscreen state and document visibility stop unnecessary work. Functional timers retain accurate wall-clock deadlines. Native cross-document transitions have instant native fallbacks and do not intercept navigation.
 
-Essential: publisher clarity, one shared-geometry transformation, unmistakable masthead, product identities, native publication disclosures, working controls and truthful states.
+## Deliberate exclusions
 
-Supporting: Low light preference, Korean direction, precise release rows, sibling product marks and readable functional pages.
+No alternate master marks, rays, shutter motifs, forced scrolling, atmospheric video, background particles, perpetual pointer following, unannounced software claims or added business infrastructure. Earlier candidates remain inspectable only in the development archive.
 
-Deferred: actual screenshots/downloads, launch social cards and new business infrastructure until real products require them.
-
-Rejected: photographic nostalgia, literal sunrise intro, floating mockup cards, magnetic cursor, orbital catalog, scroll pinning, random 3D and extra effect libraries. No dependency, route or data-model expansion was needed.
-
-## Limits
-
-The Dayfold is a studio experiment, not a published Harulo application. The synthetic mixer cannot control system audio; weather/spending values are examples; notes/plans are not saved. The preview explicitly explains this. Native assistive technology and physical-device performance still need human testing.
+The public launch and connection of harulostudio.com remain separate from the existing owner-private review deployment. Native assistive technology and physical-device performance need human verification; automated testing is not certification.

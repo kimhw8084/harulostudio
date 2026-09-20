@@ -3,6 +3,7 @@ import "./globals.css";
 import { ExperienceProvider } from "@/components/experience-provider";
 import { SiteHeader, SiteFooter } from "@/components/site-shell";
 import { studio } from "@/lib/site-content";
+import { pageTransitionScript } from "@/lib/brand/page-transitions";
 
 export const metadata: Metadata = {
   metadataBase: new URL(studio.url),
@@ -37,6 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: pageTransitionScript }} />
         <script
           dangerouslySetInnerHTML={{
             __html: `try{var t=localStorage.getItem('harulo-theme');document.documentElement.dataset.theme=t==='evening'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches)?'evening':'daylight';document.documentElement.dataset.motion=localStorage.getItem('harulo-motion')==='paused'||matchMedia('(prefers-reduced-motion: reduce)').matches?'paused':'running'}catch(e){}`,

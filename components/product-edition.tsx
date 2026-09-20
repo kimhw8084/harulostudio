@@ -9,49 +9,14 @@ import {
 import { Direction } from "./publisher-mark";
 import { ApplicationInstrument } from "./application-instrument";
 import { BrandSlot } from "./brand-slot";
+import { ProductGlyph } from "./brand/product-glyph";
+import { HaruloMark } from "./brand/harulo-mark";
 
 export function ProductIcon({ product }: { product: Product }) {
-  const paths: Record<Product["icon"], React.ReactNode> = {
-    sound: (
-      <>
-        {[16, 28, 40, 28, 16].map((h, i) => (
-          <rect key={i} x={5 + i * 8} y={(48 - h) / 2} width="4" height={h} />
-        ))}
-      </>
-    ),
-    notes: (
-      <g transform="rotate(-25 24 24)">
-        <path d="M5 9h31v5H5zM10 21h31v5H10zM15 33h28v5H15z" />
-      </g>
-    ),
-    focus: (
-      <>
-        <path d="M24 3a21 21 0 0 1 21 21h-7A14 14 0 0 0 24 10ZM24 45A21 21 0 0 1 3 24h7a14 14 0 0 0 14 14Z" />
-        <circle cx="24" cy="24" r="5" />
-      </>
-    ),
-    weather: (
-      <>
-        <path d="M8 22a16 16 0 0 1 32 0H8ZM3 28h42v4H3zM8 37h32v4H8z" />
-      </>
-    ),
-    spending: (
-      <g transform="rotate(-35 24 24)">
-        <path d="M5 8h18v9H5zM25 20h18v9H25zM5 32h18v9H5z" />
-      </g>
-    ),
-    planning: (
-      <>
-        <path d="M4 7h33v5H4zM4 22h22v5H4zM4 37h11v5H4zM32 22h12v20h-5V27h-7Z" />
-      </>
-    ),
-  };
   return (
     <span className="product-icon" data-tone={product.tone}>
       <BrandSlot product={product.icon}>
-        <svg viewBox="0 0 48 48" fill="currentColor" aria-hidden="true">
-          {paths[product.icon]}
-        </svg>
+        <ProductGlyph kind={product.icon} />
       </BrandSlot>
     </span>
   );
@@ -100,7 +65,10 @@ export function ProductEdition({
           className="edition-spine"
           aria-label={`Toggle ${product.name} edition`}
         >
-          <span className="edition-number">{product.edition}</span>
+          <span className="edition-number">
+            <HaruloMark />
+            {product.edition}
+          </span>
           <h3 className="edition-spine-title">
             {product.name}
             {product.koreanName && <span lang="ko">{product.koreanName}</span>}
@@ -140,12 +108,14 @@ export function ProductEdition({
               <Direction />
             </Link>
           </div>
-          <div className="edition-media">
+          <div className="edition-media" data-publication={product.slug}>
             <ProductMedia product={product} />
           </div>
         </div>
         <div className="edition-imprint">
-          <span>A HARULO STUDIO EDITION / {product.edition}</span>
+          <span>
+            <HaruloMark /> A HARULO STUDIO EDITION / {product.edition}
+          </span>
           <span>PUBLICATION → APPLICATION</span>
         </div>
       </details>
@@ -162,7 +132,7 @@ export function ReleaseRow({
   prefix?: string;
 }) {
   return (
-    <li className="release-row">
+    <li className="release-row" data-kind={release.kind}>
       <time className="metadata" dateTime={release.publishedAt}>
         {formatDate(release.publishedAt)}
       </time>

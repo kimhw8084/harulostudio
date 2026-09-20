@@ -47,7 +47,7 @@ export function LabHero() {
         compact
       />
       <div className="lab-hero-end">
-        <Link href="/preview/identity-lab/software">
+        <Link href="/preview/identity-lab/archive/software">
           Explore the editions ↗
         </Link>
         <span>FICTIONAL PUBLISHER / DESIGN EDITION 2036</span>
@@ -60,16 +60,16 @@ export function LabSiteHeader() {
   return (
     <header className="lab-site-header">
       <Link
-        href="/preview/identity-lab/home"
+        href="/preview/identity-lab/archive/home"
         aria-label="Harulo demonstration homepage"
       >
         <IdentityWordmark identity={identity} compact />
       </Link>
       <nav aria-label="Demonstration publisher">
-        <Link href="/preview/identity-lab/software">Software</Link>
-        <Link href="/preview/identity-lab/releases">Releases</Link>
-        <Link href="/preview/identity-lab/support">Support</Link>
-        <Link href="/preview/identity-lab/press">Press</Link>
+        <Link href="/preview/identity-lab/archive/software">Software</Link>
+        <Link href="/preview/identity-lab/archive/releases">Releases</Link>
+        <Link href="/preview/identity-lab/archive/support">Support</Link>
+        <Link href="/preview/identity-lab/archive/press">Press</Link>
       </nav>
     </header>
   );
@@ -148,7 +148,7 @@ export function LabSpecialContext({ context }: { context: string }) {
               <br />
               every day.
             </p>
-            <Link href="/preview/identity-lab/software">
+            <Link href="/preview/identity-lab/archive/software">
               Explore software ↗
             </Link>
           </div>
@@ -236,7 +236,7 @@ export function LabSpecialContext({ context }: { context: string }) {
             edition="SORI / 4.8.2 / DESIGN EDITION"
           />
           <Button asChild>
-            <Link href="/preview/identity-lab/software/sori">
+            <Link href="/preview/identity-lab/archive/software/sori">
               Open the destination ↗
             </Link>
           </Button>

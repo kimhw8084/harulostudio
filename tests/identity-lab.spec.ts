@@ -14,7 +14,7 @@ import {
 import { palettes, contrastChecks, contrast } from "../lib/identity/palettes";
 import { labCatalog, archiveCatalog } from "../lib/identity/fixtures";
 
-const root = "/preview/identity-lab";
+const root = "/preview/identity-lab/archive";
 const development = process.env.HARULO_TEST_MODE === "development";
 test("identity topology and ten complete semantic palettes", () => {
   expect(palettes).toHaveLength(10);

@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 import { Moon, Pause, Play, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -131,6 +138,7 @@ export function ThemeControl() {
 }
 export function MotionControl() {
   const { ready, paused, reduced, setPaused } = useExperience();
+  const preferenceId = useId();
   return (
     <div className="motion-tools">
       <Button
@@ -139,7 +147,7 @@ export function MotionControl() {
         type="button"
         disabled={!ready || reduced}
         onClick={() => setPaused(!paused)}
-        aria-describedby={reduced ? "motion-preference" : undefined}
+        aria-describedby={reduced ? preferenceId : undefined}
       >
         {paused || reduced ? (
           <Play aria-hidden="true" />
@@ -149,7 +157,7 @@ export function MotionControl() {
         {reduced ? "Motion reduced" : paused ? "Resume motion" : "Pause motion"}
       </Button>
       {reduced && (
-        <span className="metadata" id="motion-preference">
+        <span className="metadata" id={preferenceId}>
           Following your device preference.
         </span>
       )}

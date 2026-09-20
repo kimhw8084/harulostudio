@@ -4,6 +4,7 @@ import { PublisherMark, Direction } from "@/components/publisher-mark";
 import { liveCatalog, publicProducts } from "@/lib/publishing/catalog";
 import { studio } from "@/lib/site-content";
 import { pageMetadata } from "@/lib/publishing/metadata";
+import { HaruloMark, HaruloLockup } from "@/components/brand/harulo-mark";
 export const metadata = pageMetadata(
   "Press",
   "Harulo Studio company description, identity assets and press contact.",
@@ -41,33 +42,38 @@ export default function Press() {
       </div>
       <div className="press-assets">
         <div className="press-asset">
-          <img
-            src="/favicon.svg"
-            alt="Harulo Dayfold mark"
-            width="64"
-            height="64"
-          />
-          <p>Harulo Dayfold mark</p>
-          <a
-            className="text-link"
-            href="/favicon.svg"
-            download="harulo-dayfold.svg"
-          >
+          <HaruloMark title="Harulo master mark" />
+          <p>Master mark / monochrome</p>
+          <a className="text-link" href="/brand/harulo-master.svg" download>
             Download SVG <Direction />
           </a>
         </div>
         <div className="press-asset">
-          <PublisherMark />
+          <HaruloLockup />
           <p>Harulo publisher imprint</p>
           <a className="text-link" href="/brand/harulo-publisher.svg" download>
             Download SVG <Direction />
           </a>
         </div>
+        <div className="press-asset inverse">
+          <HaruloMark title="Harulo master mark, reversed" />
+          <p>Master mark / reversed</p>
+          <a className="text-link" href="/brand/harulo-reversed.svg" download>
+            Download SVG <Direction />
+          </a>
+        </div>
+        <div className="press-asset">
+          <HaruloLockup vertical />
+          <p>Vertical publisher lockup</p>
+          <a className="text-link" href="/brand/harulo-vertical.svg" download>
+            Download SVG <Direction />
+          </a>
+        </div>
       </div>
       <p className="resource-note">
-        Keep the marks in their original proportions and colors, with clear
-        space around them. For product imagery or an interview, contact the
-        studio.{" "}
+        One ring. One satellite. Two tiers. Keep the supplied geometry intact,
+        with clear space around the mark. Do not redraw, crop, stretch, or add
+        elements to it. For product imagery or an interview, contact the studio.{" "}
         {publicProducts(liveCatalog).length === 0 &&
           "No product launches have been announced yet."}
       </p>

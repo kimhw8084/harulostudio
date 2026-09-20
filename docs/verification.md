@@ -1,4 +1,29 @@
-# Verification — Harulo 2.0 / The Dayfold
+# Verification — Permanent Harulo identity, 2026-09-20
+
+Candidate: the approved 06 · High Tension master, four-piece motion system, Software Origin hero, publication presentation, mobile portal and official identity laboratory. The publishing records and live/demo boundaries are retained.
+
+- Sites production Worker build and TypeScript pass. ESLint: zero errors, one existing recommendation for record-driven native product images. No runtime dependency was added.
+- Final complete Chromium and WebKit runs: **47 production checks passed, 41 explicitly skipped; 78 development checks passed, 10 explicitly skipped.** No unexpected failures or retries in these final runs. Counts include data checks in each browser project, not unique journeys.
+- Production skips comprise 38 development-only scenarios and three WebKit-specific unsupported clipboard/forced-colors/CDP checks. Development skips comprise six production gates, two production throttling checks, and WebKit clipboard/forced-colors checks.
+- Exact coordinates and four-piece structure verified in rendered marks, generated SVGs and favicon. All nine PNG size assets load. Twelve different transformation trajectories are sampled at 1,001 positions each: finite coordinates, continuous movement, no target mutation, and exact canonical endpoint return. The old 43 research transformations remain accessible only in the archived development interface.
+- The official lab defaults to the master, supports all twelve destinations and exact returns, playback/pause/slow/reduced states, offscreen suspension and persistent palette review. All representative publishing contexts work at 320px. A separate JavaScript-disabled check confirms the master heading and nine static size specimens remain rendered.
+- Mobile dialog: keyboard activation, visible focus, Escape, focus return, five native destinations and Axe scans pass. Existing public/mature journeys, GET filtering, all six fictional application interactions, 20-product/240-release growth fixtures, clipboard recovery, manual themes, no-JS navigation, denied storage and font failure remain covered.
+- Public and mature Axe scans, plus official master/motion/color tabs, report no tagged WCAG A/AA violations. Reflow includes 320px, landscape and enlarged text with spacing overrides. These are automated checks, not accessibility certification.
+- The hero's working minute starts only on request; pause, resume, completion and reset retain deadline accuracy. Optional visual opening does not delay reading or start the timer. Reduced motion/manual pause and offscreen/hidden handling preserve intentional still states.
+- A delayed native-navigation check verifies that pending feedback appears only while the destination is pending and clears on arrival. Native links/back remain functional with progressive cross-document transitions; unsupported browsers use ordinary navigation. No global Suspense loading boundary obscures server-rendered content.
+- Production returns 404 for official and archived laboratories, future previews and fictional product routes. Public content, metadata and sitemap remain free of synthetic releases.
+
+Visual inspection covered desktop and mobile homepage, open hero, mature publisher shelf, official geometry/motion views and inherited functional pages. The old Dayfold component was removed; it remains recoverable in Git. Historical identity research is retained, not promoted.
+
+Local throttled Chromium observation: 390px/DPR1, disabled cache, 150ms latency, 750 kbit/s download and 4× CPU throttling. FCP and recorded LCP: **2,000ms**. Encoded JavaScript, including module-preloads: **154,582 bytes** against a 200,000-byte ceiling. Subresource transfer: **251,601 bytes**, excluding HTML. No raster hero, canvas, WebGL or graphics library. These are single-run local measurements, not field Core Web Vitals or guarantees for physical low-power devices.
+
+Diagnostic findings: a global loading boundary hid no-JS preview content; it was replaced by nonblocking native-navigation feedback. An outdated hot-reload process required a restart; the final development run used the actual localhost listener. Earlier failed/diagnostic runs are not counted as passing evidence.
+
+Limits: native VoiceOver/Narrator speech, physical phones, real Korean IME and field performance are not verified. Cross-document effects depend on browser support; native navigation is the guaranteed baseline. The existing Sites audience remains owner-private. Custom-domain DNS/public launch remain separate.
+
+---
+
+# Historical verification — Harulo 2.0 / The Dayfold
 
 Candidate: complete visual reinvention, 2026-09-20. The application/data routes are retained; the visual system, hero, publication presentation, icon family, fonts and motion are replaced. Historical records follow this section.
 

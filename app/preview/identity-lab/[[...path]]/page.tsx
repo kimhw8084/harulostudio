@@ -3,7 +3,7 @@ import type { Query } from "@/lib/publishing/types";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
-  title: "Permanent Identity Lab",
+  title: "Harulo Identity System",
   robots: { index: false, follow: false },
   alternates: { canonical: null },
   openGraph: { images: [] },
@@ -22,7 +22,13 @@ export default async function IdentityLabPage({
   const { LabDocument } = await import(
     "@/components/identity-lab/lab-document"
   );
+  const path = (await params).path ?? [];
+  const archive = path[0] === "archive";
   return (
-    <LabDocument path={(await params).path ?? []} query={await searchParams} />
+    <LabDocument
+      path={archive ? path.slice(1) : path}
+      query={await searchParams}
+      archive={archive}
+    />
   );
 }

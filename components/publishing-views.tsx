@@ -385,7 +385,11 @@ export function ProductView({
             </p>
           )}
         </div>
-        <div className="product-detail-art" data-tone={product.tone}>
+        <div
+          className="product-detail-art"
+          data-tone={product.tone}
+          data-publication={product.slug}
+        >
           <ProductMedia product={product} />
         </div>
       </section>

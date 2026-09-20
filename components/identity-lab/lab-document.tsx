@@ -20,19 +20,41 @@ import { labCatalog, archiveCatalog } from "@/lib/identity/fixtures";
 import type { Query } from "@/lib/publishing/types";
 import { IdentityLab } from "./identity-lab";
 import { LabHero, LabSpecialContext } from "./lab-context";
+import {
+  OfficialLab,
+  OfficialSpecialContext,
+} from "@/components/brand/system-lab";
 
-const prefix = "/preview/identity-lab";
-export function LabDocument({ path, query }: { path: string[]; query: Query }) {
+export function LabDocument({
+  path,
+  query,
+  archive = false,
+}: {
+  path: string[];
+  query: Query;
+  archive?: boolean;
+}) {
+  const prefix = archive
+    ? "/preview/identity-lab/archive"
+    : "/preview/identity-lab";
   let view: React.ReactNode;
   const context = path.join("/") || "home";
   if (!path.length || context === "home")
     view = (
-      <HaruloSite catalog={labCatalog} prefix={prefix} hero={<LabHero />} />
+      <HaruloSite
+        catalog={labCatalog}
+        prefix={prefix}
+        hero={archive ? <LabHero /> : undefined}
+      />
     );
   else if (context === "hero")
     view = (
       <main id="main">
-        <LabHero />
+        {archive ? (
+          <LabHero />
+        ) : (
+          <OfficialSpecialContext context="transition" />
+        )}
       </main>
     );
   else if (context === "software")
@@ -104,9 +126,13 @@ export function LabDocument({ path, query }: { path: string[]; query: Query }) {
     );
   else if (context === "empty")
     view = (
-      <HaruloSite catalog={liveCatalog} prefix={prefix} hero={<LabHero />} />
+      <HaruloSite
+        catalog={liveCatalog}
+        prefix={prefix}
+        hero={archive ? <LabHero /> : undefined}
+      />
     );
-  else if (context === "archive")
+  else if (context === "lifecycle" || context === "archive")
     view = (
       <main id="main" className="lab-archive">
         <h1>Every edition has a life.</h1>
@@ -136,8 +162,9 @@ export function LabDocument({ path, query }: { path: string[]; query: Query }) {
       <main id="main" className="lab-press">
         <h1>A publisher, on record.</h1>
         <p>
-          Fictional announcements and candidate brand assets. These are design
-          studies, not a real press kit or company history.
+          Fictional announcements and example publishing layouts. These are
+          design studies, not a real company history. The Harulo master mark
+          itself is approved.
         </p>
         <div className="lab-press-list">
           {labCatalog.pressItems.map((item) => (
@@ -167,8 +194,9 @@ export function LabDocument({ path, query }: { path: string[]; query: Query }) {
             everyday life.
           </p>
           <p>
-            Brand assets are under review. No candidate is an approved permanent
-            identity.
+            {archive
+              ? "Historical research. None of these archived candidates is the permanent identity."
+              : "The permanent Harulo master mark is immutable. Use the approved assets from the public press page."}
           </p>
           <a className="text-link" href={`${prefix}/social`}>
             View live social-card compositions ↗
@@ -181,10 +209,20 @@ export function LabDocument({ path, query }: { path: string[]; query: Query }) {
   )
     view = (
       <main id="main">
-        <LabSpecialContext context={context} />
+        {archive ? (
+          <LabSpecialContext context={context} />
+        ) : (
+          <OfficialSpecialContext context={context} />
+        )}
       </main>
     );
   else notFound();
+  if (!archive)
+    return (
+      <OfficialLab context={context} initialWebsite={path.length > 0}>
+        {view}
+      </OfficialLab>
+    );
   return (
     <IdentityLab context={context} initialWebsite={path.length > 0}>
       {view}

@@ -237,7 +237,7 @@ export function IdentityLab({
         <div className="lab-title">
           <span className="lab-index">H / INTERNAL RESEARCH</span>
           <h1>
-            Permanent Identity Lab<span>Harulo Studio / 하루로</span>
+            Identity Research Archive<span>Harulo Studio / 하루로</span>
           </h1>
           <p>
             Hangul as meaning. A block as form. Transformation as possibility.
@@ -254,7 +254,7 @@ export function IdentityLab({
           <small>
             Fictional publisher content
             <br />
-            No identity has been finalized.
+            Historical candidates. Not approved master marks.
           </small>
         </div>
       </header>
@@ -335,7 +335,7 @@ export function IdentityLab({
             <NativeSelect
               value={context}
               onChange={(e) => {
-                window.location.href = `/preview/identity-lab/${e.target.value}`;
+                window.location.href = `/preview/identity-lab/archive/${e.target.value}`;
               }}
               aria-label="Website context"
               disabled={!ready}
@@ -789,7 +789,7 @@ function Comparison({
                   <span>01 / AUDIO / v4.8.2</span>
                 </div>
                 <Link
-                  href="/preview/identity-lab/software/sori"
+                  href="/preview/identity-lab/archive/software/sori"
                   aria-label="Explore fictional Sori"
                 >
                   ↗

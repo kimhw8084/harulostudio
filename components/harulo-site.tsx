@@ -7,7 +7,7 @@ import {
   productReleases,
 } from "@/lib/publishing/catalog";
 import type { PublisherCatalog } from "@/lib/publishing/types";
-import { Dayfold } from "./dayfold";
+import { SoftwareOrigin } from "./brand/software-origin";
 import { CopyEmail } from "./copy-email";
 import { Direction, FoldMark } from "./publisher-mark";
 import { ProductEdition, ReleaseRow } from "./product-edition";
@@ -162,20 +162,29 @@ export function HaruloSite({
               WE DESIGN. BUILD. PUBLISH. MAINTAIN.
             </span>
           </div>
-          <h1 id="hero-title" className="hero-wordmark">
-            HARULO{" "}
-            <span className="hero-studio">
-              STUDIO <span lang="ko">하루로</span>
-            </span>
-          </h1>
-          <Dayfold />
+          <div className="hero-world">
+            <div className="hero-statement">
+              <h1 id="hero-title">
+                <span className="sr-only">Harulo Studio. </span>A little
+                <br />
+                <em>better.</em>
+                <br />
+                Every day.
+              </h1>
+              <p className="hero-korean" lang="ko">
+                조금 더 나은 하루로.
+              </p>
+            </div>
+            <SoftwareOrigin />
+          </div>
           <div className="hero-bottom">
-            <h2>
-              EVERY DAY.
-              <br />
-              <em>A NEW POSSIBILITY.</em>
-            </h2>
-            <div>
+            <p className="hero-signature">
+              HARULO
+              <span>
+                STUDIO / <span lang="ko">하루로</span>
+              </span>
+            </p>
+            <div className="hero-introduction">
               <p className="hero-description">{studio.description}</p>
               <div className="hero-actions">
                 <Link
@@ -210,10 +219,10 @@ export function HaruloSite({
           </span>
         </div>
         <h2 id="software-title" className="catalog-title">
-          LESS FRICTION.
+          Small software.
           <br />
           <span>
-            MORE <em>DAY.</em>
+            More <em>day.</em>
           </span>
         </h2>
         {products.length ? (

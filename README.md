@@ -1,8 +1,8 @@
 # Harulo Studio · 하루로
 
-An independent software publisher. **A day, unfolded.** Harulo 2.0 is a complete visual break: signal yellow, ink, cobalt, an oversized Syne masthead and a 24-slat Dayfold that transforms into a working instrument. The homepage leads with what Harulo does: design, build, publish and maintain software for everyday life.
+An independent software publisher. **A little better, every day.** The permanent Harulo identity is the approved ㅎ-derived master: one ring, one satellite, two publishing tiers. Its resting geometry is immutable. The same four primitives open into working software and return to their exact original coordinates.
 
-The public content is deliberately honest: no products have been announced. The working hero interaction is explicitly a studio experiment, not a released application. Open the Dayfold for a one-minute focus timer. It uses a wall-clock deadline, supports pause/resume/reset and sends or saves nothing.
+The public catalog remains deliberately empty: no products have been announced. The hero's one-minute instrument is explicitly a studio experiment, not a released application. It uses a wall-clock deadline, supports pause/resume/reset and sends or saves nothing.
 
 ## Develop and verify
 
@@ -16,20 +16,20 @@ While `npm run dev` is running, open `/preview/2036` for the six-product fiction
 
 Every preview carries a fictional-content notice and noindex metadata. The entire preview route returns **404 in production**, before importing the fixtures. There are no fictional downloads or store links. This is an architecture/design test, not an announcement or launch forecast.
 
-## Permanent Identity Lab — development only
+## Official identity system — development only
 
-Open `/preview/identity-lab` while the development server is running. The lab opens with **Round 2 — Hangul × Geometry**, starting with five monochrome static marks. No candidate has been selected as the permanent identity; the live Dayfold site is unchanged.
+Open `/preview/identity-lab` for **HARULO MASTER MARK**. The official laboratory now contains:
 
-- **Round 2:** Syllable Block (4 primitives), ㅎ Core (3), Ro Gate (3), Hangul Loop (one continuous path), and Hangul Aperture (4). Five implemented transformations and a connected reel per candidate: **25 new transformations**, plus 30 derived product marks.
-- **Static first:** five-candidate monochrome board, 16/24/32/48/96px and large-scale specimens, reversed marks, hide-and-recall control, and a seven-question evaluation rubric with private review notes. No automatic scores or winner.
-- **Round 1 / Archive:** Hangul Flow, Horizon Core and Solar Aperture remain available, with their original 18 transformations and three reels.
-- **Exactly ten interchangeable palettes:** full semantic tokens, color-proof controls and calculated contrast reports.
-- Play, pause, replay, slow motion, scrubbing and static-state inspection. Motion stops offscreen and in hidden tabs; device reduced motion cannot be overridden by the lab.
-- Whole-website contexts reuse the publishing views: six products, releases, 48 support articles, privacy examples, press, lifecycle archive, empty state, mobile/header/favicon/loading/transition and social-card studies.
-- Side-by-side identity/palette comparison (three selectable candidates at a time), static and monochrome specimens, 16–256px and environmental scale tests, and six-product icon families for each identity.
-- Review choices and up to four pinned combinations persist only under the lab’s browser-storage key. Round 1 preferences migrate into Round 2 without promoting a candidate. Pinning is not approval and cannot modify production.
+- The exact 100 × 100 geometry, coordinate overlay, monochrome and reversed lockups.
+- Exact-artboard tests at 16, 20, 24, 32, 48, 64, 128, 256 and 512 pixels.
+- **Twelve working transformations:** interface, edition, release timeline, navigation, page portal, loading, publishing stamp, product world, screenshot viewport, release number, footer closure and mobile navigation.
+- Finite play/replay/pause, slow inspection, keyboard scrubbing and composed reduced-motion destinations. Motion sleeps offscreen and in hidden tabs.
+- Shared website contexts with the six fictional products, release history, support, privacy, press, lifecycle and honest empty state.
+- Carbon / Daylight master tokens, plus the ten retained palette research environments. Lab color changes cannot alter production.
 
-All lab routes return 404 outside development, before importing candidate code or synthetic records. Test with `HARULO_TEST_URL=http://127.0.0.1:5173 HARULO_TEST_MODE=development npx playwright test tests/identity-lab.spec.ts`. See `docs/identity-lab.md` for the small promotion boundary after a human decision.
+Previous research is preserved at `/preview/identity-lab/archive`: the five Round 2 candidates, three Round 1 candidates, their 43 transformations, comparison tools and private review notes. They are historical studies, not alternate approved marks.
+
+All preview routes return **404 outside development**, before importing the lab or synthetic records. `npm run brand:assets` regenerates the favicon, downloadable SVG lockups and nine PNG sizes directly from `lib/brand/geometry.ts`. Do not hand-edit generated assets. See `docs/identity-lab.md`.
 
 ## Content architecture
 
@@ -43,7 +43,9 @@ All lab routes return 404 outside development, before importing candidate code o
 | `components/publishing-views.tsx`       | Reusable catalog, product, archive, release, support and privacy views              |
 | `components/product-edition.tsx`        | Publisher shelf, media and release rows                                             |
 | `components/harulo-site.tsx`            | Server-rendered homepage narrative and studio sections                              |
-| `components/dayfold.tsx`                | Transforming 24-slat centerpiece and working minute timer                           |
+| `components/brand/`                    | Canonical mark, four-piece transformations, software origin, navigation, footer and official lab |
+| `lib/brand/`                           | Immutable geometry, motion grammar and native navigation enhancement |
+| `components/minute-instrument.tsx`      | Working, local one-minute instrument |
 | `components/application-instrument.tsx` | Interactive, explicitly fictional product concepts                                  |
 | `components/experience-provider.tsx`    | Persistent manual theme, device preferences and global motion pause                 |
 | `app/globals.css`                       | Semantic color, typography, spacing, surface, product and motion tokens             |
@@ -62,9 +64,11 @@ Routes: `/software`, `/software/[slug]`, `/releases`, `/releases/[product]/[vers
 
 ## Design and quality
 
-Read `docs/design-synthesis.md` for the selected Harulo 2.0 direction and deliberate exclusions. `docs/ui-contract.md` maps supported tasks to the supplied Golden UI Engineering Lawbook. `docs/verification.md` distinguishes observed evidence from untested claims. `docs/assets.md` records artwork/font provenance.
+Read `docs/design-synthesis.md` for the permanent four-part identity and deliberate exclusions. `docs/ui-contract.md` maps supported tasks to the supplied Golden UI Engineering Lawbook. `docs/verification.md` distinguishes observed evidence from untested claims. `docs/assets.md` records artwork/font provenance.
 
-Essential reading/navigation/contact is server rendered. Device reduced motion overrides decorative motion; pause and manual theme persist when storage is available. High signal and Low light share a geometric identity; text/surface colors change together to retain contrast. The same 24 SVG slats transform from folded object to timer ticks. Publication spines open through native details/summary controls, including without JavaScript. Timer rendering stops offscreen or in hidden tabs; its deadline remains accurate on return. Optional controls appear once ready. No scroll hijacking, tracking, account system, analytics, CMS or database is installed for this site.
+Essential reading, navigation and contact are server rendered. Device reduced motion overrides decorative motion; pause and manual theme persist when storage is available. A finite logo assembly leads into the working hero when visible; it never blocks reading. User action always takes over. The actual timer is independent of decorative-motion pause. Publishing disclosures remain native and work without JavaScript. The mobile dialog provides focus containment, Escape dismissal and focus return, with native navigation available when JavaScript is disabled.
+
+Cross-document View Transitions progressively connect publication surfaces and reveal other routes through the ring's position. Unsupported browsers use the same native links immediately. No fetching override, synthetic router, scroll hijacking, tracking, account system, analytics, CMS or database was added.
 
 Internal links use `components/site-link.tsx`, a native anchor wrapper. Production tests exposed a navigation/prefetch exception in the pinned Vinext client Link helper, so the site deliberately uses native document navigation. This preserves real destinations, browser history and no-JS behavior without modifying the supplied runtime or adding another router.
 

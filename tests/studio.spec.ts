@@ -36,7 +36,7 @@ test.beforeEach(async ({ page }) => {
   await page.emulateMedia({ colorScheme: "light" });
 });
 
-test("publisher identity, working Dayfold, navigation and theme persistence", async ({
+test("publisher identity, working Software Origin, navigation and theme persistence", async ({
   page,
 }, info) => {
   const errors: string[] = [];
@@ -48,18 +48,18 @@ test("publisher identity, working Dayfold, navigation and theme persistence", as
   await expect(page.locator(".hero-description")).toContainText(
     "design, build, publish and maintain",
   );
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("HARULO");
-  await page.getByRole("button", { name: "Open the day" }).click();
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Harulo");
+  await page.getByRole("button", { name: "Open a little space" }).click();
   await expect(page.getByRole("timer")).toHaveText("01:00");
   await page.getByRole("button", { name: "Start minute" }).click();
   await expect(page.getByRole("button", { name: "Pause timer" })).toBeVisible();
   await page.getByRole("button", { name: "Pause timer" }).click();
   await page.getByRole("button", { name: "Reset minute" }).click();
   await expect(page.getByRole("timer")).toHaveText("01:00");
-  await page.getByRole("button", { name: "Fold it back" }).focus();
+  await page.getByRole("button", { name: "Return to the mark" }).focus();
   await page.keyboard.press("Enter");
   await expect(
-    page.getByRole("button", { name: "Open the day" }),
+    page.getByRole("button", { name: "Open a little space" }),
   ).toBeFocused();
   await expect(page.getByRole("timer")).toHaveCount(0);
   await page.setViewportSize({ width: 1440, height: 1000 });
@@ -118,7 +118,7 @@ test("320px, landscape, enlarged text and spacing retain content", async ({
       "* { line-height:1.5 !important; letter-spacing:.12em !important; word-spacing:.16em !important; } p { margin-bottom:2em !important; }",
   });
   await expectReflow(page);
-  await page.getByRole("button", { name: "Open the day" }).click();
+  await page.getByRole("button", { name: "Open a little space" }).click();
   await expectReflow(page);
   await page.getByRole("button", { name: "Start minute" }).click();
   await expect(page.getByRole("button", { name: "Pause timer" })).toBeVisible();
@@ -180,7 +180,7 @@ test("automated accessibility in both environments and useful pages", async ({
   }
 });
 
-test("keyboard skip, native links and Dayfold controls", async ({
+test("keyboard skip, native links and Software Origin controls", async ({
   page,
   browserName,
 }) => {
@@ -192,13 +192,14 @@ test("keyboard skip, native links and Dayfold controls", async ({
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
   const theme = page.getByRole("button", { name: "Low-light mode" });
+  await expect(theme).toBeEnabled();
   await theme.focus();
   await page.keyboard.press("Space");
   await expect(theme).toHaveAttribute("aria-pressed", "true");
   expect(
     await theme.evaluate((el) => getComputedStyle(el).outlineStyle),
   ).not.toBe("none");
-  await page.getByRole("button", { name: "Open the day" }).focus();
+  await page.getByRole("button", { name: "Open a little space" }).focus();
   await page.keyboard.press("Enter");
   await page.getByRole("button", { name: "Start minute" }).focus();
   await page.keyboard.press("Space");
@@ -216,7 +217,7 @@ test("minute timer pauses, resumes, completes and resets without drift", async (
 }) => {
   await page.clock.install();
   await page.goto("/");
-  await page.getByRole("button", { name: "Open the day" }).click();
+  await page.getByRole("button", { name: "Open a little space" }).click();
   await page.getByRole("button", { name: "Start minute" }).click();
   await page.clock.fastForward(12000);
   await expect(page.getByRole("timer")).toHaveText("00:48");
@@ -229,10 +230,10 @@ test("minute timer pauses, resumes, completes and resets without drift", async (
   await expect(page.locator(".minute-message")).toContainText(
     "A little space, made.",
   );
-  await expect(page.locator(".fold-slat[data-spent=true]")).toHaveCount(24);
+  await expect(page.locator(".origin-publication")).toContainText("60 SEC");
   await page.getByRole("button", { name: "Reset minute" }).click();
   await expect(page.getByRole("timer")).toHaveText("01:00");
-  await expect(page.locator(".fold-slat[data-spent=true]")).toHaveCount(0);
+  await expect(page.locator(".origin-publication")).toContainText("00 SEC");
 });
 
 test("motion preference, pause, resume and offscreen animation", async ({
@@ -241,30 +242,30 @@ test("motion preference, pause, resume and offscreen animation", async ({
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("data-motion", "running");
-  await expect(page.locator(".dayfold")).toHaveAttribute(
+  await expect(page.locator(".software-origin")).toHaveAttribute(
     "data-in-view",
     "true",
   );
   expect(
     await page
-      .locator(".fold-breath")
+      .locator('.origin-mark [data-piece="ring"]')
       .evaluate((el) => getComputedStyle(el).animationName),
-  ).toBe("fold-breathe");
+  ).toBe("ring-register");
   await page.getByRole("button", { name: "Pause motion" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-motion", "paused");
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-motion", "paused");
   await page.getByRole("button", { name: "Resume motion" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-motion", "running");
-  await expect(page.locator(".dayfold")).toHaveAttribute(
+  await expect(page.locator(".software-origin")).toHaveAttribute(
     "data-in-view",
     "false",
   );
   expect(
     await page
-      .locator(".fold-breath")
-      .evaluate((el) => getComputedStyle(el).animationName),
-  ).toBe("none");
+      .locator('.origin-mark [data-piece="ring"]')
+      .evaluate((el) => getComputedStyle(el).animationPlayState),
+  ).toBe("paused");
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(
     page.getByRole("button", { name: "Motion reduced" }),
@@ -323,7 +324,7 @@ test("storage denial and failed fonts do not block tasks or override manual them
   await page.emulateMedia({ colorScheme: "light" });
   await expect(page.locator("html")).toHaveAttribute("data-theme", "evening");
   await expectReflow(page);
-  await page.getByRole("button", { name: "Open the day" }).click();
+  await page.getByRole("button", { name: "Open a little space" }).click();
   await page.getByRole("button", { name: "Start minute" }).click();
   await expect(page.getByRole("button", { name: "Pause timer" })).toBeVisible();
 });
@@ -339,6 +340,7 @@ test("forced colors retains control focus and layout", async ({
   await page.emulateMedia({ forcedColors: "active" });
   await page.goto("/");
   const theme = page.getByRole("button", { name: "Low-light mode" });
+  await expect(theme).toBeEnabled();
   await theme.focus();
   expect(
     await theme.evaluate((el) => getComputedStyle(el).outlineStyle),

@@ -3,6 +3,8 @@ import { ArrowUp } from "lucide-react";
 import { studio } from "@/lib/site-content";
 import { ThemeControl, MotionControl } from "./experience-provider";
 import { PublisherMark, Direction, FoldMark } from "./publisher-mark";
+import { FooterReturn } from "./brand/footer-return";
+import { MobileNavigation } from "./brand/mobile-navigation";
 export function SiteHeader() {
   return (
     <>
@@ -34,6 +36,8 @@ export function SiteHeader() {
           </Link>
         </nav>
         <ThemeControl />
+        <MobileNavigation />
+        <span className="navigation-status" role="status" aria-live="polite">Opening next page…</span>
       </header>
     </>
   );
@@ -59,8 +63,9 @@ export function SiteFooter() {
         </nav>
       </div>
       <p className="footer-philosophy">A little better, every day.</p>
-      <div className="footer-wordmark" aria-hidden="true">
-        HARULO<span>↗</span>
+      <div className="footer-wordmark">
+        <span aria-hidden="true">HARULO</span>
+        <FooterReturn />
       </div>
       <div className="footer-bottom">
         <div>

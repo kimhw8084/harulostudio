@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Product } from "@/lib/publishing/types";
-import { MinuteInstrument } from "./dayfold";
+import { MinuteInstrument } from "./minute-instrument";
 import { useExperience } from "./experience-provider";
 
 export function ApplicationInstrument({

@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test("touch navigation, theme and working Dayfold", async ({
+test("touch navigation, theme and working Software Origin", async ({
   browser,
 }, info) => {
   const context = await browser.newContext({
@@ -15,16 +15,17 @@ test("touch navigation, theme and working Dayfold", async ({
   await page.goto(process.env.HARULO_TEST_URL || "http://127.0.0.1:8791");
   await page.getByRole("button", { name: "Low-light mode" }).tap();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "evening");
-  await page.getByRole("button", { name: "Open the day" }).tap();
+  await page.getByRole("button", { name: "Open a little space" }).tap();
   await page.getByRole("button", { name: "Start minute" }).tap();
   await expect(page.getByRole("button", { name: "Pause timer" })).toBeVisible();
   await page.getByRole("button", { name: "Pause timer" }).tap();
   await page.screenshot({
-    path: `work/${info.project.name}-touch-dayfold.png`,
+    path: `work/${info.project.name}-touch-origin.png`,
     fullPage: true,
   });
+  await page.getByRole("button", { name: "Menu", exact: true }).tap();
   await page
-    .getByRole("navigation", { name: "Main navigation" })
+    .getByRole("navigation", { name: "Mobile navigation" })
     .getByRole("link", { name: "Support" })
     .tap();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
@@ -70,7 +71,9 @@ test("production on a throttled connection and CPU", async ({
   await expect(page.locator(".publisher-eyebrow")).toHaveText(
     "Independent software publisher",
   );
-  await expect(page.getByRole("button", { name: "Open the day" })).toBeEnabled({
+  await expect(
+    page.getByRole("button", { name: "Open a little space" }),
+  ).toBeEnabled({
     timeout: 15000,
   });
   await page.waitForLoadState("load");
@@ -94,7 +97,8 @@ test("production on a throttled connection and CPU", async ({
       scriptBytes: resources
         .filter((r) => /\.m?js$/.test(new URL(r.name).pathname))
         .reduce((n, r) => n + r.encodedBodySize, 0),
-      heroSlats: document.querySelectorAll(".fold-slat").length,
+      heroPrimitives: document.querySelectorAll(".origin-mark [data-piece]")
+        .length,
       resources: resources.map((r) => ({
         name: new URL(r.name).pathname,
         encodedBytes: r.encodedBodySize,
@@ -105,12 +109,12 @@ test("production on a throttled connection and CPU", async ({
     body: JSON.stringify(metrics, null, 2),
     contentType: "application/json",
   });
-  expect(metrics.heroSlats).toBe(24);
+  expect(metrics.heroPrimitives).toBe(4);
   expect(metrics.resources.some((r) => r.name.includes("daylight-"))).toBe(
     false,
   );
   expect(metrics.scriptBytes).toBeLessThan(200000);
-  await page.getByRole("button", { name: "Open the day" }).click();
+  await page.getByRole("button", { name: "Open a little space" }).click();
   await page.getByRole("button", { name: "Start minute" }).click();
   await expect(page.getByRole("button", { name: "Pause timer" })).toBeVisible();
 });

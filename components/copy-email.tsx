@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Check, Copy } from "lucide-react";
+import { Copy } from "lucide-react";
+import { HaruloMark } from "./brand/harulo-mark";
 import { Button } from "@/components/ui/button";
 import { useExperience } from "./experience-provider";
 export function CopyEmail({ email }: { email: string }) {
@@ -39,7 +40,7 @@ export function CopyEmail({ email }: { email: string }) {
         disabled={!ready || state === "copying"}
       >
         {state === "copied" ? (
-          <Check aria-hidden="true" />
+          <HaruloMark className="publish-settle" />
         ) : (
           <Copy aria-hidden="true" />
         )}
