@@ -14,6 +14,9 @@ import { Input } from "@/components/ui/input";
 import { BrandContext } from "@/components/brand-slot";
 import {
   identities,
+  archiveIdentities,
+  roundTwoIdentities,
+  isRoundTwo,
   transformations,
   identityReel,
   type Identity,
@@ -31,6 +34,7 @@ import {
 } from "./identity-vector";
 import { TransformationPlayer } from "./transformation-player";
 import { LabContext, LabSiteFooter, LabSiteHeader } from "./lab-context";
+import { RoundTwoBoard } from "./round-two-board";
 import "./identity-lab.css";
 
 type Selection = {
@@ -40,11 +44,20 @@ type Selection = {
 };
 type Pin = { identity: Identity; palette: string; variant: string };
 const defaults: Selection = {
-  identity: "hangul",
+  identity: "syllable",
   palette: "01",
-  variants: { hangul: "HF-01", horizon: "HC-01", aperture: "SA-01" },
+  variants: {
+    hangul: "HF-01",
+    horizon: "HC-01",
+    aperture: "SA-01",
+    syllable: "SB-01",
+    "h-core": "HC2-01",
+    "ro-gate": "RG-01",
+    "hangul-loop": "HL-01",
+    "hangul-aperture": "HA-01",
+  },
 };
-const storageKey = "harulo-identity-lab-v1";
+const storageKey = "harulo-identity-lab-v2";
 const contexts = [
   ["home", "Complete homepage"],
   ["hero", "Hero"],
@@ -111,7 +124,7 @@ export function IdentityLab({
 }) {
   const [selection, setSelection] = useState<Selection>(defaults),
     [ready, setReady] = useState(false),
-    [tab, setTab] = useState(initialWebsite ? "website" : "motion");
+    [tab, setTab] = useState(initialWebsite ? "website" : "overview");
   const [pins, setPins] = useState<Pin[]>([]),
     [storageAvailable, setStorageAvailable] = useState(true),
     [message, setMessage] = useState("");
@@ -119,8 +132,15 @@ export function IdentityLab({
     // Hydrate browser-only review preferences after the server composition is attached.
     const frame = requestAnimationFrame(() => {
       try {
-        const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
-        setSelection(validSelection(saved?.selection));
+        const current = localStorage.getItem(storageKey);
+        const saved = JSON.parse(
+          current || localStorage.getItem("harulo-identity-lab-v1") || "null",
+        );
+        const restored = validSelection(saved?.selection);
+        // Preserve the old palette, variants and pins; the first Round 2 visit starts here.
+        setSelection(
+          current ? restored : { ...restored, identity: defaults.identity },
+        );
         if (Array.isArray(saved?.pins))
           setPins(
             saved.pins
@@ -154,6 +174,8 @@ export function IdentityLab({
   }, [selection, pins, ready]);
   const { identity } = selection,
     currentIdentity = identities.find((i) => i.id === identity)!;
+  const roundTwo = isRoundTwo(identity);
+  const candidates = roundTwo ? roundTwoIdentities : archiveIdentities;
   const palette = palettes.find((p) => p.id === selection.palette)!;
   const variants = useMemo(() => transformations(identity), [identity]);
   const transformation =
@@ -203,7 +225,11 @@ export function IdentityLab({
     );
   };
   return (
-    <div className="identity-lab" data-ready={ready}>
+    <div
+      className="identity-lab"
+      data-ready={ready}
+      data-round={roundTwo ? "2" : "1"}
+    >
       <Link className="lab-skip" href="#lab-workspace">
         Skip review controls
       </Link>
@@ -213,7 +239,9 @@ export function IdentityLab({
           <h1>
             Permanent Identity Lab<span>Harulo Studio / 하루로</span>
           </h1>
-          <p>Three living identities. Ten color worlds. Your decision.</p>
+          <p>
+            Hangul as meaning. A block as form. Transformation as possibility.
+          </p>
         </div>
         <div className="lab-environment">
           <span>
@@ -230,6 +258,30 @@ export function IdentityLab({
           </small>
         </div>
       </header>
+      <nav className="lab-rounds" aria-label="Research round">
+        <Button
+          variant="ghost"
+          aria-pressed={roundTwo}
+          disabled={!ready}
+          onClick={() => {
+            setSelection((s) => ({ ...s, identity: "syllable" }));
+            setTab("overview");
+          }}
+        >
+          Round 2 — Hangul × Geometry <span>5 candidates / 25 studies</span>
+        </Button>
+        <Button
+          variant="ghost"
+          aria-pressed={!roundTwo}
+          disabled={!ready}
+          onClick={() => {
+            setSelection((s) => ({ ...s, identity: "hangul" }));
+            setTab("specimens");
+          }}
+        >
+          Round 1 / Archive <span>3 candidates / 18 studies</span>
+        </Button>
+      </nav>
       <div className="lab-controls">
         <fieldset className="identity-picker">
           <legend>01 / Identity</legend>
@@ -242,7 +294,7 @@ export function IdentityLab({
             disabled={!ready}
             aria-label="Identity system"
           >
-            {identities.map((candidate) => (
+            {candidates.map((candidate) => (
               <label
                 key={candidate.id}
                 className={`identity-option ${candidate.id === identity ? "selected" : ""}`}
@@ -355,8 +407,8 @@ export function IdentityLab({
       </p>
       <noscript>
         <p className="lab-noscript">
-          JavaScript is off. The initial Hangul Flow mark and publishing layout
-          remain readable. Enable JavaScript to compare identities, inspect
+          JavaScript is off. The five Round 2 marks and publishing layout remain
+          readable. Enable JavaScript to compare identities, inspect
           transformations and save review choices.
         </p>
       </noscript>
@@ -370,8 +422,11 @@ export function IdentityLab({
             tabIndex={-1}
           >
             <TabsList aria-label="Review workspace">
+              <TabsTrigger value="overview" disabled={!ready}>
+                {roundTwo ? "Static first" : "Research archive"}
+              </TabsTrigger>
               <TabsTrigger value="motion" disabled={!ready}>
-                Motion studio <span>18</span>
+                Motion studio <span>{roundTwo ? "25" : "18"}</span>
               </TabsTrigger>
               <TabsTrigger value="website" disabled={!ready}>
                 In the website
@@ -386,6 +441,19 @@ export function IdentityLab({
                 Color systems <span>10</span>
               </TabsTrigger>
             </TabsList>
+            <TabsContent value="overview">
+              {roundTwo ? (
+                <RoundTwoBoard
+                  selected={identity}
+                  onInspect={(id) => {
+                    setSelection((s) => ({ ...s, identity: id }));
+                    setTab("motion");
+                  }}
+                />
+              ) : (
+                <Specimens identity={identity} palette={palette} />
+              )}
+            </TabsContent>
             <TabsContent value="motion">
               <div className="motion-workspace">
                 <aside className="transformation-index">
@@ -461,9 +529,9 @@ export function IdentityLab({
                     <h3>{transformation.name}</h3>
                     <p>{transformation.continuity}</p>
                     <p className="lab-small">
-                      Every path retains its piece index. Scrub slowly to follow
-                      the construction. Static states are available even when
-                      motion is disabled.
+                      Follow the same primary strokes from one role to the next.
+                      Scrub slowly, or use the compositional states with motion
+                      off.
                     </p>
                   </div>
                 </div>
@@ -488,7 +556,11 @@ export function IdentityLab({
               </div>
             </TabsContent>
             <TabsContent value="compare">
-              <Comparison identity={identity} palette={palette} />
+              <Comparison
+                key={roundTwo ? "2" : "1"}
+                identity={identity}
+                palette={palette}
+              />
             </TabsContent>
             <TabsContent value="specimens">
               <Specimens identity={identity} palette={palette} />
@@ -539,7 +611,12 @@ export function IdentityLab({
       </LabContext.Provider>
       <footer className="lab-footer">
         <span>HARULO / PERMANENT IDENTITY RESEARCH</span>
-        <span>3 systems · 18 transformations · 10 color worlds</span>
+        <span>
+          {roundTwo
+            ? "Round 2 · 5 systems · 25 transformations"
+            : "Round 1 archive · 3 systems · 18 transformations"}{" "}
+          · 10 color worlds
+        </span>
         <p>
           Review only. A pinned combination is not approval or a production
           setting.
@@ -548,6 +625,7 @@ export function IdentityLab({
           variant="ghost"
           onClick={() => {
             setSelection(defaults);
+            setTab("overview");
             setMessage("Review controls reset. Pinned combinations retained.");
           }}
         >
@@ -570,9 +648,29 @@ function Comparison({
     [second, setSecond] = useState("02"),
     [third, setThird] = useState("03");
   const [active, setActive] = useState<number | null>(null);
+  const candidates = isRoundTwo(identity)
+    ? roundTwoIdentities
+    : archiveIdentities;
+  const [secondIdentity, setSecondIdentity] = useState<Identity>(
+    candidates[1].id,
+  );
+  const [thirdIdentity, setThirdIdentity] = useState<Identity>(
+    candidates[2].id,
+  );
+  const comparedIdentities = [
+    identity,
+    ...new Set(
+      [secondIdentity, thirdIdentity, ...candidates.map((c) => c.id)].filter(
+        (id) => id !== identity,
+      ),
+    ),
+  ].slice(0, 3);
   const worlds =
     mode === "identities"
-      ? identities.map((i) => ({ identity: i.id, palette }))
+      ? comparedIdentities.map((id) => ({
+          identity: id,
+          palette,
+        }))
       : [
           palette,
           palettes.find((p) => p.id === second)!,
@@ -604,6 +702,33 @@ function Comparison({
             </NativeSelectOption>
           </NativeSelect>
         </label>
+        {mode === "identities" && (
+          <>
+            {[
+              [comparedIdentities[1], setSecondIdentity, "Second"],
+              [comparedIdentities[2], setThirdIdentity, "Third"],
+            ].map(([value, setter, label]) => (
+              <label key={label as string}>
+                {label as string} identity
+                <NativeSelect
+                  aria-label={`${label} comparison identity`}
+                  value={value as string}
+                  onChange={(e) =>
+                    (setter as (v: Identity) => void)(
+                      e.target.value as Identity,
+                    )
+                  }
+                >
+                  {candidates.map((candidate) => (
+                    <NativeSelectOption key={candidate.id} value={candidate.id}>
+                      {candidate.name}
+                    </NativeSelectOption>
+                  ))}
+                </NativeSelect>
+              </label>
+            ))}
+          </>
+        )}
         {mode === "palettes" && (
           <>
             {[

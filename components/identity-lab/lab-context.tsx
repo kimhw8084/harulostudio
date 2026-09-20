@@ -13,9 +13,9 @@ import { TransformationPlayer } from "./transformation-player";
 import { Button } from "@/components/ui/button";
 
 export const LabContext = createContext({
-  identity: "hangul" as Identity,
+  identity: "syllable" as Identity,
   palette: palettes[0],
-  transformation: transformations("hangul")[0],
+  transformation: transformations("syllable")[0],
 });
 export function LabHero() {
   const { identity, transformation } = useContext(LabContext);

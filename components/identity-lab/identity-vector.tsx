@@ -40,6 +40,49 @@ export function IdentityVector({
       aria-hidden={label ? undefined : true}
     >
       {label && <title id={id}>{label}</title>}
+      {shape.reveal && (
+        <>
+          <defs>
+            <clipPath id={`${id}-reveal`}>
+              <rect
+                x={shape.reveal[0]}
+                y={shape.reveal[1]}
+                width={shape.reveal[2]}
+                height={shape.reveal[3]}
+              />
+            </clipPath>
+          </defs>
+          <g
+            clipPath={`url(#${id}-reveal)`}
+            style={{ color: "var(--brand-foreground, #191a1d)" }}
+          >
+            <rect
+              width="800"
+              height="500"
+              fill="var(--brand-background, #f5f5f6)"
+            />
+            <g fill="currentColor">
+              <text x="128" y="139" fontSize="13">
+                HARULO / THE NEXT EDITION
+              </text>
+              <text x="128" y="231" fontSize="72" fontWeight="700">
+                Sori
+              </text>
+              <text x="128" y="269" fontSize="18">
+                YOUR SOUND, CONSIDERED.
+              </text>
+              <text x="128" y="377" fontSize="13">
+                01 / AUDIO UTILITY / FICTIONAL STUDY
+              </text>
+            </g>
+            <path
+              d="M485,330 L485,170 M529,330 L529,210 M573,330 L573,144 M617,330 L617,250"
+              stroke="currentColor"
+              strokeWidth="18"
+            />
+          </g>
+        </>
+      )}
       {shape.pieces.map((piece, i) => (
         <path
           data-piece={i}
@@ -90,6 +133,41 @@ export function IdentityVector({
           </text>
           <text x="520" y="388">
             03
+          </text>
+        </g>
+      )}
+      {shape.kind === "cells" && (
+        <g className="identity-annotation" fill="currentColor" fontSize="28">
+          <text x="151" y="174">
+            01
+          </text>
+          <text x="341" y="174">
+            02
+          </text>
+          <text x="531" y="174">
+            03
+          </text>
+          <text x="151" y="340" fontSize="16">
+            SORI
+          </text>
+          <text x="341" y="340" fontSize="16">
+            NAMU
+          </text>
+          <text x="531" y="340" fontSize="16">
+            GOYO
+          </text>
+        </g>
+      )}
+      {shape.kind === "timeline" && (
+        <g className="identity-annotation" fill="currentColor" fontSize="14">
+          <text x="183" y="345">
+            2027 / 1.0
+          </text>
+          <text x="355" y="345">
+            2031 / 3.0
+          </text>
+          <text x="534" y="345">
+            2036 / 4.8
           </text>
         </g>
       )}

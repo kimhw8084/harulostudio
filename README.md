@@ -18,14 +18,16 @@ Every preview carries a fictional-content notice and noindex metadata. The entir
 
 ## Permanent Identity Lab — development only
 
-Open `/preview/identity-lab` while the development server is running. No candidate has been selected as the permanent identity; the live Dayfold site is unchanged.
+Open `/preview/identity-lab` while the development server is running. The lab opens with **Round 2 — Hangul × Geometry**, starting with five monochrome static marks. No candidate has been selected as the permanent identity; the live Dayfold site is unchanged.
 
-- **Hangul Flow, Horizon Core, Solar Aperture:** six continuous vector transformations each, plus three connected identity reels.
+- **Round 2:** Syllable Block (4 primitives), ㅎ Core (3), Ro Gate (3), Hangul Loop (one continuous path), and Hangul Aperture (4). Five implemented transformations and a connected reel per candidate: **25 new transformations**, plus 30 derived product marks.
+- **Static first:** five-candidate monochrome board, 16/24/32/48/96px and large-scale specimens, reversed marks, hide-and-recall control, and a seven-question evaluation rubric with private review notes. No automatic scores or winner.
+- **Round 1 / Archive:** Hangul Flow, Horizon Core and Solar Aperture remain available, with their original 18 transformations and three reels.
 - **Exactly ten interchangeable palettes:** full semantic tokens, color-proof controls and calculated contrast reports.
 - Play, pause, replay, slow motion, scrubbing and static-state inspection. Motion stops offscreen and in hidden tabs; device reduced motion cannot be overridden by the lab.
 - Whole-website contexts reuse the publishing views: six products, releases, 48 support articles, privacy examples, press, lifecycle archive, empty state, mobile/header/favicon/loading/transition and social-card studies.
-- Side-by-side identity/palette comparison, static and monochrome specimens, 16–256px and environmental scale tests, and six-product icon families for each identity.
-- Review choices and up to four pinned combinations persist only under the lab’s browser-storage key. Pinning is not approval and cannot modify production.
+- Side-by-side identity/palette comparison (three selectable candidates at a time), static and monochrome specimens, 16–256px and environmental scale tests, and six-product icon families for each identity.
+- Review choices and up to four pinned combinations persist only under the lab’s browser-storage key. Round 1 preferences migrate into Round 2 without promoting a candidate. Pinning is not approval and cannot modify production.
 
 All lab routes return 404 outside development, before importing candidate code or synthetic records. Test with `HARULO_TEST_URL=http://127.0.0.1:5173 HARULO_TEST_MODE=development npx playwright test tests/identity-lab.spec.ts`. See `docs/identity-lab.md` for the small promotion boundary after a human decision.
 

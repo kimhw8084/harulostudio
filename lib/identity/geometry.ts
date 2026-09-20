@@ -1,12 +1,35 @@
+import {
+  isRoundTwo,
+  roundTwoIdentities,
+  roundTwoBase,
+  roundTwoProduct,
+  roundTwoTransformations,
+  roundTwoReel,
+} from "./round-two";
+
 /** Lab-only vector topology. A piece keeps its identity throughout a morph. */
-export type Identity = "hangul" | "horizon" | "aperture";
+export type Identity =
+  | "hangul"
+  | "horizon"
+  | "aperture"
+  | "syllable"
+  | "h-core"
+  | "ro-gate"
+  | "hangul-loop"
+  | "hangul-aperture";
 export type Point = readonly [number, number];
-export type Piece = { points: Point[]; width: number; solid?: boolean };
+export type Piece = {
+  points: Point[];
+  width: number;
+  solid?: boolean;
+  breaks?: number[];
+};
 export type Pose = {
   pieces: Piece[];
   caption?: string;
   detail?: string;
   kind?: string;
+  reveal?: readonly [number, number, number, number];
 };
 export type Frame = { at: number; pose: Pose };
 export type Transformation = {
@@ -17,7 +40,7 @@ export type Transformation = {
   duration: number;
   frames: Frame[];
 };
-export const identities = [
+export const archiveIdentities = [
   {
     id: "hangul" as const,
     name: "Hangul Flow",
@@ -43,6 +66,8 @@ export const identities = [
       "Eight unequal shutters surround an offset square of light. Their flat edges can become the architecture of an application.",
   },
 ];
+export const identities = [...roundTwoIdentities, ...archiveIdentities];
+export { roundTwoIdentities, isRoundTwo };
 
 const SAMPLES = 40;
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -144,6 +169,7 @@ function hangulWord(): Piece[] {
   ];
 }
 export function basePose(identity: Identity): Pose {
+  if (isRoundTwo(identity)) return roundTwoBase(identity);
   if (identity === "hangul")
     return {
       pieces: [
@@ -514,6 +540,7 @@ function editionPose(): Pose {
 }
 
 export function productPose(identity: Identity, index: number): Pose {
+  if (isRoundTwo(identity)) return roundTwoProduct(identity, index);
   // Six silhouettes, one construction language. No raster swaps between family members.
   const count = identity === "hangul" ? 19 : 8;
   const names = ["SORI", "NAMU", "GOYO", "HARU WEATHER", "DAMI", "MORROW"];
@@ -909,6 +936,7 @@ function make(
   };
 }
 export function transformations(identity: Identity): Transformation[] {
+  if (isRoundTwo(identity)) return roundTwoTransformations(identity);
   const b = basePose(identity),
     w = windowPose(identity),
     g = gridPose(identity),
@@ -1152,6 +1180,7 @@ export function transformations(identity: Identity): Transformation[] {
   ];
 }
 export function identityReel(identity: Identity): Transformation {
+  if (isRoundTwo(identity)) return roundTwoReel(identity);
   const b = basePose(identity);
   const poses =
     identity === "hangul"
@@ -1216,6 +1245,7 @@ export function poseAt(transformation: Transformation, progress: number): Pose {
     const target = b.pose.pieces[index];
     if (!target) return piece;
     return {
+      breaks: piece.breaks,
       solid: piece.solid || target.solid,
       width: lerp(piece.width, target.width, t),
       points: piece.points.map(
@@ -1241,12 +1271,30 @@ export function poseAt(transformation: Transformation, progress: number): Pose {
       true,
     );
   }
-  return { ...(raw > 0.5 ? b.pose : a.pose), pieces };
+  const reveal = a.pose.reveal || b.pose.reveal;
+  const from = a.pose.reveal ?? [400, 250, 0, 0];
+  const to = b.pose.reveal ?? [400, 250, 0, 0];
+  const x = Math.min(1, raw / 0.84);
+  const t = x * x * x * (x * (x * 6 - 15) + 10);
+  return {
+    ...(raw > 0.5 ? b.pose : a.pose),
+    pieces,
+    ...(reveal
+      ? {
+          reveal: from.map((v, n) =>
+            lerp(v, to[n], t),
+          ) as unknown as Pose["reveal"],
+        }
+      : {}),
+  };
 }
 export function pathData(piece: Piece): string {
   return (
     piece.points
-      .map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(2)},${y.toFixed(2)}`)
+      .map(
+        ([x, y], i) =>
+          `${i && !piece.breaks?.includes(i) ? "L" : "M"}${x.toFixed(2)},${y.toFixed(2)}`,
+      )
       .join(" ") + (piece.solid ? " Z" : "")
   );
 }
