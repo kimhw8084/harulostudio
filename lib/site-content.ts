@@ -5,7 +5,7 @@ export const studio = {
   email: "harulostudio@gmail.com",
   domain: "harulostudio.com",
   url: "https://harulostudio.com",
-  github: "https://github.com/kimhw8084/harulostudion",
+  github: "https://github.com/kimhw8084/harulostudio",
   role: "Independent software publisher",
   tagline: "A little better, every day.",
   koreanTagline: "조금 더 나은 하루로.",

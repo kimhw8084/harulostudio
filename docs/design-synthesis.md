@@ -2,7 +2,7 @@
 
 ## Inspection and brand
 
-Baseline: public repository `kimhw8084/harulostudion`, revision `e60ee58b1b6be3134cc6db66297f280496349785`. The repository has one route and one studio-specific client component, with a supplied shadcn/Radix primitive library. The rendered site uses its Button primitive. The remaining catalog provides future controls; it is not a product catalog. Essential content is server rendered, although the entire original homepage is a client boundary.
+Baseline: public repository `kimhw8084/harulostudio`, revision `e60ee58b1b6be3134cc6db66297f280496349785`. The repository has one route and one studio-specific client component, with a supplied shadcn/Radix primitive library. The rendered site uses its Button primitive. The remaining catalog provides future controls; it is not a product catalog. Essential content is server rendered, although the entire original homepage is a client boundary.
 
 Reviewed: README, content, homepage component, stylesheet, layout, UI contract, verification record, asset provenance, favicon, component exports/dependencies, runtime configuration and current artwork. Preserve the locally served Instrument Serif/DM Sans, sun mark, mineral image, paper/forest/terracotta palette, native anchors, visible focus, truthful clipboard handling, storage-denial fallback and reduced-motion precedence. Improve the publisher message, section order, type sizes, client boundaries, theme initialization, reusable content architecture and route coverage.
 

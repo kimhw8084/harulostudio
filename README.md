@@ -54,6 +54,6 @@ Internal links use `components/site-link.tsx`, a native anchor wrapper. Producti
 
 ## Hosting
 
-Repository: [kimhw8084/harulostudion](https://github.com/kimhw8084/harulostudion). Keep the Sites Vite integration and `.openai/hosting.json`. Deployment remains an owner-private review. `harulostudio.com` is the intended production canonical domain; DNS connection and public launch are separate steps, not completed by a source push. Never put deployment credentials in source or Git remotes.
+Repository: [kimhw8084/harulostudio](https://github.com/kimhw8084/harulostudio). Keep the Sites Vite integration and `.openai/hosting.json`. Deployment remains an owner-private review. `harulostudio.com` is the intended production canonical domain; DNS connection and public launch are separate steps, not completed by a source push. Never put deployment credentials in source or Git remotes.
 
 The supplied optional UI primitives and framework scaffolding are retained; unused authentication/database examples are not active product features.
