@@ -1,29 +1,59 @@
-# Harulo Studio
+# Harulo Studio · 하루로
 
-The independent software studio behind 하루로. A warm, editorial introduction with original daylight artwork, day/evening themes, optional decorative motion, and direct contact at harulostudio@gmail.com.
+An independent software publisher. **Software, brought into daylight.** Warm editorial typography, a tactile solar identity and precise publication metadata belong to the same system. The homepage leads with what Harulo does: design, build, publish and maintain software for everyday life.
+
+The public content is deliberately honest: no products have been announced. The working hero interaction is explicitly a small studio study, not a released application. It keeps one intention in this tab's React memory; nothing is sent or saved by the study.
 
 ## Develop and verify
 
-Requires Node 22.13 or newer. Run `npm ci`, then `npm run dev` and use the printed loopback URL. `npm run build` creates the Cloudflare Worker output. `npm start -- --port 8791` serves that production build locally.
+Requires Node 22.13+. Run `npm ci`, then `npm run dev`; use the printed URL. `npm run build` creates the Cloudflare Worker output. `npm start -- --port 8791` serves that production build locally.
 
-Install browser test binaries with `npx playwright install chromium webkit`. With the built preview running at port 8791, run `npm run test:ui`; `HARULO_TEST_URL` can select a different local preview. Run `npx tsc --noEmit` for type checking. Test traces, screenshots and reports stay in ignored `work/`.
+Install test browsers with `npx playwright install chromium webkit`. Run `npx tsc --noEmit`. With the production preview running at port 8791, run `npm run test:ui`. Development-only catalog coverage: `HARULO_TEST_URL=http://localhost:5173 HARULO_TEST_MODE=development npm run test:ui` (substitute the actual dev port). Screenshots, traces and reports are ignored under `work/`.
 
-## Customize
+## Explore the future without inventing the present
 
-- `lib/site-content.ts`: studio identity, contact address, hero description and principles.
-- `components/harulo-site.tsx`: section copy, semantic layout and small client-side interactions.
-- `app/globals.css`: semantic color tokens for both themes, fonts, spacing, responsive layout and motion.
-- `app/layout.tsx`: search/social metadata; `public/favicon.svg`: the studio mark.
-- `public/images/` and `public/fonts/`: locally served assets; font licenses are included.
+While `npm run dev` is running, open `/preview/2036` for the six-product fictional edition. Its nested software, release and support pages reuse the real production views. `/preview/2036/growth/software` and `/preview/2036/growth/releases` exercise 20 products and 240 releases with pagination.
 
-Keep future products as data with genuine names, screenshots, availability and working destinations. Replace the first-chapter section with a product collection when releases exist; do not invent release claims. Product detail/support/privacy routes can be added under `app/` as needed. No database, account system, analytics or CMS is required for this first site.
+Every preview carries a fictional-content notice and noindex metadata. The entire preview route returns **404 in production**, before importing the fixtures. There are no fictional downloads or store links. This is an architecture/design test, not an announcement or launch forecast.
+
+## Content architecture
+
+| Source                               | Responsibility                                                                      |
+| ------------------------------------ | ----------------------------------------------------------------------------------- |
+| `lib/site-content.ts`                | Studio identity, contact, philosophy and principles                                 |
+| `lib/publishing/types.ts`            | Products, releases, downloads, media, privacy notices, support and press records    |
+| `lib/publishing/catalog.ts`          | Verified production records; public visibility, querying, pagination and validation |
+| `lib/publishing/fixtures.ts`         | Isolated synthetic catalog and growth fixtures                                      |
+| `lib/publishing/metadata.ts`         | Record-driven SEO, canonical URLs and structured data                               |
+| `components/publishing-views.tsx`    | Reusable catalog, product, archive, release, support and privacy views              |
+| `components/product-edition.tsx`     | Publisher shelf, media and release rows                                             |
+| `components/harulo-site.tsx`         | Server-rendered homepage narrative and studio sections                              |
+| `components/software-sunrise.tsx`    | Small, real, client-side hero study                                                 |
+| `components/experience-provider.tsx` | Persistent manual theme, device preferences and global motion pause                 |
+| `app/globals.css`                    | Semantic color, typography, spacing, surface, product and motion tokens             |
+
+Use static typed records until a CMS or release API is justified. A future adapter can return `PublisherCatalog` without rewriting views. Translation fields are prepared; localized routing and reviewed translations are intentionally not pretended to exist. Optional download, store, documentation, status, security and developer links render only when provided. Media records support screenshots, artwork and videos; use verified media, not concept interfaces, for real products.
+
+## Publish a real product
+
+1. Add a complete, verified `Product` to `liveCatalog.products`. Set a stable ID/slug, public visibility, accurate public lifecycle status, copy, platforms and edition. Internal/exploring/development/private-beta records are excluded from public queries.
+2. Add genuine versioned `Release` records referencing that product ID. Record publication dates, channels, compatibility, known issues and download metadata accurately. Update the catalog's `asOf` date when publishing; `validateCatalog` checks dates against it.
+3. Add actual screenshot/media files with dimensions and meaningful alt text. Supply real download/app-store destinations, requirements, accessibility notes and approved resource links. Leave absent resources absent.
+4. Add support articles and, when reviewed, a product-specific privacy record. Add factual press announcements separately. Never convert demonstration provenance to verified without independently replacing/checking every claim.
+5. Run catalog validation, type checking, production build and both browser suites. Check the product's actual downloads, signatures and support destinations independently. The homepage shelf, archive, detail pages, metadata and sitemap then use the records automatically.
+
+Routes: `/software`, `/software/[slug]`, `/releases`, `/releases/[product]/[version]`, `/support`, `/support/[product]`, `/support/[product]/[article]`, `/software/[slug]/privacy`, `/studio`, `/press`, `/press/[slug]`. Missing records return 404. Native GET filters preserve URLs and work without JavaScript. Catalog and release archives show 12 records per page.
 
 ## Design and quality
 
-`docs/ui-contract.md` maps this site's supported tasks to the supplied Golden UI Engineering Lawbook. `docs/verification.md` records actual evidence and limits. `docs/assets.md` records the original artwork prompt and fonts. Essential reading and contact links work without JavaScript; optional controls appear only once ready. Motion follows the device preference and can be paused. Clipboard feedback reflects the actual result.
+Read `docs/design-synthesis.md` for the inspection, creative thesis and deliberate exclusions. `docs/ui-contract.md` maps supported tasks to the supplied Golden UI Engineering Lawbook. `docs/verification.md` distinguishes observed evidence from untested claims. `docs/assets.md` records artwork/font provenance.
+
+Essential reading/navigation/contact is server rendered. Device reduced motion overrides decorative motion; pause and manual theme persist when storage is available. Artwork illumination and shadows transition between environments while text/surface colors change together to retain contrast. Optional controls appear once ready. No scroll hijacking, tracking, account system, analytics, CMS or database is installed for this site.
+
+Internal links use `components/site-link.tsx`, a native anchor wrapper. Production tests exposed a navigation/prefetch exception in the pinned Vinext client Link helper, so the site deliberately uses native document navigation. This preserves real destinations, browser history and no-JS behavior without modifying the supplied runtime or adding another router.
 
 ## Hosting
 
-This project uses the Sites Vite integration and `.openai/hosting.json`; retain both. Deployment is a private review by default. `harulostudio.com` is the intended domain, not a claim that DNS has been connected. Production domain connection and public launch are separate steps. Do not store credentials in source or Git remotes.
+Repository: [kimhw8084/harulostudion](https://github.com/kimhw8084/harulostudion). Keep the Sites Vite integration and `.openai/hosting.json`. Deployment remains an owner-private review. `harulostudio.com` is the intended production canonical domain; DNS connection and public launch are separate steps, not completed by a source push. Never put deployment credentials in source or Git remotes.
 
-The source retains the supplied framework's optional UI and data scaffolding for later development, but this site does not use its optional authentication or database features.
+The supplied optional UI primitives and framework scaffolding are retained; unused authentication/database examples are not active product features.

@@ -1,132 +1,283 @@
-"use client";
-import { useEffect, useRef, useState } from "react";
-import { ArrowDown, ArrowUp, ArrowUpRight, Check, Copy, Moon, Pause, Play, Sun } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Link from "@/components/site-link";
+import { Sun, ArrowRight } from "lucide-react";
 import { studio } from "@/lib/site-content";
+import {
+  liveCatalog,
+  publicProducts,
+  productReleases,
+} from "@/lib/publishing/catalog";
+import type { PublisherCatalog } from "@/lib/publishing/types";
+import { SoftwareSunrise } from "./software-sunrise";
+import { CopyEmail } from "./copy-email";
+import { Direction } from "./publisher-mark";
+import { ProductEdition, ReleaseRow } from "./product-edition";
 
-function readPreference(key: string) {
-  try { return localStorage.getItem(key); } catch { return null; }
-}
-function savePreference(key: string, value: string) {
-  try { localStorage.setItem(key, value); } catch { /* Preferences still work for this visit. */ }
-}
-
-export function HaruloSite() {
-  const [evening, setEvening] = useState(false);
-  const [paused, setPaused] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
-  const [copyState, setCopyState] = useState<"idle" | "copying" | "copied" | "error">("idle");
-  const artRef = useRef<HTMLDivElement>(null);
-  const pointerFrame = useRef<number | null>(null);
-  const copyInFlight = useRef(false);
-  const mounted = useRef(false);
-  const isStill = paused || reducedMotion;
-
-  useEffect(() => {
-    mounted.current = true;
-    document.documentElement.dataset.enhanced = "true";
-    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => {
-      setEvening(readPreference("harulo-theme") === "evening");
-      setPaused(readPreference("harulo-motion") === "paused");
-      setReducedMotion(preference.matches);
-    };
-    sync();
-    preference.addEventListener("change", sync);
-    window.addEventListener("storage", sync);
-    return () => {
-      mounted.current = false;
-      delete document.documentElement.dataset.enhanced;
-      preference.removeEventListener("change", sync);
-      window.removeEventListener("storage", sync);
-      if (pointerFrame.current !== null) cancelAnimationFrame(pointerFrame.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = evening ? "evening" : "daylight";
-    document.documentElement.dataset.motion = isStill ? "paused" : "running";
-    if (isStill) {
-      artRef.current?.style.setProperty("--pointer-x", "0px");
-      artRef.current?.style.setProperty("--pointer-y", "0px");
-      if (pointerFrame.current !== null) cancelAnimationFrame(pointerFrame.current);
-    }
-  }, [evening, isStill]);
-
-  function toggleTheme() {
-    savePreference("harulo-theme", evening ? "daylight" : "evening");
-    setEvening(!evening);
-  }
-  function toggleMotion() {
-    savePreference("harulo-motion", paused ? "running" : "paused");
-    setPaused(!paused);
-  }
-  async function copyEmail() {
-    if (copyInFlight.current) return;
-    copyInFlight.current = true;
-    setCopyState("copying");
-    try {
-      await navigator.clipboard.writeText(studio.email);
-      if (mounted.current) setCopyState("copied");
-    } catch {
-      if (mounted.current) setCopyState("error");
-    } finally { copyInFlight.current = false; }
-  }
-
+export function ContactSection() {
   return (
-    <div className="harulo-site" id="top">
-      <a className="skip-link" href="#main">Skip to content</a>
-      <header className="site-header page-width">
-        <a className="wordmark" href="#top" aria-label="Harulo Studio home"><Sun aria-hidden="true" /><span>harulo<span className="wordmark-studio">studio</span></span></a>
-        <nav aria-label="Main navigation"><a href="#studio">The studio</a><a className="nav-contact" href="#contact">Say hello <ArrowUpRight aria-hidden="true" /></a></nav>
-        <Button type="button" variant="ghost" className="theme-button" aria-label="Evening theme" aria-pressed={evening} onClick={toggleTheme}>{evening ? <Moon aria-hidden="true" /> : <Sun aria-hidden="true" />}<span>{evening ? "Evening" : "Daylight"}</span></Button>
-      </header>
-      <main id="main" tabIndex={-1}>
-        <section className="hero page-width" aria-labelledby="hero-title">
-          <div className="hero-copy">
-            <p className="eyebrow"><span className="eyebrow-line" />Independent software studio</p>
-            <h1 id="hero-title">A little better,<br /><em>every day.</em></h1>
-            <p className="hero-description">{studio.description}</p>
-            <a className="primary-link" href="#studio">Meet the studio <ArrowDown aria-hidden="true" /></a>
-            <p className="hero-korean" lang="ko">{studio.koreanTagline}</p>
+    <section
+      className="contact-section page-width"
+      id="contact"
+      aria-labelledby="contact-title"
+    >
+      <div>
+        <p className="eyebrow">Good things start with a conversation</p>
+        <h2 id="contact-title">
+          What could be
+          <br />
+          <em>a little better?</em>
+        </h2>
+      </div>
+      <div className="contact-details">
+        <p>
+          A question about Harulo, a suggestion, or a small frustration you wish
+          software could solve. We’d like to hear it.
+        </p>
+        <a className="email-link" href={`mailto:${studio.email}`}>
+          <span>{studio.email}</span>
+          <Direction />
+        </a>
+        <CopyEmail email={studio.email} />
+      </div>
+    </section>
+  );
+}
+export function StudioStory({ full = false }: { full?: boolean }) {
+  return (
+    <section
+      className="story-section page-width"
+      id="studio"
+      aria-labelledby="story-title"
+    >
+      <div className="story-language">
+        <span className="eyebrow">The direction in our name</span>
+        <div className="korean-direction" lang="ko">
+          <span>하루</span>
+          <ArrowRight aria-hidden="true" />
+          <span>
+            하루<span className="korean-ro">로</span>
+          </span>
+        </div>
+        <div className="language-labels metadata">
+          <span>A DAY</span>
+          <span>TOWARD A BETTER DAY ↗</span>
+        </div>
+        <div className="story-horizon" aria-hidden="true">
+          <Sun />
+        </div>
+      </div>
+      <div className="story-copy">
+        <p className="eyebrow">Harulo · 하루로</p>
+        <h2 id="story-title">
+          It begins with
+          <br />
+          <em>an ordinary day.</em>
+        </h2>
+        <p>
+          <span lang="ko">하루</span> means a day. In{" "}
+          <span lang="ko">하루로</span>, we find a direction: toward a day that
+          feels a little better.
+        </p>
+        <p>
+          A repeated task. A small frustration. Something that could be clearer,
+          calmer, or easier. That is where our software begins.
+        </p>
+        {full && (
+          <p>
+            Harulo Studio is an independent software publisher, built by one
+            maker. We design, build, publish and maintain our own products. The
+            ambition is simple: useful software with the care to keep getting
+            better.
+          </p>
+        )}
+        <p className="story-signoff" lang="ko">
+          하루에서, 하루로.
+        </p>
+      </div>
+    </section>
+  );
+}
+export function MakingSection() {
+  return (
+    <section className="making-section">
+      <div className="page-width">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">The way we make</p>
+            <h2>
+              Small things.
+              <br />
+              <em>Considered completely.</em>
+            </h2>
           </div>
-          <figure className="hero-art">
-            <div className="art-frame">
-              <div className="art-window" ref={artRef} onPointerMove={(event) => {
-                if (isStill || event.pointerType !== "mouse") return;
-                const bounds = event.currentTarget.getBoundingClientRect();
-                const x = ((event.clientX - bounds.left) / bounds.width - .5) * 10;
-                const y = ((event.clientY - bounds.top) / bounds.height - .5) * 10;
-                if (pointerFrame.current !== null) cancelAnimationFrame(pointerFrame.current);
-                pointerFrame.current = requestAnimationFrame(() => {
-                  artRef.current?.style.setProperty("--pointer-x", `${x}px`);
-                  artRef.current?.style.setProperty("--pointer-y", `${y}px`);
-                });
-              }} onPointerLeave={() => {
-                if (pointerFrame.current !== null) cancelAnimationFrame(pointerFrame.current);
-                artRef.current?.style.setProperty("--pointer-x", "0px");
-                artRef.current?.style.setProperty("--pointer-y", "0px");
-              }}>
-                <div className="art-drift"><img src="/images/daylight.jpg" alt="" width="1122" height="1402" fetchPriority="high" /></div>
-              </div>
-              <span className="art-seal" aria-hidden="true"><Sun /><span>FOR THE<br />EVERYDAY</span></span>
+          <p>
+            Publishing is a beginning.
+            <br />
+            Care continues after release.
+          </p>
+        </div>
+        <ol className="making-principles">
+          {studio.principles.map((p) => (
+            <li key={p.number}>
+              <span className="metadata">{p.number} /</span>
+              <h3>{p.title}</h3>
+              <p>{p.body}</p>
+            </li>
+          ))}
+        </ol>
+        <div className="making-cycle" aria-label="Our process">
+          <span>Observe</span>
+          <Direction />
+          <span>Design</span>
+          <Direction />
+          <span>Build</span>
+          <Direction />
+          <span>Publish</span>
+          <Direction />
+          <span>Improve</span>
+          <span className="cycle-again">
+            Then begin again. <Sun aria-hidden="true" />
+          </span>
+        </div>
+      </div>
+    </section>
+  );
+}
+export function HaruloSite({
+  catalog = liveCatalog,
+  prefix = "",
+}: {
+  catalog?: PublisherCatalog;
+  prefix?: string;
+}) {
+  const products = publicProducts(catalog);
+  const releases = productReleases(catalog).slice(0, 3);
+  return (
+    <main id="main" tabIndex={-1}>
+      <section
+        className="publisher-hero page-width"
+        aria-labelledby="hero-title"
+      >
+        <div className="hero-copy">
+          <p className="eyebrow publisher-eyebrow">
+            <span className="eyebrow-line" />
+            {studio.role}
+          </p>
+          <h1 id="hero-title">
+            Software for <br />a little <br />
+            <em>better day.</em>
+          </h1>
+          <p className="hero-description">{studio.description}</p>
+          <div className="hero-actions">
+            <Link
+              className="primary-link"
+              href={products.length ? `${prefix}/software` : "#software"}
+            >
+              {products.length ? "Explore our software" : "Meet the publisher"}
+              <Direction />
+            </Link>
+            <a className="quiet-link" href="#contact">
+              Say hello <Direction />
+            </a>
+          </div>
+          <div className="hero-signature">
+            <span lang="ko">조금 더 나은 하루로.</span>
+            <span className="metadata">
+              DESIGNED. BUILT. PUBLISHED. CARED FOR.
+            </span>
+          </div>
+        </div>
+        <SoftwareSunrise />
+      </section>
+      <div className="dayline page-width" aria-hidden="true">
+        <span>01 / A BEGINNING</span>
+        <span className="dayline-track">
+          <span />
+        </span>
+        <span>INTO THE EVERYDAY ↗</span>
+      </div>
+      <section
+        className="software-section page-width"
+        id="software"
+        aria-labelledby="software-title"
+      >
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">The Harulo catalog</p>
+            <h2 id="software-title">
+              Useful by nature.
+              <br />
+              <em>Thoughtful by design.</em>
+            </h2>
+          </div>
+          {products.length > 0 ? (
+            <Link className="text-link" href={`${prefix}/software`}>
+              All software{" "}
+              <span className="metadata">
+                {String(products.length).padStart(2, "0")}
+              </span>
+              <Direction />
+            </Link>
+          ) : (
+            <span className="metadata">THE FIRST CHAPTER</span>
+          )}
+        </div>
+        {products.length > 0 ? (
+          <div className="publisher-shelf">
+            {products.slice(0, 6).map((p) => (
+              <ProductEdition key={p.id} product={p} prefix={prefix} />
+            ))}
+          </div>
+        ) : (
+          <div className="first-edition">
+            <div className="first-edition-mark">
+              <Sun aria-hidden="true" />
+              <span className="metadata">HARULO / SOFTWARE</span>
             </div>
-            <figcaption><span>A little room for a better day.</span><span lang="ko">하루로</span></figcaption>
-          </figure>
+            <div>
+              <h3>The first edition is still ahead.</h3>
+              <p>
+                There are no announced products yet. When our software is ready,
+                you’ll find it here—with real details, release notes, and a way
+                to get help.
+              </p>
+            </div>
+            <Link className="text-link" href="/studio">
+              About the studio <Direction />
+            </Link>
+          </div>
+        )}
+      </section>
+      {releases.length > 0 && (
+        <section
+          className="recent-releases page-width"
+          aria-labelledby="releases-title"
+        >
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Published, and improving</p>
+              <h2 id="releases-title">
+                Fresh from <em>Harulo.</em>
+              </h2>
+            </div>
+            <Link className="text-link" href={`${prefix}/releases`}>
+              Release archive <Direction />
+            </Link>
+          </div>
+          <ul className="release-list">
+            {releases.map((r) => (
+              <ReleaseRow
+                key={r.id}
+                release={r}
+                product={products.find((p) => p.id === r.productId)!}
+                prefix={prefix}
+              />
+            ))}
+          </ul>
         </section>
-        <div className="day-note page-width"><span>Small improvements. Real days.</span><span className="day-note-end">Built independently. Made with intention.</span></div>
-        <section className="studio-section page-width" id="studio" aria-labelledby="studio-title">
-          <div className="studio-heading"><p className="eyebrow"><span className="section-number">01 /</span> The studio</p><h2 id="studio-title">A studio built<br />around <em>a day.</em></h2><p className="name-signature" lang="ko">하루로<span aria-hidden="true">↗</span></p></div>
-          <div className="studio-story"><p className="body-copy">Harulo takes its name from <span lang="ko">하루로</span>, inspired by <span lang="ko">하루</span>—the Korean word for a day.</p><p className="story-question">What could make someone’s day<br className="desktop-break" /> <em>a little better?</em></p><p className="body-copy">That question is where the work begins. Harulo Studio is my independent software studio. I build and publish my own apps, with an emphasis on clear design and details that make everyday use more enjoyable.</p><p className="studio-signoff">One maker. A little everyday intention.</p></div>
-        </section>
-        <section className="principles-section" aria-labelledby="principles-title"><div className="principles-layout page-width"><div className="principles-intro"><p className="eyebrow"><span className="section-number">02 /</span> A way of making</p><h2 id="principles-title">Small things.<br /><em>Real difference.</em></h2><p>The useful, the simple, and the details that make it feel right.</p><Sun className="principles-sun" aria-hidden="true" /></div><ol className="principles-list">{studio.principles.map((principle) => <li key={principle.number}><span className="principle-number" aria-hidden="true">{principle.number}</span><div><h3>{principle.title}</h3><p>{principle.body}</p></div></li>)}</ol></div></section>
-        <section className="beginning-section page-width" aria-labelledby="beginning-title"><p className="eyebrow"><span className="section-number">03 /</span> The first chapter</p><div className="beginning-body"><h2 id="beginning-title">Starting with<br /><em>the everyday.</em></h2><div><p>This is the beginning of Harulo Studio. Future releases will have a home here.</p><a className="text-link" href="#contact">Have something in mind? <ArrowUpRight aria-hidden="true" /></a></div></div></section>
-        <section className="contact-section page-width" id="contact" aria-labelledby="contact-title">
-          <div className="contact-heading"><p className="eyebrow">A conversation is a good beginning</p><h2 id="contact-title">Say <em>hello.</em><ArrowUpRight aria-hidden="true" /></h2></div>
-          <div className="contact-details"><p>Have a question, a suggestion, or a small frustration you wish an app could solve? I’d love to hear it.</p><a className="email-link" href={`mailto:${studio.email}`}><span>{studio.email}</span><ArrowUpRight aria-hidden="true" /></a><div className="copy-row"><Button type="button" variant="ghost" className="copy-button" onClick={copyEmail} disabled={copyState === "copying"}>{copyState === "copied" ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}{copyState === "copying" ? "Copying…" : "Copy email"}</Button><p role="status" aria-live="polite" aria-atomic="true" className="copy-status">{copyState === "copied" ? "Email copied." : copyState === "error" ? "Couldn’t copy. Select the address above, or open your email app." : ""}</p></div></div>
-        </section>
-      </main>
-      <footer className="site-footer page-width"><div className="footer-brand"><span>Harulo Studio · <span lang="ko">하루로</span></span><span>A little better, every day.</span></div><div className="footer-tools"><Button type="button" variant="ghost" className="motion-button" onClick={toggleMotion} disabled={reducedMotion} aria-describedby={reducedMotion ? "motion-preference" : undefined}>{isStill ? <Play aria-hidden="true" /> : <Pause aria-hidden="true" />}{reducedMotion ? "Motion reduced" : paused ? "Resume motion" : "Pause motion"}</Button>{reducedMotion && <span id="motion-preference" className="motion-note">Following your device preference.</span>}<a className="back-top" href="#top" aria-label="Back to top"><ArrowUp aria-hidden="true" /></a></div><div className="footer-bottom"><span>© {new Date().getFullYear()} Harulo Studio</span><span lang="ko">{studio.koreanTagline}</span></div></footer>
-    </div>
+      )}
+      <StudioStory />
+      <MakingSection />
+      <ContactSection />
+    </main>
   );
 }
