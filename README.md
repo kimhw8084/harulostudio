@@ -16,6 +16,19 @@ While `npm run dev` is running, open `/preview/2036` for the six-product fiction
 
 Every preview carries a fictional-content notice and noindex metadata. The entire preview route returns **404 in production**, before importing the fixtures. There are no fictional downloads or store links. This is an architecture/design test, not an announcement or launch forecast.
 
+## Permanent Identity Lab — development only
+
+Open `/preview/identity-lab` while the development server is running. No candidate has been selected as the permanent identity; the live Dayfold site is unchanged.
+
+- **Hangul Flow, Horizon Core, Solar Aperture:** six continuous vector transformations each, plus three connected identity reels.
+- **Exactly ten interchangeable palettes:** full semantic tokens, color-proof controls and calculated contrast reports.
+- Play, pause, replay, slow motion, scrubbing and static-state inspection. Motion stops offscreen and in hidden tabs; device reduced motion cannot be overridden by the lab.
+- Whole-website contexts reuse the publishing views: six products, releases, 48 support articles, privacy examples, press, lifecycle archive, empty state, mobile/header/favicon/loading/transition and social-card studies.
+- Side-by-side identity/palette comparison, static and monochrome specimens, 16–256px and environmental scale tests, and six-product icon families for each identity.
+- Review choices and up to four pinned combinations persist only under the lab’s browser-storage key. Pinning is not approval and cannot modify production.
+
+All lab routes return 404 outside development, before importing candidate code or synthetic records. Test with `HARULO_TEST_URL=http://127.0.0.1:5173 HARULO_TEST_MODE=development npx playwright test tests/identity-lab.spec.ts`. See `docs/identity-lab.md` for the small promotion boundary after a human decision.
+
 ## Content architecture
 
 | Source                                  | Responsibility                                                                      |

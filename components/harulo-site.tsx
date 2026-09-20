@@ -144,52 +144,58 @@ export function MakingSection() {
 export function HaruloSite({
   catalog = liveCatalog,
   prefix = "",
+  hero,
 }: {
   catalog?: PublisherCatalog;
   prefix?: string;
+  hero?: React.ReactNode;
 }) {
   const products = publicProducts(catalog),
     releases = productReleases(catalog).slice(0, 3);
   return (
     <main id="main" tabIndex={-1} className="harulo-world">
-      <section className="publisher-hero" aria-labelledby="hero-title">
-        <div className="hero-mast">
-          <p className="publisher-eyebrow eyebrow">{studio.role}</p>
-          <span className="metadata">WE DESIGN. BUILD. PUBLISH. MAINTAIN.</span>
-        </div>
-        <h1 id="hero-title" className="hero-wordmark">
-          HARULO{" "}
-          <span className="hero-studio">
-            STUDIO <span lang="ko">하루로</span>
-          </span>
-        </h1>
-        <Dayfold />
-        <div className="hero-bottom">
-          <h2>
-            EVERY DAY.
-            <br />
-            <em>A NEW POSSIBILITY.</em>
-          </h2>
-          <div>
-            <p className="hero-description">{studio.description}</p>
-            <div className="hero-actions">
-              <Link
-                className="primary-link"
-                href={products.length ? `${prefix}/software` : "#software"}
-              >
-                {products.length
-                  ? "Explore our software"
-                  : "Meet the publisher"}
-                <Direction />
-              </Link>
-              <a className="quiet-link" href="#contact">
-                Say hello
-                <Direction />
-              </a>
+      {hero ?? (
+        <section className="publisher-hero" aria-labelledby="hero-title">
+          <div className="hero-mast">
+            <p className="publisher-eyebrow eyebrow">{studio.role}</p>
+            <span className="metadata">
+              WE DESIGN. BUILD. PUBLISH. MAINTAIN.
+            </span>
+          </div>
+          <h1 id="hero-title" className="hero-wordmark">
+            HARULO{" "}
+            <span className="hero-studio">
+              STUDIO <span lang="ko">하루로</span>
+            </span>
+          </h1>
+          <Dayfold />
+          <div className="hero-bottom">
+            <h2>
+              EVERY DAY.
+              <br />
+              <em>A NEW POSSIBILITY.</em>
+            </h2>
+            <div>
+              <p className="hero-description">{studio.description}</p>
+              <div className="hero-actions">
+                <Link
+                  className="primary-link"
+                  href={products.length ? `${prefix}/software` : "#software"}
+                >
+                  {products.length
+                    ? "Explore our software"
+                    : "Meet the publisher"}
+                  <Direction />
+                </Link>
+                <a className="quiet-link" href="#contact">
+                  Say hello
+                  <Direction />
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
       <section
         className="software-section"
         id="software"

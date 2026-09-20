@@ -95,6 +95,7 @@ export default async function Preview({
             <Link href={`${prefix}/releases`}>Releases</Link>
             <Link href={`${prefix}/support`}>Support</Link>
             <Link href="/preview/2036/growth/software">20-product test</Link>
+            <Link href="/preview/identity-lab">Identity Lab</Link>
             <Link href="/">Current Harulo</Link>
           </nav>
         </div>

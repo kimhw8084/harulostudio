@@ -8,6 +8,7 @@ import {
 } from "@/lib/publishing/catalog";
 import { Direction } from "./publisher-mark";
 import { ApplicationInstrument } from "./application-instrument";
+import { BrandSlot } from "./brand-slot";
 
 export function ProductIcon({ product }: { product: Product }) {
   const paths: Record<Product["icon"], React.ReactNode> = {
@@ -47,9 +48,11 @@ export function ProductIcon({ product }: { product: Product }) {
   };
   return (
     <span className="product-icon" data-tone={product.tone}>
-      <svg viewBox="0 0 48 48" fill="currentColor" aria-hidden="true">
-        {paths[product.icon]}
-      </svg>
+      <BrandSlot product={product.icon}>
+        <svg viewBox="0 0 48 48" fill="currentColor" aria-hidden="true">
+          {paths[product.icon]}
+        </svg>
+      </BrandSlot>
     </span>
   );
 }
