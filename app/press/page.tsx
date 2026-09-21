@@ -42,7 +42,18 @@ export default function Press() {
       </div>
       <div className="press-assets">
         <div className="press-asset">
-          <HaruloMark title="Harulo master mark" />
+          <HaruloMark title="Harulo Cobalt Ember master" />
+          <p>Master mark / Cobalt Ember</p>
+          <a
+            className="text-link"
+            href="/brand/harulo-cobalt-ember.svg"
+            download
+          >
+            Download SVG <Direction />
+          </a>
+        </div>
+        <div className="press-asset">
+          <HaruloMark title="Harulo master mark" monochrome />
           <p>Master mark / monochrome</p>
           <a className="text-link" href="/brand/harulo-master.svg" download>
             Download SVG <Direction />
@@ -56,7 +67,7 @@ export default function Press() {
           </a>
         </div>
         <div className="press-asset inverse">
-          <HaruloMark title="Harulo master mark, reversed" />
+          <HaruloMark title="Harulo master mark, reversed" monochrome />
           <p>Master mark / reversed</p>
           <a className="text-link" href="/brand/harulo-reversed.svg" download>
             Download SVG <Direction />

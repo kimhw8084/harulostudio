@@ -114,9 +114,9 @@ test("mature pages retain accessible mobile layouts and theme contrast", async (
       ),
       path,
     ).toBe(true);
-    for (const theme of ["daylight", "evening"]) {
-      if (theme === "evening")
-        await page.getByRole("button", { name: "Low-light mode" }).click();
+    for (const theme of ["light", "dark"]) {
+      if (theme === "dark")
+        await page.getByRole("button", { name: "Dark mode" }).click();
       const a = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
         .analyze();
@@ -128,7 +128,7 @@ test("mature pages retain accessible mobile layouts and theme contrast", async (
         `${path} ${theme}`,
       ).toEqual([]);
     }
-    await page.getByRole("button", { name: "Low-light mode" }).click();
+    await page.getByRole("button", { name: "Dark mode" }).click();
   }
   await page.goto("/preview/2036");
   await page.setViewportSize({ width: 390, height: 844 });

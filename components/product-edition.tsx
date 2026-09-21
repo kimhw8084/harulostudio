@@ -11,6 +11,7 @@ import { ApplicationInstrument } from "./application-instrument";
 import { BrandSlot } from "./brand-slot";
 import { ProductGlyph } from "./brand/product-glyph";
 import { HaruloMark } from "./brand/harulo-mark";
+import { ExtendedInstrument } from "./extended-instrument";
 
 export function ProductIcon({ product }: { product: Product }) {
   return (
@@ -22,6 +23,7 @@ export function ProductIcon({ product }: { product: Product }) {
   );
 }
 export function ConceptInterface({ product }: { product: Product }) {
+  if (product.specimen) return <ExtendedInstrument product={product} />;
   return <ApplicationInstrument name={product.name} kind={product.icon} />;
 }
 export function ProductMedia({ product }: { product: Product }) {
@@ -59,7 +61,11 @@ export function ProductEdition({
   initiallyOpen?: boolean;
 }) {
   return (
-    <article className="product-edition" data-tone={product.tone}>
+    <article
+      className="product-edition"
+      data-tone={product.tone}
+      data-systems="03 06 11 12 14 18"
+    >
       <details className="edition-disclosure" open={initiallyOpen || undefined}>
         <summary
           className="edition-spine"

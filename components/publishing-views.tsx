@@ -27,6 +27,8 @@ import {
   releasePath,
 } from "@/lib/publishing/catalog";
 import { Direction, PublisherMark, FoldMark } from "./publisher-mark";
+import { ReleaseRiver } from "./brand/publisher-history";
+import { SoftwareXRay } from "./brand/software-xray";
 import {
   ProductEdition,
   ProductIcon,
@@ -289,6 +291,16 @@ export function ReleasesView({
               ]}
             />
             <Button type="submit">Filter releases</Button>
+            <SelectFilter
+              name="channel"
+              label="Channels"
+              query={query}
+              options={[
+                { value: "stable", label: "Stable" },
+                { value: "preview", label: "Preview" },
+                { value: "beta", label: "Beta" },
+              ]}
+            />
             <Link className="quiet-link" href={path}>
               Reset
             </Link>
@@ -313,6 +325,11 @@ export function ReleasesView({
             </EmptyPublication>
           )}
           <Pagination path={path} query={query} {...result} />
+          <ReleaseRiver
+            releases={filterReleases(catalog, query)}
+            products={products}
+            prefix={prefix}
+          />
         </>
       )}
     </main>
@@ -390,7 +407,13 @@ export function ProductView({
           data-tone={product.tone}
           data-publication={product.slug}
         >
-          <ProductMedia product={product} />
+          {product.provenance === "synthetic" ? (
+            <SoftwareXRay compact product={product}>
+              <ProductMedia product={product} />
+            </SoftwareXRay>
+          ) : (
+            <ProductMedia product={product} />
+          )}
         </div>
       </section>
       {catalog.edition === "demo" && (
@@ -399,6 +422,13 @@ export function ProductView({
           compatibility information are illustrative. No software is available
           to download.
         </p>
+      )}
+      {product.history && (
+        <ReleaseRiver
+          releases={releases}
+          products={[product]}
+          prefix={prefix}
+        />
       )}
       <section className="detail-section detail-grid">
         <h2>
@@ -640,15 +670,21 @@ export function SupportView({
   catalog,
   product,
   prefix = "",
+  query = {},
 }: {
   catalog: PublisherCatalog;
   product?: Product;
   prefix?: string;
+  query?: Query;
 }) {
   const products = publicProducts(catalog);
   const articles = catalog.supportArticles.filter(
     (a) =>
       (!product || a.productId === product.id) &&
+      (!queryValue(query, "q") ||
+        `${a.title} ${a.sections.flatMap((s) => s.paragraphs).join(" ")}`
+          .toLowerCase()
+          .includes(queryValue(query, "q").toLowerCase())) &&
       (catalog.edition === "demo" || a.provenance === "verified"),
   );
   return (
@@ -662,7 +698,49 @@ export function SupportView({
             : "Help belongs alongside the software. Find a product below, or get in touch with the studio."
         }
       />
-      {product ? (
+      {products.length > 0 && (
+        <form
+          className="filters"
+          method="get"
+          action={`${prefix}/support${product ? `/${product.slug}` : ""}`}
+        >
+          <label>
+            Search documentation
+            <Input
+              name="q"
+              defaultValue={queryValue(query, "q")}
+              placeholder="Export, keyboard, migration…"
+            />
+          </label>
+          <Button>Find help</Button>
+          <Link href={`${prefix}/support${product ? `/${product.slug}` : ""}`}>
+            Reset
+          </Link>
+        </form>
+      )}
+      {!product && queryValue(query, "q") ? (
+        <>
+          <p className="results-count">{articles.length} matching guides</p>
+          <ul className="support-list">
+            {articles.map((a) => {
+              const p = products.find((p) => p.id === a.productId)!;
+              return (
+                <li key={a.id}>
+                  <Link href={`${prefix}/support/${p.slug}/${a.slug}`}>
+                    {p.name} / {a.title} ↗
+                  </Link>
+                  <p>{a.category.replaceAll("-", " ")}</p>
+                </li>
+              );
+            })}
+          </ul>
+          {!articles.length && (
+            <EmptyPublication title="No guides match.">
+              Try a product name or a shorter description of the problem.
+            </EmptyPublication>
+          )}
+        </>
+      ) : product ? (
         <>
           <div className="article-meta">
             <ProductIcon product={product} />
@@ -790,6 +868,12 @@ export function ProductPrivacyView({ product }: { product: Product }) {
             <li key={x}>{x}</li>
           ))}
         </ul>
+        {p.storage && (
+          <>
+            <h2>Storage</h2>
+            <p>{p.storage}</p>
+          </>
+        )}
         <h2>Retention</h2>
         <p>{p.retention}</p>
         <h2>Deletion</h2>

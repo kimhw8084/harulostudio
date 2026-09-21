@@ -16,13 +16,13 @@ const style = `<style>@font-face{font-family:HaruloWordmark;src:url(data:font/wo
 const assets = {
   "harulo-master.svg": svg(markSvg("#000000")),
   "harulo-reversed.svg": svg(markSvg("#ffffff")),
-  "harulo-daylight.svg": svg(markSvg("#f0f769")),
+  "harulo-cobalt-ember.svg": svg(markSvg("#123DFF", "#FF5C35")),
   "harulo-publisher.svg": svg(
-    `${style}${markSvg("#171a16")}<text x="98" y="47" fill="#171a16" font-size="30" font-weight="700" letter-spacing="-1.2">HARULO STUDIO</text><text x="99" y="66" fill="#171a16" font-size="10" font-weight="500" letter-spacing="1.2">INDEPENDENT SOFTWARE PUBLISHER</text>`,
+    `${style}${markSvg("#101322")}<text x="98" y="47" fill="#101322" font-size="30" font-weight="700" letter-spacing="-1.2">HARULO STUDIO</text><text x="99" y="66" fill="#101322" font-size="10" font-weight="500" letter-spacing="1.2">INDEPENDENT SOFTWARE PUBLISHER</text>`,
     "0 0 450 100",
   ),
   "harulo-vertical.svg": svg(
-    `${style}<g transform="translate(25 0) scale(1.5)">${markSvg("#171a16")}</g><text x="100" y="160" text-anchor="middle" fill="#171a16" font-size="30" font-weight="700" letter-spacing="-1.2">HARULO</text><text x="100" y="183" text-anchor="middle" fill="#171a16" font-size="12" font-weight="500" letter-spacing="4">STUDIO</text>`,
+    `${style}<g transform="translate(25 0) scale(1.5)">${markSvg("#101322")}</g><text x="100" y="160" text-anchor="middle" fill="#101322" font-size="30" font-weight="700" letter-spacing="-1.2">HARULO</text><text x="100" y="183" text-anchor="middle" fill="#101322" font-size="12" font-weight="500" letter-spacing="4">STUDIO</text>`,
     "0 0 200 215",
   ),
 };
@@ -31,7 +31,7 @@ for (const [name, content] of Object.entries(assets))
 await writeFile(
   new URL("favicon.svg", root),
   svg(
-    `<style>svg{color:#171a16}@media(prefers-color-scheme:dark){svg{color:#f0f769}}</style>${markSvg()}`,
+    `<style>svg{color:#123DFF;--ember:#FF5C35}@media(prefers-color-scheme:dark){svg{color:#6F86FF;--ember:#FF7152}}</style>${markSvg("currentColor", "var(--ember)")}`,
   ) + "\n",
 );
 

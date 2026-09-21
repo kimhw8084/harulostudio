@@ -9,9 +9,16 @@ import {
 export default function sitemap(): MetadataRoute.Sitemap {
   const products = publicProducts(liveCatalog);
   return [
-    ...["", "/software", "/releases", "/studio", "/support", "/press"].map(
-      (path) => ({ url: `${studio.url}${path}` }),
-    ),
+    ...[
+      "",
+      "/software",
+      "/releases",
+      "/studio",
+      "/support",
+      "/press",
+      "/archive",
+      "/history",
+    ].map((path) => ({ url: `${studio.url}${path}` })),
     ...products.flatMap((p) => [
       {
         url: `${studio.url}/software/${p.slug}`,
@@ -20,7 +27,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       { url: `${studio.url}/support/${p.slug}` },
     ]),
     ...productReleases(liveCatalog).map((r) => ({
-      url: `${studio.url}${releasePath(r, products.find((p) => p.id === r.productId)!)}`,
+      url: `${studio.url}${releasePath(
+        r,
+        products.find((p) => p.id === r.productId)!,
+      )}`,
       lastModified: r.publishedAt,
     })),
     ...liveCatalog.supportArticles

@@ -67,10 +67,10 @@ test("publisher identity, working Software Origin, navigation and theme persiste
     path: `work/${info.project.name}-publisher-daylight.png`,
     fullPage: true,
   });
-  await page.getByRole("button", { name: "Low-light mode" }).click();
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "evening");
+  await page.getByRole("button", { name: "Dark mode" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.reload();
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "evening");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page
     .getByRole("navigation", { name: "Main navigation" })
     .getByRole("link", { name: "Software", exact: true })
@@ -78,7 +78,7 @@ test("publisher identity, working Software Origin, navigation and theme persiste
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     "Software for everyday life.",
   );
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "evening");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.getByRole("link", { name: "Harulo Studio home" }).click();
   await page.getByRole("link", { name: "Say hello", exact: true }).click();
   await expect(page).toHaveURL(/#contact$/);
@@ -159,9 +159,9 @@ test("automated accessibility in both environments and useful pages", async ({
     "/press",
   ]) {
     await page.goto(path);
-    for (const theme of ["daylight", "evening"]) {
-      if (theme === "evening")
-        await page.getByRole("button", { name: "Low-light mode" }).click();
+    for (const theme of ["light", "dark"]) {
+      if (theme === "dark")
+        await page.getByRole("button", { name: "Dark mode" }).click();
       await expect(page.locator("html")).toHaveAttribute("data-theme", theme);
       const result = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
@@ -176,7 +176,7 @@ test("automated accessibility in both environments and useful pages", async ({
         })),
       ).toEqual([]);
     }
-    await page.getByRole("button", { name: "Low-light mode" }).click();
+    await page.getByRole("button", { name: "Dark mode" }).click();
   }
 });
 
@@ -191,7 +191,7 @@ test("keyboard skip, native links and Software Origin controls", async ({
   ).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.locator("main")).toBeFocused();
-  const theme = page.getByRole("button", { name: "Low-light mode" });
+  const theme = page.getByRole("button", { name: "Dark mode" });
   await expect(theme).toBeEnabled();
   await theme.focus();
   await page.keyboard.press("Space");
@@ -319,10 +319,10 @@ test("storage denial and failed fonts do not block tasks or override manual them
   });
   await page.route("**/fonts/*.woff2", (r) => r.abort());
   await page.goto("/");
-  await page.getByRole("button", { name: "Low-light mode" }).click();
+  await page.getByRole("button", { name: "Dark mode" }).click();
   await page.emulateMedia({ colorScheme: "dark" });
   await page.emulateMedia({ colorScheme: "light" });
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "evening");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await expectReflow(page);
   await page.getByRole("button", { name: "Open a little space" }).click();
   await page.getByRole("button", { name: "Start minute" }).click();
@@ -339,7 +339,7 @@ test("forced colors retains control focus and layout", async ({
   );
   await page.emulateMedia({ forcedColors: "active" });
   await page.goto("/");
-  const theme = page.getByRole("button", { name: "Low-light mode" });
+  const theme = page.getByRole("button", { name: "Dark mode" });
   await expect(theme).toBeEnabled();
   await theme.focus();
   expect(

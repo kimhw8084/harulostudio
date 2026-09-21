@@ -4,6 +4,7 @@ import type {
   Release,
   SupportArticle,
 } from "./types";
+import { buildUniverse } from "./universe";
 
 // FICTIONAL DESIGN DATA. Imported only by the development preview and tests.
 const common: Pick<
@@ -386,7 +387,7 @@ const articles: SupportArticle[] = demoProducts.map((p) => ({
     },
   ],
 }));
-export const demoCatalog: PublisherCatalog = {
+export const legacyDemoCatalog: PublisherCatalog = {
   edition: "demo",
   asOf: "2036-09-20",
   products: demoProducts,
@@ -409,6 +410,8 @@ export const demoCatalog: PublisherCatalog = {
     },
   ],
 };
+
+export const demoCatalog = buildUniverse(legacyDemoCatalog);
 
 /** Growth fixture, never imported by a production content adapter. */
 export function makeGrowthCatalog(

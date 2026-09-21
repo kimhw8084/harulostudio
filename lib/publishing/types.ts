@@ -12,12 +12,7 @@ export type ProductStatus =
 export type ReleaseChannel = "stable" | "preview" | "beta";
 export type Provenance = "verified" | "synthetic";
 export type ProductTone =
-  | "clay"
-  | "olive"
-  | "forest"
-  | "sky"
-  | "ochre"
-  | "plum";
+  "clay" | "olive" | "forest" | "sky" | "ochre" | "plum";
 
 export interface ProductCopy {
   tagline: string;
@@ -53,6 +48,20 @@ export interface PrivacyNotice {
   deletion: string;
   services: { name: string; purpose: string }[];
   history: { date: string; change: string }[];
+  storage?: string;
+}
+export interface ProductEra {
+  date: string;
+  version: string;
+  title: string;
+  summary: string;
+}
+export interface CompanyMilestone {
+  id: string;
+  year: number;
+  title: string;
+  description: string;
+  provenance: Provenance;
 }
 export interface Product extends ProductCopy {
   id: string;
@@ -100,6 +109,14 @@ export interface Product extends ProductCopy {
   archiveReason?: string;
   team?: string[];
   translations?: Record<string, ProductCopy>;
+  architecture?: string[];
+  supportState?: "active" | "security-only" | "read-only";
+  history?: ProductEra[];
+  relatedProductIds?: string[];
+  successorId?: string;
+  migration?: string;
+  specimen?:
+    "clipboard" | "transfer" | "diff" | "capture" | "backup" | "reading";
 }
 export interface Release {
   id: string;
@@ -126,10 +143,7 @@ export interface SupportArticle {
   slug: string;
   title: string;
   category:
-    | "getting-started"
-    | "troubleshooting"
-    | "accessibility"
-    | "reference";
+    "getting-started" | "troubleshooting" | "accessibility" | "reference";
   updatedAt: string;
   provenance: Provenance;
   sections: { heading: string; paragraphs: string[] }[];
@@ -152,5 +166,6 @@ export interface PublisherCatalog {
   releases: Release[];
   supportArticles: SupportArticle[];
   pressItems: PressItem[];
+  milestones?: CompanyMilestone[];
 }
 export type Query = Record<string, string | string[] | undefined>;

@@ -13,8 +13,8 @@ test("touch navigation, theme and working Software Origin", async ({
   });
   const page = await context.newPage();
   await page.goto(process.env.HARULO_TEST_URL || "http://127.0.0.1:8791");
-  await page.getByRole("button", { name: "Low-light mode" }).tap();
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "evening");
+  await page.getByRole("button", { name: "Dark mode" }).tap();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.getByRole("button", { name: "Open a little space" }).tap();
   await page.getByRole("button", { name: "Start minute" }).tap();
   await expect(page.getByRole("button", { name: "Pause timer" })).toBeVisible();

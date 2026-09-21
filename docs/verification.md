@@ -1,4 +1,26 @@
-# Verification — Permanent Harulo identity, 2026-09-20
+# Verification — Cobalt Ember publisher world, 2026-09-20
+
+Candidate: permanent Cobalt Ember light/dark, unchanged High Tension master, four-channel scenes, three adaptive Canvas/SVG environments, expanded publisher history and official engineering lab.
+
+- Final Sites Worker build and TypeScript pass. Authored TS/TSX ESLint has zero errors and one existing native-image recommendation. No runtime dependency was added.
+- Full development regression: **92 passed / 12 explicitly skipped**, Chromium and WebKit. After the final product-frame correction, all **24 affected mature-world checks** passed again. Final compiled-production regression: **53 passed / 51 explicitly skipped**, with no failures or retries. Counts include data checks repeated per browser, not unique journeys.
+- Eleven deterministic Chromium/macOS visual baselines pass: light/dark desktop and mobile home, product, product instrument close-up, releases, archive, support, reduced-motion chronology and release river. These are stable compositions, not arbitrary animation frames. Other operating systems need reviewed renderer-specific baselines.
+- Exact resting geometry and all twelve inherited four-piece transformations retain their coordinate/continuity tests. Brand structure is Cobalt, signal is Ember; monochrome is explicit. Old saved daylight/evening themes migrate to light/dark. Semantic text pairs meet the tested 4.5:1 threshold; representative rendered light/dark contexts pass tagged Axe A/AA scans.
+- The synthetic relational universe validates: **12 products, 181 releases, 96 support records, 24 announcements and 11 milestones**. Successors, prior versions, requirements and provenance remain linked. The separate 20-product/240-release growth fixture and archived identity research still pass.
+- Chrono Lens selection, reload persistence and clear-local-memory work. Archive → product → migration support and release selection → release detail remain native destinations. JSON comparison responds to valid/invalid input; X-ray states explain transient local storage accurately. GET filters, no-JS navigation, native disclosures, mobile dialog focus/Escape/return, touch, reduced motion, global pause, forced colors, denied storage and missing fonts retain coverage.
+- New routes are checked at 390px and 1440px in both themes and engines, including privacy, history, archive, press and support. Existing 320px, landscape, enlarged text and spacing stress tests pass. Automated accessibility is not certification.
+- All three environments settle to an idle state and retain their static vector fallback. Canvas denial leaves the hero instrument usable. No perpetual background renderer, WebGL stack or raster hero was added. Physical device power consumption is not measured.
+- Production returns 404 for the official lab, archived experiments, mature history/archive/press/privacy routes and fictional public product/history routes. The real history/archive shells return honest empty states. Live content, metadata and sitemap do not advertise fictional products.
+
+**Local performance observation:** compiled Worker, Chromium at 390px/DPR1, cache disabled, 150ms latency, 750 kbit/s download and 4× CPU throttle. FCP and recorded LCP: **2,124ms**. Encoded script and module-preload bodies: **159,984 bytes**, below the 200,000-byte test ceiling. Subresource transfer: **261,060 bytes**, excluding HTML. These are single-run local observations, not field Core Web Vitals or physical-phone guarantees.
+
+Visual inspection caught an oversized radius clipping the product inspection tabs; the interactive frame now uses the bounded window radius. A hit-target assertion and dedicated close-up baseline protect it. Diagnostic runs also exposed stale local Worker asset references after rebuilding with the preview server running; restarting the server against the final build resolved those 404s. Interrupted and failed diagnostic runs are not counted as passing evidence.
+
+Limits: the optical, membrane and temporal materials are deliberately lightweight CSS/SVG/Canvas approximations, not physical fluid/refraction simulations. The publication atlas is finite and keeps conventional navigation. Native screen-reader speech, physical phones, Korean IME and field traffic remain unverified. Human aesthetic review is still necessary. The deployment audience remains owner-private; DNS and public-domain launch are separate.
+
+---
+
+# Historical verification — Permanent Harulo identity, 2026-09-20
 
 Candidate: the approved 06 · High Tension master, four-piece motion system, Software Origin hero, publication presentation, mobile portal and official identity laboratory. The publishing records and live/demo boundaries are retained.
 

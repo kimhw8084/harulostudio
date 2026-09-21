@@ -8,7 +8,15 @@ import {
   ReleaseView,
   SupportView,
   SupportArticleView,
+  ProductPrivacyView,
 } from "@/components/publishing-views";
+import {
+  HistoryView,
+  ArchiveView,
+  ProductHistoryView,
+  NewsView,
+  NewsArticleView,
+} from "@/components/universe-views";
 import { productBySlug, productReleases } from "@/lib/publishing/catalog";
 import type { Query } from "@/lib/publishing/types";
 
@@ -29,9 +37,8 @@ export default async function Preview({
 }) {
   // A production request must terminate before importing any fictional content.
   if (process.env.NODE_ENV !== "development") notFound();
-  const { demoCatalog, makeGrowthCatalog } = await import(
-    "@/lib/publishing/fixtures"
-  );
+  const { demoCatalog, makeGrowthCatalog } =
+    await import("@/lib/publishing/fixtures");
   const segments = (await params).path || [];
   const query = await searchParams;
   const growth = segments[0] === "growth";
@@ -46,6 +53,47 @@ export default async function Preview({
     const product = productBySlug(catalog, path[1]);
     if (!product) notFound();
     view = <ProductView catalog={catalog} product={product} prefix={prefix} />;
+  } else if (
+    path[0] === "software" &&
+    path.length === 3 &&
+    ["privacy", "history"].includes(path[2])
+  ) {
+    const product = productBySlug(catalog, path[1]);
+    if (!product) notFound();
+    view =
+      path[2] === "privacy" ? (
+        <ProductPrivacyView product={product} />
+      ) : (
+        <ProductHistoryView
+          product={product}
+          catalog={catalog}
+          prefix={prefix}
+        />
+      );
+  } else if (path[0] === "archive" && path.length === 1)
+    view = <ArchiveView catalog={catalog} prefix={prefix} />;
+  else if (path[0] === "archive" && path.length === 2) {
+    const product = productBySlug(catalog, path[1]);
+    if (
+      !product ||
+      !["archived", "discontinued", "maintenance"].includes(product.status)
+    )
+      notFound();
+    view = <ProductView catalog={catalog} product={product} prefix={prefix} />;
+  } else if (["history", "studio"].includes(path[0]) && path.length === 1)
+    view = (
+      <HistoryView
+        catalog={catalog}
+        prefix={prefix}
+        studio={path[0] === "studio"}
+      />
+    );
+  else if (path[0] === "press" && path.length === 1)
+    view = <NewsView catalog={catalog} prefix={prefix} query={query} />;
+  else if (path[0] === "press" && path.length === 2) {
+    const item = catalog.pressItems.find((i) => i.slug === path[1]);
+    if (!item) notFound();
+    view = <NewsArticleView item={item} catalog={catalog} prefix={prefix} />;
   } else if (path[0] === "releases" && path.length === 1)
     view = <ReleasesView catalog={catalog} query={query} prefix={prefix} />;
   else if (path[0] === "releases" && path.length === 3) {
@@ -63,11 +111,18 @@ export default async function Preview({
       />
     );
   } else if (path[0] === "support" && path.length === 1)
-    view = <SupportView catalog={catalog} prefix={prefix} />;
+    view = <SupportView catalog={catalog} prefix={prefix} query={query} />;
   else if (path[0] === "support" && path.length === 2) {
     const product = productBySlug(catalog, path[1]);
     if (!product) notFound();
-    view = <SupportView catalog={catalog} product={product} prefix={prefix} />;
+    view = (
+      <SupportView
+        catalog={catalog}
+        product={product}
+        prefix={prefix}
+        query={query}
+      />
+    );
   } else if (path[0] === "support" && path.length === 3) {
     const product = productBySlug(catalog, path[1]);
     const article =
@@ -94,6 +149,10 @@ export default async function Preview({
             <Link href={`${prefix}/software`}>Software</Link>
             <Link href={`${prefix}/releases`}>Releases</Link>
             <Link href={`${prefix}/support`}>Support</Link>
+            <Link href={`${prefix}/history`}>History</Link>
+            <Link href={`${prefix}/archive`}>Archive</Link>
+            <Link href={`${prefix}/press`}>Press</Link>
+            <Link href={`${prefix}/studio`}>Studio</Link>
             <Link href="/preview/2036/growth/software">20-product test</Link>
             <Link href="/preview/identity-lab">Identity Lab</Link>
             <Link href="/">Current Harulo</Link>

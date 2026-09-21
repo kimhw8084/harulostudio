@@ -1,4 +1,4 @@
-import { demoCatalog } from "@/lib/publishing/fixtures";
+import { legacyDemoCatalog as demoCatalog } from "@/lib/publishing/fixtures";
 import type {
   Product,
   PublisherCatalog,

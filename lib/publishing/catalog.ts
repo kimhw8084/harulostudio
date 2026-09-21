@@ -91,6 +91,8 @@ export function filterReleases(catalog: PublisherCatalog, query: Query) {
       (!queryValue(query, "year") ||
         r.publishedAt.startsWith(queryValue(query, "year"))) &&
       (!queryValue(query, "type") || r.kind === queryValue(query, "type")) &&
+      (!queryValue(query, "channel") ||
+        r.channel === queryValue(query, "channel")) &&
       (!queryValue(query, "platform") ||
         r.platforms.includes(
           queryValue(query, "platform") as Release["platforms"][number],
@@ -138,6 +140,7 @@ export function validateCatalog(catalog: PublisherCatalog) {
     releases: catalog.releases,
     support: catalog.supportArticles,
     press: catalog.pressItems,
+    milestones: catalog.milestones ?? [],
   })) {
     const ids = new Set<string>();
     for (const record of records) {
@@ -171,5 +174,14 @@ export function validateCatalog(catalog: PublisherCatalog) {
   }
   for (const a of catalog.supportArticles)
     if (!ids.has(a.productId)) errors.push(`Unknown support product: ${a.id}`);
+  for (const p of catalog.products) {
+    if (p.successorId && !ids.has(p.successorId))
+      errors.push(`Unknown successor: ${p.id}`);
+    for (const id of p.relatedProductIds ?? [])
+      if (!ids.has(id)) errors.push(`Unknown related product: ${p.id}/${id}`);
+  }
+  for (const item of catalog.pressItems)
+    if (item.productId && !ids.has(item.productId))
+      errors.push(`Unknown press product: ${item.id}`);
   return errors;
 }

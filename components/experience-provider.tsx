@@ -8,15 +8,17 @@ import {
   useRef,
   useState,
 } from "react";
-import { Moon, Pause, Play, Sun } from "lucide-react";
+import { Pause, Play } from "lucide-react";
+import { HaruloMark } from "@/components/brand/harulo-mark";
+import { migrateTheme, type Theme } from "@/lib/brand/themes";
 import { Button } from "@/components/ui/button";
 
 type Preferences = {
   ready: boolean;
-  evening: boolean;
+  theme: Theme;
   paused: boolean;
   reduced: boolean;
-  setEvening: (v: boolean) => void;
+  setTheme: (v: Theme) => void;
   setPaused: (v: boolean) => void;
 };
 const Context = createContext<Preferences | null>(null);
@@ -46,7 +48,7 @@ export function ExperienceProvider({
   children: React.ReactNode;
 }) {
   const [ready, setReady] = useState(false);
-  const [evening, setEvening] = useState(false);
+  const [theme, setTheme] = useState<Theme>("light");
   const [paused, setPaused] = useState(false);
   const [reduced, setReduced] = useState(false);
   const manualTheme = useRef<string | null>(null);
@@ -54,17 +56,19 @@ export function ExperienceProvider({
   useEffect(() => {
     const motion = matchMedia("(prefers-reduced-motion: reduce)");
     const scheme = matchMedia("(prefers-color-scheme: dark)");
-    manualTheme.current = read("harulo-theme");
+    manualTheme.current = migrateTheme(read("harulo-theme"));
     const syncTheme = () =>
-      setEvening(
+      setTheme(
         manualTheme.current
-          ? manualTheme.current === "evening"
-          : scheme.matches,
+          ? (manualTheme.current as Theme)
+          : scheme.matches
+            ? "dark"
+            : "light",
       );
     const syncMotion = () => setReduced(motion.matches);
     const syncStorage = (e: StorageEvent) => {
       if (e.key === "harulo-theme" || e.key === null) {
-        manualTheme.current = read("harulo-theme");
+        manualTheme.current = migrateTheme(read("harulo-theme"));
         syncTheme();
       }
       if (e.key === "harulo-motion" || e.key === null)
@@ -92,22 +96,22 @@ export function ExperienceProvider({
   /* eslint-enable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (!ready) return;
-    document.documentElement.dataset.theme = evening ? "evening" : "daylight";
+    document.documentElement.dataset.theme = theme;
     document.documentElement.dataset.motion =
       paused || reduced ? "paused" : "running";
     document.documentElement.dataset.enhanced = "true";
-  }, [ready, evening, paused, reduced]);
+  }, [ready, theme, paused, reduced]);
   return (
     <Context.Provider
       value={{
         ready,
-        evening,
+        theme,
         paused,
         reduced,
-        setEvening(v) {
-          manualTheme.current = v ? "evening" : "daylight";
-          write("harulo-theme", v ? "evening" : "daylight");
-          setEvening(v);
+        setTheme(v) {
+          manualTheme.current = v;
+          write("harulo-theme", v);
+          setTheme(v);
         },
         setPaused(v) {
           write("harulo-motion", v ? "paused" : "running");
@@ -120,19 +124,19 @@ export function ExperienceProvider({
   );
 }
 export function ThemeControl() {
-  const { ready, evening, setEvening } = useExperience();
+  const { ready, theme, setTheme } = useExperience();
   return (
     <Button
       className="theme-button control-button"
       variant="ghost"
       type="button"
       disabled={!ready}
-      aria-label="Low-light mode"
-      aria-pressed={evening}
-      onClick={() => setEvening(!evening)}
+      aria-label="Dark mode"
+      aria-pressed={theme === "dark"}
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
-      {evening ? <Moon aria-hidden="true" /> : <Sun aria-hidden="true" />}
-      <span>Low-light mode</span>
+      <HaruloMark key={theme} className="theme-orbit" />
+      <span>{theme === "dark" ? "Dark" : "Light"}</span>
     </Button>
   );
 }

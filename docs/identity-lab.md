@@ -1,3 +1,7 @@
+# Official Cobalt Ember engineering lab
+
+The permanent mark and color decision are installed. See [Cobalt Ember system](cobalt-ember-system.md) for the current 24-system production index, environment controls and fallback strategy. The prior identity-selection experience is retained only under `/preview/identity-lab/archive`.
+
 # Official Harulo identity system
 
 Development route: `/preview/identity-lab`. Production returns 404 before loading the lab. The mark is approved; the root lab is no longer a logo-selection interface.
@@ -13,7 +17,7 @@ Development route: `/preview/identity-lab`. Production returns 404 before loadin
 
 ## Inspection surfaces
 
-Master geometry and overlay; black/white and reverse; horizontal/vertical wordmarks; exact-size favicon tests; six derived fictional application glyphs; twelve motion studies; shared catalog/product/release/support/privacy/press/lifecycle/empty/mobile/loading/page-transition views; master colors plus retained ten-palette research.
+Master geometry and overlay; black/white and reverse; horizontal/vertical wordmarks; exact-size favicon tests; six derived fictional application glyphs; twelve motion studies; shared catalog/product/release/support/privacy/press/lifecycle/empty/mobile/loading/page-transition views; permanent Cobalt Ember light/dark tokens (ten-palette research is archived).
 
 The twelve transformations are open, edition, timeline, navigation, portal, loading, stamp, family, screenshot, version, closure and mobile. Every sequence begins and ends with the exact canonical mark. Direct Master / Destination / Exact return controls remain available without dramatic motion. System reduced motion wins. The global pause remains accessible in the lab footer.
 

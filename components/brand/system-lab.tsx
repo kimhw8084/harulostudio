@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -9,7 +9,11 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { HaruloMark, HaruloLockup } from "./harulo-mark";
 import { ProductGlyph } from "./product-glyph";
-import { MotionControl, useExperience } from "@/components/experience-provider";
+import {
+  MotionControl,
+  ThemeControl,
+  useExperience,
+} from "@/components/experience-provider";
 import { useBrandMotion } from "./use-brand-motion";
 import { HARULO, proportions } from "@/lib/brand/geometry";
 import Link from "@/components/site-link";
@@ -20,11 +24,14 @@ import {
   motion,
   type StudyId,
 } from "@/lib/brand/motion";
+import { themes, swatches } from "@/lib/brand/themes";
 import {
-  palettes,
-  contrastChecks,
-  paletteStyle,
-} from "@/lib/identity/palettes";
+  productionSystems,
+  type SceneMaterial,
+  type SceneQuality,
+} from "@/lib/brand/scene";
+import { BrandScene } from "./scene/brand-scene";
+import { HaruloEnvironment } from "./environments/harulo-environment";
 import "./system-lab.css";
 
 const sizes = [16, 20, 24, 32, 48, 64, 128, 256, 512];
@@ -415,11 +422,11 @@ function MasterSpecimen() {
       <div className="master-lockups">
         <section>
           <p className="eyebrow">MONOCHROME / HORIZONTAL</p>
-          <HaruloLockup />
+          <HaruloLockup monochrome />
         </section>
         <section className="inverse">
           <p className="eyebrow">REVERSED / VERTICAL</p>
-          <HaruloLockup vertical />
+          <HaruloLockup vertical monochrome />
         </section>
       </div>
       <section className="master-family">
@@ -453,56 +460,13 @@ export function OfficialLab({
   context: string;
   initialWebsite?: boolean;
 }) {
-  const { ready } = useExperience();
-  const [restored, setRestored] = useState(false);
-  const [palette, setPalette] = useState("master");
+  const { ready, theme } = useExperience();
   const [tab, setTab] = useState(initialWebsite ? "applications" : "master");
-  useEffect(() => {
-    let saved = "master";
-    try {
-      const value = localStorage.getItem("harulo-master-lab-palette");
-      if (value && (value === "master" || palettes.some((p) => p.id === value)))
-        saved = value;
-    } catch {
-      /* Review storage is optional. */
-    }
-    const frame = requestAnimationFrame(() => {
-      setPalette(saved);
-      setRestored(true);
-    });
-    return () => cancelAnimationFrame(frame);
-  }, []);
-  const selected = palettes.find((p) => p.id === palette);
-  const choosePalette = (id: string) => {
-    setPalette(id);
-    try {
-      localStorage.setItem("harulo-master-lab-palette", id);
-    } catch {
-      /* Review storage is optional. */
-    }
-  };
-  const style = selected
-    ? ({
-        ...paletteStyle(selected),
-        "--background": selected.tokens.background,
-        "--foreground": selected.tokens.foreground,
-        "--card": selected.tokens.surface,
-        "--card-foreground": selected.tokens["surface-foreground"],
-        "--primary": selected.tokens.primary,
-        "--primary-foreground": selected.tokens["primary-foreground"],
-        "--muted": selected.tokens.elevated,
-        "--muted-foreground": selected.tokens.muted,
-        "--border": selected.tokens.border,
-        "--ring": selected.tokens.focus,
-        "--accent": selected.tokens.metadata,
-        "--stage": selected.tokens.stage,
-        "--stage-ink": selected.tokens["stage-foreground"],
-        "--hero-bg": selected.tokens.stage,
-        "--signal": selected.tokens.mark,
-      } as CSSProperties)
-    : undefined;
+  const [material, setMaterial] = useState<SceneMaterial>("flow");
+  const [quality, setQuality] = useState<SceneQuality>("balanced");
+  const [width, setWidth] = useState("100%");
   return (
-    <div className="official-lab" style={style} data-palette={palette}>
+    <div className="official-lab" data-palette="cobalt-ember">
       <header className="master-lab-header">
         <Link
           href="/preview/identity-lab"
@@ -511,60 +475,57 @@ export function OfficialLab({
           <HaruloLockup />
         </Link>
         <p className="metadata">
-          OFFICIAL IDENTITY SYSTEM
-          <br />
-          DEVELOPMENT ONLY / NOT INDEXED
+          OFFICIAL BRAND ENGINEERING / DEVELOPMENT ONLY
         </p>
+        <ThemeControl />
         <Link href="/" className="text-link">
           Public site ↗
         </Link>
       </header>
-      <section
-        className="master-lab-intro"
-        aria-label="Identity system overview"
-      >
+      <section className="master-lab-intro">
         <div>
-          <p className="eyebrow">THE PERMANENT IDENTITY / 하루로</p>
+          <p className="eyebrow">COBALT IS STRUCTURE. EMBER IS SIGNAL.</p>
           <h1>HARULO MASTER MARK</h1>
-          <p>One immutable symbol. An expansive living system.</p>
+          <p>
+            One immutable symbol. Four material channels. One permanent
+            identity.
+          </p>
         </div>
-        <label>
-          Color environment
-          <NativeSelect
-            disabled={!ready || !restored}
-            aria-label="Color environment"
-            value={palette}
-            onChange={(e) => choosePalette(e.target.value)}
-          >
-            <NativeSelectOption value="master">
-              Master / Carbon + Daylight
-            </NativeSelectOption>
-            {palettes.map((p) => (
-              <NativeSelectOption key={p.id} value={p.id}>
-                {p.id} / {p.name}
-              </NativeSelectOption>
-            ))}
-          </NativeSelect>
-        </label>
+        <span className="metadata">{theme.toUpperCase()} / COBALT EMBER</span>
       </section>
       <Tabs value={tab} onValueChange={setTab} className="master-tabs">
         <TabsList aria-label="Identity system views">
-          <TabsTrigger disabled={!ready || !restored} value="master">
+          <TabsTrigger disabled={!ready} value="master">
             Master & geometry
           </TabsTrigger>
-          <TabsTrigger disabled={!ready || !restored} value="motion">
+          <TabsTrigger disabled={!ready} value="motion">
             Motion / 12 studies
           </TabsTrigger>
-          <TabsTrigger disabled={!ready || !restored} value="applications">
+          <TabsTrigger disabled={!ready} value="systems">
+            24 production systems
+          </TabsTrigger>
+          <TabsTrigger disabled={!ready} value="environments">
+            Living environments
+          </TabsTrigger>
+          <TabsTrigger disabled={!ready} value="applications">
             In the website
           </TabsTrigger>
-          <TabsTrigger disabled={!ready || !restored} value="color">
+          <TabsTrigger disabled={!ready} value="color">
             Color & tokens
           </TabsTrigger>
         </TabsList>
         <TabsContent value="master">
           <main id="main" tabIndex={-1}>
             <MasterSpecimen />
+            <section className="master-colors">
+              <h2>Space is part of the mark.</h2>
+              <p>
+                Keep the complete 100 × 100 artboard. Minimum icon artboard: 16
+                px; recommended navigation artboard: 48 px. Use 12 px of clear
+                space outside the artboard beside a lockup. Never crop to the
+                visible ring or stretch the symbol.
+              </p>
+            </section>
           </main>
         </TabsContent>
         <TabsContent value="motion">
@@ -572,36 +533,133 @@ export function OfficialLab({
             <MasterMotionPlayer />
           </main>
         </TabsContent>
+        <TabsContent value="systems">
+          <main id="main" tabIndex={-1}>
+            <div className="system-registry">
+              {productionSystems.map(([id, name, description, place]) => (
+                <article key={id}>
+                  <span className="metadata">
+                    SYSTEM {id} / {place.toUpperCase()}
+                  </span>
+                  <h3>{name}</h3>
+                  <p>{description}</p>
+                  <Link
+                    className="text-link"
+                    href={
+                      place === "history"
+                        ? "/preview/2036/history"
+                        : place === "releases"
+                          ? "/preview/2036/releases?product=sori"
+                          : place === "product"
+                            ? "/preview/2036/software/gyeol"
+                            : place === "catalog"
+                              ? "/preview/2036/software"
+                              : "/preview/2036"
+                    }
+                  >
+                    Open in the publisher ↗
+                  </Link>
+                </article>
+              ))}
+            </div>
+          </main>
+        </TabsContent>
+        <TabsContent value="environments">
+          <main id="main" tabIndex={-1}>
+            <div className="engineering-controls">
+              <label>
+                Environment
+                <NativeSelect
+                  aria-label="Environment"
+                  value={material}
+                  onChange={(e) => setMaterial(e.target.value as SceneMaterial)}
+                >
+                  {(["flow", "chrono", "membrane"] as const).map((v) => (
+                    <NativeSelectOption key={v} value={v}>
+                      {v}
+                    </NativeSelectOption>
+                  ))}
+                </NativeSelect>
+              </label>
+              <label>
+                Rendering tier
+                <NativeSelect
+                  aria-label="Rendering tier"
+                  value={quality}
+                  onChange={(e) => setQuality(e.target.value as SceneQuality)}
+                >
+                  {(["full", "balanced", "reduced", "static"] as const).map(
+                    (v) => (
+                      <NativeSelectOption key={v} value={v}>
+                        {v}
+                      </NativeSelectOption>
+                    ),
+                  )}
+                </NativeSelect>
+              </label>
+              <label>
+                Review width
+                <NativeSelect
+                  aria-label="Review width"
+                  value={width}
+                  onChange={(e) => setWidth(e.target.value)}
+                >
+                  {["100%", "768px", "390px", "320px"].map((v) => (
+                    <NativeSelectOption key={v} value={v}>
+                      {v}
+                    </NativeSelectOption>
+                  ))}
+                </NativeSelect>
+              </label>
+              <MotionControl />
+            </div>
+            <div style={{ width, maxWidth: "100%", margin: "auto" }}>
+              <BrandScene
+                className="environment-review"
+                quality={quality}
+                key={material + quality}
+              >
+                <HaruloEnvironment material={material} />
+                <HaruloMark title="Harulo master in the environment" />
+              </BrandScene>
+            </div>
+            <p className="resource-note">
+              Move a pointer or scroll to energize the field. Drawing settles at
+              rest. Reduced motion, pause and hidden documents override the
+              selected quality.
+            </p>
+          </main>
+        </TabsContent>
         <TabsContent value="applications">
           <div className="master-context-nav">
-            <p className="resource-note">
-              Fictional software and future releases below are demonstration
-              content, not public Harulo claims.
+            <p>
+              Fictional software and future releases. No real availability is
+              claimed.
             </p>
             <nav aria-label="Brand application contexts">
               {[
                 ["home", "Homepage"],
                 ["software", "Catalog"],
                 ["software/sori", "Product"],
-                ["edition", "Edition"],
                 ["releases", "Releases"],
                 ["support", "Support"],
                 ["privacy/sori", "Privacy"],
                 ["press", "Press"],
-                ["lifecycle", "Lifecycle"],
+                ["lifecycle", "Archive"],
                 ["empty", "Empty state"],
                 ["mobile", "Mobile"],
                 ["loading", "Loading"],
                 ["transition", "Transition"],
               ].map(([value, label]) => (
                 <Link
-                  href={`/preview/identity-lab/${value}`}
+                  href={"/preview/identity-lab/" + value}
                   key={value}
                   aria-current={context === value ? "page" : undefined}
                 >
                   {label}
                 </Link>
               ))}
+              <Link href="/preview/2036/history">Decade history</Link>
             </nav>
           </div>
           <div className="master-website">{children}</div>
@@ -609,18 +667,14 @@ export function OfficialLab({
         <TabsContent value="color">
           <main id="main" tabIndex={-1}>
             <section className="master-colors">
-              <h2>Carbon. Daylight. Space.</h2>
+              <h2>Cobalt Ember. Permanent.</h2>
               <p>
-                The mark stands alone in black and white. Color gives its world
-                a temperature.
+                Structure stays Cobalt. The active signal is Ember. Dark mode is
+                art-directed, not inverted. Previous palette research is
+                archived, not a production preference.
               </p>
               <div className="master-color-strip">
-                {[
-                  ["Carbon", "#161b17"],
-                  ["Daylight", "#f0f769"],
-                  ["Open space", "#f7f7ef"],
-                  ["Quiet surface", "#e9eadf"],
-                ].map(([name, color]) => (
+                {Object.entries(swatches).map(([name, color]) => (
                   <figure key={name}>
                     <span style={{ background: color }} />
                     <figcaption>
@@ -631,10 +685,19 @@ export function OfficialLab({
                   </figure>
                 ))}
               </div>
+              <h3>Current semantic tokens</h3>
+              <dl className="motion-token-list">
+                {Object.entries(themes[theme]).map(([name, value]) => (
+                  <div key={name}>
+                    <dt>{name}</dt>
+                    <dd>{value}</dd>
+                  </div>
+                ))}
+              </dl>
               <h3>Motion tokens</h3>
               <dl className="motion-token-list">
                 {Object.entries(motion)
-                  .filter(([, value]) => typeof value === "number")
+                  .filter(([, v]) => typeof v === "number")
                   .map(([name, value]) => (
                     <div key={name}>
                       <dt>{name}</dt>
@@ -642,37 +705,11 @@ export function OfficialLab({
                     </div>
                   ))}
               </dl>
-              <h3>Retained color research</h3>
               <p>
-                These ten environments remain review tools. They never change
-                the master geometry or the public site.
+                Normal text pairs are validated at 4.5:1 or better in the
+                automated brand contract. Ember text uses a calibrated token;
+                the raw Ember swatch is not a body-text color.
               </p>
-              <div className="palette-research">
-                {palettes.map((p) => (
-                  <button
-                    key={p.id}
-                    onClick={() => choosePalette(p.id)}
-                    aria-pressed={palette === p.id}
-                  >
-                    <span className="palette-color-row">
-                      {p.colors.map((color) => (
-                        <i key={color} style={{ background: color }} />
-                      ))}
-                    </span>
-                    <strong>
-                      {p.id} / {p.name}
-                    </strong>
-                    <span>{p.character}</span>
-                    <small>
-                      Minimum tested text contrast:{" "}
-                      {Math.min(
-                        ...contrastChecks(p).map((check) => check.ratio),
-                      ).toFixed(2)}
-                      :1
-                    </small>
-                  </button>
-                ))}
-              </div>
             </section>
           </main>
         </TabsContent>
@@ -680,7 +717,7 @@ export function OfficialLab({
       <footer className="master-lab-footer">
         <HaruloMark />
         <p>
-          Every resting state returns to the master.
+          Exact at rest. Expansive in motion.
           <br />
           <span className="metadata">
             RING · SATELLITE · PRIMARY TIER · SECONDARY TIER

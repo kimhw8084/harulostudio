@@ -20,7 +20,7 @@ export const proportions = Object.freeze({
 });
 
 /** Asset files are generated from this same source, never redrawn. */
-export function markSvg(color = "currentColor") {
+export function markSvg(color = "currentColor", signal = color) {
   const { ring: r, satellite: s, primary: p, secondary: q } = HARULO;
-  return `<g fill="${color}"><circle cx="${r.cx}" cy="${r.cy}" r="${r.r}" fill="none" stroke="${color}" stroke-width="${r.strokeWidth}"/><circle cx="${s.cx}" cy="${s.cy}" r="${s.r}"/><rect x="${p.x}" y="${p.y}" width="${p.width}" height="${p.height}" rx="${p.rx}"/><rect x="${q.x}" y="${q.y}" width="${q.width}" height="${q.height}" rx="${q.rx}"/></g>`;
+  return `<g fill="${color}"><circle cx="${r.cx}" cy="${r.cy}" r="${r.r}" fill="none" stroke="${color}" stroke-width="${r.strokeWidth}"/><circle cx="${s.cx}" cy="${s.cy}" r="${s.r}" fill="${signal}"/><rect x="${p.x}" y="${p.y}" width="${p.width}" height="${p.height}" rx="${p.rx}"/><rect x="${q.x}" y="${q.y}" width="${q.width}" height="${q.height}" rx="${q.rx}"/></g>`;
 }

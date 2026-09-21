@@ -3,7 +3,7 @@
 The permanent identity is code-native. No raster artwork, canvas, video or WebGL is loaded by the homepage.
 
 - **Master mark:** owner-supplied canonical 06 · High Tension geometry, rooted in ㅎ. One ring, one satellite, two rounded tiers. `lib/brand/geometry.ts` is authoritative; `components/brand/harulo-mark.tsx` renders it everywhere.
-- **Favicon / press assets:** generated, not redrawn. `npm run brand:assets` produces the exact SVG geometry, monochrome/reversed/daylight files, horizontal and vertical lockups, and PNGs at 16/20/24/32/48/64/128/256/512. No optical small-size alternative exists. Lockup SVGs embed the existing licensed Syne WOFF2 for portable typography.
+- **Favicon / press assets:** generated, not redrawn. `npm run brand:assets` produces the exact SVG geometry, monochrome/reversed/Cobalt Ember files, horizontal and vertical lockups, and PNGs at 16/20/24/32/48/64/128/256/512. No optical small-size alternative exists. Lockup SVGs embed the existing licensed Syne WOFF2 for portable typography.
 - **Product glyphs:** repo-native application identifiers derived from circular controls, satellite state and tier relationships. They are not alternate publisher marks. Fictional application families remain in preview content.
 - **Software Origin:** four SVG primitives transform into an actual local one-minute instrument. It is explicitly a studio experiment, not an announced product.
 - **Concept applications:** working HTML controls, clearly fictional and development-only. No generated screenshot is represented as shipping software.

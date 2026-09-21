@@ -8,11 +8,13 @@ The preserved engineering includes typed publishing records, lifecycle visibilit
 
 ## A day becomes a useful space
 
-Carbon, luminous daylight yellow and an open neutral field set the environment. Manrope moves from large human-scale statements to readable interface copy. Syne is concentrated in the wordmark. The site leads with “Independent software publisher” and what Harulo actually does.
+Cobalt Ember is now permanent: Cobalt provides structure, Ember carries active signal, and a cool paper or art-directed night field provides contrast. The former yellow/olive palette is retired. Manrope moves from large human-scale statements to readable interface copy. Syne is concentrated in the wordmark. The site leads with “Independent software publisher” and what Harulo actually does.
 
 The hero is a functional origin story. Its four persistent shapes open into the one-minute instrument: the ring becomes the viewport, the satellite its registration point, and the tiers become publication rails. On an unhurried, visible visit it opens once; interaction takes priority. There is no splash, waiting screen, automatic timer start or claimed product launch.
 
 The .54 relationship between the two tiers repeats in publication baselines, links and page hierarchy. Products use related application glyphs, never substitute master logos. Native edition disclosures open into usable, clearly fictional interfaces in the future preview. Actual product records will use actual screenshots.
+
+The higher-level scene channels, mature publication universe, three ambient materials and 24-system application index are documented in `cobalt-ember-system.md`.
 
 ## Rhythm
 
@@ -35,6 +37,6 @@ The default mark remains strong with motion disabled. Reduced motion, a manual g
 
 ## Deliberate exclusions
 
-No alternate master marks, rays, shutter motifs, forced scrolling, atmospheric video, background particles, perpetual pointer following, unannounced software claims or added business infrastructure. Earlier candidates remain inspectable only in the development archive.
+No alternate master marks, rays, shutter motifs, forced scrolling, atmospheric video, background particles, perpetual pointer following, unannounced software claims or added account/database infrastructure. Earlier candidates remain inspectable only in the development archive.
 
 The public launch and connection of harulostudio.com remain separate from the existing owner-private review deployment. Native assistive technology and physical-device performance need human verification; automated testing is not certification.

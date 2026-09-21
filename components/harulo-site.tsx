@@ -10,7 +10,11 @@ import type { PublisherCatalog } from "@/lib/publishing/types";
 import { SoftwareOrigin } from "./brand/software-origin";
 import { CopyEmail } from "./copy-email";
 import { Direction, FoldMark } from "./publisher-mark";
-import { ProductEdition, ReleaseRow } from "./product-edition";
+import { ProductEdition, ReleaseRow, ProductMedia } from "./product-edition";
+import { BrandScene } from "./brand/scene/brand-scene";
+import { HaruloEnvironment } from "./brand/environments/harulo-environment";
+import { ChronoLens, ReleaseRiver } from "./brand/publisher-history";
+import { SoftwareXRay } from "./brand/software-xray";
 
 export function ContactSection() {
   return (
@@ -155,55 +159,57 @@ export function HaruloSite({
   return (
     <main id="main" tabIndex={-1} className="harulo-world">
       {hero ?? (
-        <section className="publisher-hero" aria-labelledby="hero-title">
-          <div className="hero-mast">
-            <p className="publisher-eyebrow eyebrow">{studio.role}</p>
-            <span className="metadata">
-              WE DESIGN. BUILD. PUBLISH. MAINTAIN.
-            </span>
-          </div>
-          <div className="hero-world">
-            <div className="hero-statement">
-              <h1 id="hero-title">
-                <span className="sr-only">Harulo Studio. </span>A little
-                <br />
-                <em>better.</em>
-                <br />
-                Every day.
-              </h1>
-              <p className="hero-korean" lang="ko">
-                조금 더 나은 하루로.
-              </p>
-            </div>
-            <SoftwareOrigin />
-          </div>
-          <div className="hero-bottom">
-            <p className="hero-signature">
-              HARULO
-              <span>
-                STUDIO / <span lang="ko">하루로</span>
+        <BrandScene className="hero-scene" systems="01 02 04 05 13 21 23">
+          <HaruloEnvironment material="flow" />
+          <section className="publisher-hero" aria-labelledby="hero-title">
+            <div className="hero-mast">
+              <p className="publisher-eyebrow eyebrow">{studio.role}</p>
+              <span className="metadata">
+                WE DESIGN. BUILD. PUBLISH. MAINTAIN.
               </span>
-            </p>
-            <div className="hero-introduction">
-              <p className="hero-description">{studio.description}</p>
-              <div className="hero-actions">
-                <Link
-                  className="primary-link"
-                  href={products.length ? `${prefix}/software` : "#software"}
-                >
-                  {products.length
-                    ? "Explore our software"
-                    : "Meet the publisher"}
-                  <Direction />
-                </Link>
-                <a className="quiet-link" href="#contact">
-                  Say hello
-                  <Direction />
-                </a>
+            </div>
+            <div className="hero-world">
+              <div className="hero-statement">
+                <h1 id="hero-title">
+                  <span className="sr-only">Harulo Studio. </span>Software,
+                  <br />
+                  <em>toward</em>
+                  <br />a better day.
+                </h1>
+                <p className="hero-korean" lang="ko">
+                  조금 더 나은 하루로.
+                </p>
+              </div>
+              <SoftwareOrigin />
+            </div>
+            <div className="hero-bottom">
+              <p className="hero-signature">
+                HARULO
+                <span>
+                  STUDIO / <span lang="ko">하루로</span>
+                </span>
+              </p>
+              <div className="hero-introduction">
+                <p className="hero-description">{studio.description}</p>
+                <div className="hero-actions">
+                  <Link
+                    className="primary-link"
+                    href={products.length ? `${prefix}/software` : "#software"}
+                  >
+                    {products.length
+                      ? "Explore our software"
+                      : "Meet the publisher"}
+                    <Direction />
+                  </Link>
+                  <a className="quiet-link" href="#contact">
+                    Say hello
+                    <Direction />
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </BrandScene>
       )}
       <section
         className="software-section"
@@ -301,6 +307,43 @@ export function HaruloSite({
             ))}
           </ul>
         </section>
+      )}
+      {catalog.edition === "demo" && catalog.milestones && (
+        <>
+          <ReleaseRiver
+            releases={productReleases(catalog, products[0]?.id)}
+            products={products}
+            prefix={prefix}
+          />
+          {products.find((p) => p.id === "gyeol") && (
+            <SoftwareXRay product={products.find((p) => p.id === "gyeol")!}>
+              <ProductMedia product={products.find((p) => p.id === "gyeol")!} />
+            </SoftwareXRay>
+          )}
+          <ChronoLens catalog={catalog} prefix={prefix} />
+          <section className="continuity-section">
+            <div>
+              <p className="eyebrow">A PUBLICATION HAS A LIFE AFTER LAUNCH.</p>
+              <h2>
+                Kept useful.
+                <br />
+                Kept accessible.
+              </h2>
+            </div>
+            <div>
+              <p>
+                Some work grows. Some becomes something else. Some reaches its
+                final edition. The record stays readable.
+              </p>
+              <Link className="text-link" href={`${prefix}/archive`}>
+                Visit the permanent archive ↗
+              </Link>
+              <Link className="text-link" href={`${prefix}/support`}>
+                Find your product’s documentation ↗
+              </Link>
+            </div>
+          </section>
+        </>
       )}
       <StudioStory />
       <MakingSection />

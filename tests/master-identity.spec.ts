@@ -81,7 +81,7 @@ test("public logos, generated assets, press and icon sizes share the master", as
   for (const name of [
     "harulo-master.svg",
     "harulo-reversed.svg",
-    "harulo-daylight.svg",
+    "harulo-cobalt-ember.svg",
     "harulo-publisher.svg",
     "harulo-vertical.svg",
   ]) {
@@ -248,21 +248,22 @@ test.describe("official development lab", () => {
     await page.getByRole("button", { name: "03 / Exact return" }).click();
     await exactMark(page.locator(".study-stage .harulo-mark"));
   });
-  test("color research, contexts, reduced-motion and mobile accessibility", async ({
+  test("permanent color, contexts, reduced-motion and mobile accessibility", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 320, height: 860 });
     await page.goto("/preview/identity-lab");
-    await page
-      .getByRole("combobox", { name: "Color environment" })
-      .selectOption("02");
-    await page.reload();
     await expect(
       page.getByRole("combobox", { name: "Color environment" }),
-    ).toHaveValue("02");
-    await page
-      .getByRole("combobox", { name: "Color environment" })
-      .selectOption("master");
+    ).toHaveCount(0);
+    await expect(page.locator(".official-lab")).toHaveAttribute(
+      "data-palette",
+      "cobalt-ember",
+    );
+    await page.getByRole("button", { name: "Dark mode" }).click();
+    await page.reload();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await page.getByRole("button", { name: "Dark mode" }).click();
     for (const tab of [
       "Master & geometry",
       "Motion / 12 studies",

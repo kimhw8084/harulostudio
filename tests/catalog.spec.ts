@@ -58,7 +58,7 @@ test("combined product and release filters produce relevant results", () => {
     filterProducts(demoCatalog.products, { status: "preview" }).map(
       (p) => p.id,
     ),
-  ).toEqual(["morrow"]);
+  ).toEqual(["morrow", "gyeote"]);
   expect(
     filterReleases(demoCatalog, {
       product: "sori",

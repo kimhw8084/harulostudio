@@ -37,7 +37,9 @@ export function SiteHeader() {
         </nav>
         <ThemeControl />
         <MobileNavigation />
-        <span className="navigation-status" role="status" aria-live="polite">Opening next page…</span>
+        <span className="navigation-status" role="status" aria-live="polite">
+          Opening next page…
+        </span>
       </header>
     </>
   );
@@ -52,6 +54,8 @@ export function SiteFooter() {
           <Link href="/releases">Releases</Link>
           <Link href="/support">Support</Link>
           <Link href="/press">Press</Link>
+          <Link href="/archive">Archive</Link>
+          <Link href="/history">History</Link>
           <a href={studio.github}>
             GitHub
             <Direction />

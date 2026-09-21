@@ -38,6 +38,7 @@ export function HaruloMark({
   children,
   style,
   preserveAspectRatio,
+  monochrome = false,
 }: {
   size?: number | string;
   className?: string;
@@ -46,6 +47,7 @@ export function HaruloMark({
   children?: ReactNode;
   style?: CSSProperties;
   preserveAspectRatio?: string;
+  monochrome?: boolean;
 }) {
   return (
     <svg
@@ -54,6 +56,7 @@ export function HaruloMark({
       height={size}
       preserveAspectRatio={preserveAspectRatio}
       className={`harulo-mark ${className}`}
+      data-color={monochrome ? "mono" : "brand"}
       style={style}
       role={title ? "img" : undefined}
       aria-label={title}
@@ -67,10 +70,16 @@ export function HaruloMark({
   );
 }
 
-export function HaruloLockup({ vertical = false }: { vertical?: boolean }) {
+export function HaruloLockup({
+  vertical = false,
+  monochrome = false,
+}: {
+  vertical?: boolean;
+  monochrome?: boolean;
+}) {
   return (
     <span className={`harulo-lockup ${vertical ? "vertical" : ""}`}>
-      <HaruloMark />
+      <HaruloMark monochrome={monochrome} />
       <span>
         HARULO
         <span>

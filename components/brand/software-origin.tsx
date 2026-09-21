@@ -7,9 +7,11 @@ import { useExperience } from "@/components/experience-provider";
 import { HaruloMark } from "./harulo-mark";
 import { useBrandTransition } from "./use-brand-motion";
 import { REST, interpolatePose, studyById } from "@/lib/brand/motion";
+import { useBrandScene } from "./scene/brand-scene";
 
 /** The logo is the interface frame, not an illustration behind an unrelated card. */
 export function SoftwareOrigin() {
+  const scene = useBrandScene();
   const [open, setOpen] = useState(false);
   const [remaining, setRemaining] = useState(60);
   const { ready, paused, reduced } = useExperience();
@@ -62,7 +64,7 @@ export function SoftwareOrigin() {
       style={{ "--opening": amount } as CSSProperties}
     >
       <div className="origin-topline metadata">
-        <span>HARULO / WORKING STUDY 001</span>
+        <span>THE ORIGIN / A WORKING INSTRUMENT</span>
         <span>{open ? "A LITTLE SPACE" : "FOUR PIECES. A POSSIBILITY."}</span>
       </div>
       <div className="origin-canvas">
@@ -101,6 +103,7 @@ export function SoftwareOrigin() {
           aria-expanded={open}
           aria-controls={id}
           onClick={() => {
+            scene?.update({ energy: 1, focus: open ? 0 : 1 });
             touched.current = true;
             setOpen(!open);
           }}

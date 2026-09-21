@@ -6,6 +6,10 @@ export const metadata = pageMetadata(
   "Find help with Harulo software, or contact the studio.",
   "/support",
 );
-export default function Support() {
-  return <SupportView catalog={liveCatalog} />;
+export default async function Support({
+  searchParams,
+}: {
+  searchParams: Promise<import("@/lib/publishing/types").Query>;
+}) {
+  return <SupportView catalog={liveCatalog} query={await searchParams} />;
 }
