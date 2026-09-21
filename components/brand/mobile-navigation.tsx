@@ -25,7 +25,7 @@ export function MobileNavigation() {
             Independent software. A little better, every day.
           </DialogDescription>
           <nav aria-label="Mobile navigation">
-            {["Software", "Releases", "Studio", "Support", "Press"].map(
+            {["Software", "Studio", "Press", "Privacy"].map(
               (label, i) => (
                 <a href={`/${label.toLowerCase()}`} key={label}>
                   <span className="metadata">0{i + 1}</span>

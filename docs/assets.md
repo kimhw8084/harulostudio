@@ -1,12 +1,12 @@
 # Harulo — asset provenance
 
-The permanent identity is code-native. No raster artwork, canvas, video or WebGL is loaded by the homepage.
+The permanent identity is code-native. No raster artwork, canvas, video or WebGL
+is required for the public homepage.
 
 - **Master mark:** owner-supplied canonical 06 · High Tension geometry, rooted in ㅎ. One ring, one satellite, two rounded tiers. `lib/brand/geometry.ts` is authoritative; `components/brand/harulo-mark.tsx` renders it everywhere.
-- **Favicon / press assets:** generated, not redrawn. `npm run brand:assets` produces the exact SVG geometry, monochrome/reversed/Cobalt Ember files, horizontal and vertical lockups, and PNGs at 16/20/24/32/48/64/128/256/512. No optical small-size alternative exists. Lockup SVGs embed the existing licensed Syne WOFF2 for portable typography.
-- **Product glyphs:** repo-native application identifiers derived from circular controls, satellite state and tier relationships. They are not alternate publisher marks. Fictional application families remain in preview content.
-- **Software Origin:** four SVG primitives transform into an actual local one-minute instrument. It is explicitly a studio experiment, not an announced product.
-- **Concept applications:** working HTML controls, clearly fictional and development-only. No generated screenshot is represented as shipping software.
+- **Social and app assets:** `public/og.svg` and `public/manifest.webmanifest` use the same exact Cobalt Ember mark.
+- **Product glyphs:** repo-native application identifiers derived from circular controls, satellite state and tier relationships. They are not alternate publisher marks.
+- **Concept applications:** working HTML controls, clearly labeled as showcase concepts and not available products. No generated screenshot is represented as shipping software.
 - **UI icons:** the existing lucide-react dependency.
 
 ## Fonts
@@ -19,6 +19,5 @@ Self-hosted variable WOFF2 fonts from Google Fonts, with SIL Open Font License f
 
 ## Historical material
 
-The former Dayfold component and its public visual rules have been retired; Git preserves them. The previous identity candidates remain under the development archive. Older Instrument Serif / DM Sans fonts and daylight photographs remain for provenance, but current public components do not request them.
-
-The historical daylight artwork was generated for this project: terracotta disc, pale stone, olive branch, cream limewash and natural morning light. It is not evidence of a real place or product. No new bitmap artwork was needed for the permanent vector identity.
+Previous artwork and identity experiments are not part of the public experience.
+Git history preserves them; production components do not request them.

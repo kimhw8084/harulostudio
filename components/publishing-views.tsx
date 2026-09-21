@@ -27,7 +27,6 @@ import {
   releasePath,
 } from "@/lib/publishing/catalog";
 import { Direction, PublisherMark, FoldMark } from "./publisher-mark";
-import { ReleaseRiver } from "./brand/publisher-history";
 import { SoftwareXRay } from "./brand/software-xray";
 import {
   ProductEdition,
@@ -157,10 +156,11 @@ export function CatalogView({
   return (
     <main id="main" tabIndex={-1} className="content-page page-width">
       <PageIntro
-        eyebrow="The Harulo catalog"
-        title="Software for everyday life."
-        description="Thoughtful tools, published with care. Find something that makes a small part of your day a little better."
+        eyebrow={catalog.edition === "showcase" ? "Harulo / showcase" : "The Harulo catalog"}
+        title={catalog.edition === "showcase" ? "Publication studies." : "Software for everyday life."}
+        description={catalog.edition === "showcase" ? "Five interactive concepts showing how Harulo software can be introduced, explored and maintained. These are not currently available products." : "Thoughtful tools, published with care. Find something that makes a small part of your day a little better."}
       />
+      {catalog.edition === "showcase" && <p className="showcase-disclosure page-disclosure">SHOWCASE PUBLICATION · INTERACTIVE CONCEPT · NOT CURRENTLY AVAILABLE</p>}
       {!all.length ? (
         <EmptyPublication title="The first edition is still ahead.">
           There are no announced products yet. This is where each release will
@@ -325,11 +325,6 @@ export function ReleasesView({
             </EmptyPublication>
           )}
           <Pagination path={path} query={query} {...result} />
-          <ReleaseRiver
-            releases={filterReleases(catalog, query)}
-            products={products}
-            prefix={prefix}
-          />
         </>
       )}
     </main>
@@ -360,10 +355,9 @@ export function ProductView({
           <p className="product-tagline">{product.tagline}</p>
           <p className="product-description">{product.description}</p>
           <div className="product-detail-meta">
-            <span className="status-label">{statusLabels[product.status]}</span>
+            <span className="status-label">{product.provenance === "showcase" ? "Showcase publication" : statusLabels[product.status]}</span>
             <span className="metadata">
-              {product.version && `v${product.version}`}
-              <br />
+              {product.provenance === "showcase" ? "INTERACTIVE CONCEPT" : product.version && `v${product.version}`}<br />
               {product.platforms.join(" / ")}
             </span>
           </div>
@@ -380,12 +374,7 @@ export function ProductView({
                 <Direction />
               </a>
             )}
-            <Link
-              className="text-link"
-              href={`${prefix}/support/${product.slug}`}
-            >
-              Product support <Direction />
-            </Link>
+            {product.provenance === "verified" && <Link className="text-link" href={`${prefix}/support/${product.slug}`}>Product support <Direction /></Link>}
           </div>
           {product.status === "preview" && (
             <p className="resource-note">
@@ -407,7 +396,7 @@ export function ProductView({
           data-tone={product.tone}
           data-publication={product.slug}
         >
-          {product.provenance === "synthetic" ? (
+          {product.provenance !== "verified" ? (
             <SoftwareXRay compact product={product}>
               <ProductMedia product={product} />
             </SoftwareXRay>
@@ -416,19 +405,11 @@ export function ProductView({
           )}
         </div>
       </section>
-      {catalog.edition === "demo" && (
+      {catalog.edition !== "live" && (
         <p className="resource-note">
-          Fictional design edition. Interfaces, features, versions and
-          compatibility information are illustrative. No software is available
-          to download.
+          Showcase publication. The interface, capabilities and platform notes
+          are illustrative. No software is available to download.
         </p>
-      )}
-      {product.history && (
-        <ReleaseRiver
-          releases={releases}
-          products={[product]}
-          prefix={prefix}
-        />
       )}
       <section className="detail-section detail-grid">
         <h2>
@@ -445,7 +426,7 @@ export function ProductView({
           ))}
         </div>
       </section>
-      {releases.length > 0 && (
+      {catalog.edition === "live" && releases.length > 0 && (
         <section className="detail-section">
           <div className="section-heading">
             <h2>What’s new.</h2>
@@ -480,13 +461,13 @@ export function ProductView({
               <dt>Latest version</dt>
               <dd>{product.version || "Not announced"}</dd>
             </div>
-            {product.firstReleasedAt && (
+            {product.provenance === "verified" && product.firstReleasedAt && (
               <div>
                 <dt>First edition</dt>
                 <dd>{formatDate(product.firstReleasedAt)}</dd>
               </div>
             )}
-            {product.latestReleasedAt && (
+            {product.provenance === "verified" && product.latestReleasedAt && (
               <div>
                 <dt>Latest update</dt>
                 <dd>{formatDate(product.latestReleasedAt)}</dd>
@@ -500,7 +481,7 @@ export function ProductView({
               <dt>Release channels</dt>
               <dd>{product.channels.join(", ")}</dd>
             </div>
-            {product.price && (
+            {product.provenance === "verified" && product.price && (
               <div>
                 <dt>Pricing</dt>
                 <dd>{product.price.text}</dd>
@@ -530,7 +511,7 @@ export function ProductView({
                 <Direction />
               </a>
             ))}
-            {product.privacy && (
+            {product.provenance === "verified" && product.privacy && (
               <Link
                 className="text-link"
                 href={`${prefix}/software/${product.slug}/privacy`}

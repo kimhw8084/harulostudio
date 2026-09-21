@@ -1,0 +1,14 @@
+{
+  "name": "Harulo Studio — Independent software publisher",
+  "short_name": "Harulo",
+  "description": "Thoughtful software for the small moments that make up a day.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F3F5FF",
+  "theme_color": "#123DFF",
+  "icons": [
+    { "src": "/brand/harulo-128.png", "sizes": "128x128", "type": "image/png" },
+    { "src": "/brand/harulo-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

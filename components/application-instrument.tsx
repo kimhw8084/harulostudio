@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Product } from "@/lib/publishing/types";
-import { MinuteInstrument } from "./minute-instrument";
 import { useExperience } from "./experience-provider";
 
 export function ApplicationInstrument({
@@ -22,6 +21,10 @@ export function ApplicationInstrument({
   const [day, setDay] = useState(0);
   const [period, setPeriod] = useState(0);
   const [plan, setPlan] = useState([false, false, false]);
+  const [notes, setNotes] = useState(["A walk. A thought. A beginning."]);
+  const [draft, setDraft] = useState("");
+  const [focusLength, setFocusLength] = useState(15);
+  const [focusState, setFocusState] = useState<"ready" | "active" | "complete">("ready");
   function volume(index: number, delta: number) {
     setLevels((values) =>
       values.map((v, i) =>
@@ -34,7 +37,7 @@ export function ApplicationInstrument({
     <div
       className="concept-interface"
       role="group"
-      aria-label={`${name} fictional interface concept`}
+      aria-label={`${name} showcase interface concept`}
     >
       <div className="concept-chrome">
         <span className="window-register" aria-hidden="true">
@@ -100,22 +103,51 @@ export function ApplicationInstrument({
             id={id}
             className="note-editor"
             aria-label="Try a Namu note"
-            defaultValue={
-              "Good things take root.\n\nA walk. A thought. A beginning."
-            }
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
             maxLength={1200}
           />
+          <div className="instrument-actions">
+            <Button disabled={!ready || !draft.trim()} onClick={() => { setNotes((items) => [...items, draft.trim()]); setDraft(""); }}>
+              Add note
+            </Button>
+            <Button variant="ghost" disabled={!ready || notes.length === 0} onClick={() => setNotes((items) => items.slice(0, -1))}>
+              Remove last
+            </Button>
+          </div>
+          <ul className="specimen-items" aria-label="Namu notes">
+            {notes.map((note, index) => <li key={`${note}-${index}`}>{note}</li>)}
+          </ul>
           <div className="concept-foot">
-            <span>WRITE HERE. MAKE IT YOURS.</span>
-            <span>NOT SAVED OR SENT</span>
+            <span>{notes.length} NOTE{notes.length === 1 ? "" : "S"} IN THIS SESSION</span>
+            <span>LOCAL ONLY</span>
           </div>
         </div>
       ) : kind === "focus" ? (
-        <MinuteInstrument />
+        <div className="concept-body">
+          <p className="concept-title">Make a little room.</p>
+          <div className="weather-switches" aria-label="Focus length">
+            {[5, 15, 25].map((minutes) => (
+              <Button key={minutes} variant="ghost" disabled={!ready || focusState === "active"} aria-pressed={focusLength === minutes} onClick={() => setFocusLength(minutes)}>
+                {minutes} min
+              </Button>
+            ))}
+          </div>
+          <p className="focus-state" role="status">
+            {focusState === "active" ? `${focusLength} minute focus session in progress.` : focusState === "complete" ? "Session complete. Take the next small step." : "Choose a length, then begin."}
+          </p>
+          <div className="instrument-actions">
+            <Button disabled={!ready} onClick={() => setFocusState(focusState === "active" ? "ready" : "active")}>
+              {focusState === "active" ? "Pause session" : "Start session"}
+            </Button>
+            <Button variant="ghost" disabled={!ready} onClick={() => setFocusState("complete")}>Complete demo</Button>
+          </div>
+          <div className="concept-foot"><span>NO SCORE / NO STREAK</span><span>LOCAL ONLY</span></div>
+        </div>
       ) : kind === "weather" ? (
         <div className="concept-body">
           <div className="weather-switches" aria-label="Example forecast day">
-            {["Today", "Tomorrow"].map((d, i) => (
+            {["Morning", "Afternoon", "Evening"].map((d, i) => (
               <Button
                 variant="ghost"
                 key={d}
@@ -128,9 +160,9 @@ export function ApplicationInstrument({
             ))}
           </div>
           <div className="weather-row">
-            <p className="weather-temperature">{day === 0 ? "24°" : "21°"}</p>
+            <p className="weather-temperature">{day === 0 ? "17°" : day === 1 ? "24°" : "19°"}</p>
             <p>
-              A little {day === 0 ? "sun" : "rain"}.<br />A whole day ahead.
+              {day === 0 ? "Clear and cool." : day === 1 ? "A little sun." : "Rain after 18:00."}<br />A whole day ahead.
             </p>
           </div>
           <div className="weather-graph" aria-hidden="true">
@@ -148,8 +180,8 @@ export function ApplicationInstrument({
             )}
           </div>
           <div className="concept-foot">
-            <span>{day === 0 ? "A CLEAR AFTERNOON" : "RAIN AFTER 16:00"}</span>
-            <span>EXAMPLE FORECAST</span>
+            <span>{["COMMUTE / 08:10", "RAIN / 18:00", "AIR / CLEAR"][day]}</span>
+            <span>LOCAL EXAMPLE</span>
           </div>
         </div>
       ) : kind === "spending" ? (
@@ -158,7 +190,7 @@ export function ApplicationInstrument({
             className="weather-switches"
             aria-label="Example spending period"
           >
-            {["This week", "Last week"].map((p, i) => (
+            {["September", "August"].map((p, i) => (
               <Button
                 variant="ghost"
                 key={p}
@@ -177,8 +209,8 @@ export function ApplicationInstrument({
           </p>
           <p>A clear view of the small things.</p>
           <div className="concept-foot">
-            <span>FOOD / TRAVEL / THE REST</span>
-            <span>EXAMPLE DATA</span>
+            <span>{period === 0 ? "FOOD / TRAVEL / HOME" : "FOOD / HOME / OTHER"}</span>
+            <span>LOCAL EXAMPLE</span>
           </div>
         </div>
       ) : (
@@ -214,7 +246,7 @@ export function ApplicationInstrument({
       )}
       <noscript>
         <p className="concept-noscript">
-          This is a fictional product concept. Interactive controls require
+          This is a showcase publication concept. Interactive controls require
           JavaScript.
         </p>
       </noscript>

@@ -41,8 +41,25 @@ export function publicProducts(catalog: PublisherCatalog) {
     (p) =>
       p.visibility === "public" &&
       publicStatuses.includes(p.status) &&
-      (catalog.edition === "demo" || p.provenance === "verified"),
+      (catalog.edition === "demo" ||
+        catalog.edition === "showcase" ||
+        p.provenance === "verified"),
   );
+}
+export function hasPublicSoftware(catalog: PublisherCatalog) {
+  return publicProducts(catalog).length > 0;
+}
+export function hasVerifiedReleases(catalog: PublisherCatalog) {
+  return catalog.releases.some((release) => release.provenance === "verified");
+}
+export function hasVerifiedSupport(catalog: PublisherCatalog) {
+  return catalog.supportArticles.some((article) => article.provenance === "verified");
+}
+export function hasVerifiedPress(catalog: PublisherCatalog) {
+  return catalog.pressItems.some((item) => item.provenance === "verified");
+}
+export function hasArchive(catalog: PublisherCatalog) {
+  return publicProducts(catalog).some((product) => ["archived", "discontinued"].includes(product.status));
 }
 export function productBySlug(catalog: PublisherCatalog, slug: string) {
   return publicProducts(catalog).find((p) => p.slug === slug);
@@ -54,7 +71,7 @@ export function productReleases(catalog: PublisherCatalog, productId?: string) {
       (r) =>
         ids.has(r.productId) &&
         (!productId || r.productId === productId) &&
-        (catalog.edition === "demo" || r.provenance === "verified"),
+        (catalog.edition !== "live" || r.provenance === "verified"),
     )
     .sort(
       (a, b) =>

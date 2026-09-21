@@ -16,13 +16,13 @@ export function pageMetadata(
       url: `${studio.url}${path}`,
       type: "website",
       siteName: studio.name,
-      images: [],
+      images: [{ url: "/og.svg", width: 1200, height: 630, alt: "Harulo Studio" }],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title: `${title} — Harulo Studio`,
       description,
-      images: [],
+      images: ["/og.svg"],
     },
   };
 }
@@ -32,6 +32,9 @@ export function productMetadata(product: Product): Metadata {
     product.tagline,
     `/software/${product.slug}`,
   );
+  if (product.provenance !== "verified") {
+    metadata.robots = { index: false, follow: false };
+  }
   const image = product.media.find((m) => m.kind !== "video");
   if (image) {
     const url = new URL(image.src, studio.url).href;
@@ -50,6 +53,7 @@ export function productMetadata(product: Product): Metadata {
   return metadata;
 }
 export function softwareSchema(product: Product) {
+  if (product.provenance !== "verified") return null;
   return {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -65,6 +69,8 @@ export function softwareSchema(product: Product) {
   };
 }
 export function releaseSchema(product: Product, release: Release) {
+  if (product.provenance !== "verified" || release.provenance !== "verified")
+    return null;
   return {
     "@context": "https://schema.org",
     "@type": "TechArticle",

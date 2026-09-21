@@ -25,14 +25,11 @@ export function SiteHeader() {
           <Link href="/software">
             Software<span aria-hidden="true">01</span>
           </Link>
-          <Link href="/releases">
-            Releases<span aria-hidden="true">02</span>
-          </Link>
           <Link href="/studio">
-            Studio<span aria-hidden="true">03</span>
+            Studio<span aria-hidden="true">02</span>
           </Link>
-          <Link href="/support">
-            Support<span aria-hidden="true">04</span>
+          <Link href="/press">
+            Press<span aria-hidden="true">03</span>
           </Link>
         </nav>
         <ThemeControl />
@@ -51,11 +48,8 @@ export function SiteFooter() {
         <PublisherMark />
         <nav aria-label="Publisher navigation">
           <Link href="/software">Software</Link>
-          <Link href="/releases">Releases</Link>
-          <Link href="/support">Support</Link>
           <Link href="/press">Press</Link>
-          <Link href="/archive">Archive</Link>
-          <Link href="/history">History</Link>
+          <Link href="/privacy">Privacy</Link>
           <a href={studio.github}>
             GitHub
             <Direction />

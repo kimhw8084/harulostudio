@@ -10,7 +10,7 @@ export type ProductStatus =
   | "archived"
   | "discontinued";
 export type ReleaseChannel = "stable" | "preview" | "beta";
-export type Provenance = "verified" | "synthetic";
+export type Provenance = "verified" | "showcase" | "synthetic";
 export type ProductTone =
   "clay" | "olive" | "forest" | "sky" | "ochre" | "plum";
 
@@ -160,7 +160,7 @@ export interface PressItem {
   assets: { label: string; url: string; description: string }[];
 }
 export interface PublisherCatalog {
-  edition: "live" | "demo";
+  edition: "live" | "demo" | "showcase";
   asOf: string;
   products: Product[];
   releases: Release[];

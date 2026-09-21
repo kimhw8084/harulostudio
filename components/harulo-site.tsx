@@ -1,350 +1,93 @@
 import Link from "@/components/site-link";
 import { ArrowRight } from "lucide-react";
 import { studio } from "@/lib/site-content";
-import {
-  liveCatalog,
-  publicProducts,
-  productReleases,
-} from "@/lib/publishing/catalog";
+import { showcaseCatalog } from "@/lib/publishing/showcase";
 import type { PublisherCatalog } from "@/lib/publishing/types";
 import { SoftwareOrigin } from "./brand/software-origin";
 import { CopyEmail } from "./copy-email";
 import { Direction, FoldMark } from "./publisher-mark";
-import { ProductEdition, ReleaseRow, ProductMedia } from "./product-edition";
+import { ProductEdition } from "./product-edition";
 import { BrandScene } from "./brand/scene/brand-scene";
 import { HaruloEnvironment } from "./brand/environments/harulo-environment";
-import { ChronoLens, ReleaseRiver } from "./brand/publisher-history";
-import { SoftwareXRay } from "./brand/software-xray";
 
 export function ContactSection() {
   return (
-    <section
-      className="contact-section"
-      id="contact"
-      aria-labelledby="contact-title"
-    >
+    <section className="contact-section" id="contact" aria-labelledby="contact-title">
       <div className="contact-top">
         <p className="eyebrow">THERE IS ALWAYS A NEXT DAY.</p>
-        <span className="metadata" lang="ko">
-          조금 더 나은 하루로.
-        </span>
+        <span className="metadata" lang="ko">조금 더 나은 하루로.</span>
       </div>
-      <h2 id="contact-title">
-        WHAT COULD
-        <br />
-        BE <em>BETTER?</em>
-        <Direction />
-      </h2>
+      <h2 id="contact-title">WHAT COULD<br />BE <em>BETTER?</em><Direction /></h2>
       <div className="contact-bottom">
-        <p>
-          A recurring frustration. A question. A possibility.
-          <br />
-          We’re listening.
-        </p>
+        <p>A recurring frustration. A question. A possibility.<br />We’re listening.</p>
         <div className="contact-details">
-          <a className="email-link" href={`mailto:${studio.email}`}>
-            <span>{studio.email}</span>
-            <Direction />
-          </a>
+          <a className="email-link" href={`mailto:${studio.email}`}><span>{studio.email}</span><Direction /></a>
           <CopyEmail email={studio.email} />
         </div>
       </div>
     </section>
   );
 }
+
 export function StudioStory({ full = false }: { full?: boolean }) {
   return (
-    <section
-      className="story-section"
-      id="studio"
-      aria-labelledby="story-title"
-    >
-      <div className="story-index metadata">03 / THE DIRECTION</div>
+    <section className="story-section" id="studio" aria-labelledby="story-title">
+      <div className="story-index metadata">02 / THE DIRECTION</div>
       <div className="story-copy">
         <p className="eyebrow">HARULO · 하루로</p>
-        <h2 id="story-title">
-          Not another app.
-          <br />
-          <em>A better everyday.</em>
-        </h2>
-        <p>
-          <span lang="ko">하루</span> means a day. In{" "}
-          <span lang="ko">하루로</span>, we find a direction: toward a day that
-          feels a little better.
-        </p>
-        <p>
-          We start with the thing you do again and again. The unnecessary step.
-          The small interruption. Then we build software that gets it out of
-          your way.
-        </p>
-        {full && (
-          <p>
-            Harulo Studio is an independent software publisher, built by one
-            maker. We design, build, publish and maintain our own products.
-            Independent in how we work. Intentional about what we put into the
-            world.
-          </p>
-        )}
+        <h2 id="story-title">Not another app.<br /><em>A better everyday.</em></h2>
+        <p><span lang="ko">하루</span> means a day. In <span lang="ko">하루로</span>, we find a direction: toward a day that feels a little better.</p>
+        <p>We start with the thing you do again and again. The unnecessary step. The small interruption. Then we build software that gets it out of your way.</p>
+        {full && <p>Harulo Studio is an independent software publisher, built by one maker. We design, build, publish and maintain our own products—carefully, and in public when the work is ready.</p>}
       </div>
-      <div className="korean-direction" lang="ko">
-        <span>하루</span>
-        <ArrowRight aria-hidden="true" />
-        <span>
-          하루<b>로</b>
-        </span>
-      </div>
-      <div className="language-labels metadata">
-        <span>A DAY</span>
-        <span>TOWARD A BETTER DAY</span>
-      </div>
+      <div className="korean-direction" lang="ko"><span>하루</span><ArrowRight aria-hidden="true" /><span>하루<b>로</b></span></div>
+      <div className="language-labels metadata"><span>A DAY</span><span>TOWARD A BETTER DAY</span></div>
     </section>
   );
 }
+
 export function MakingSection() {
   return (
     <section className="making-section">
       <div className="making-intro">
-        <p className="eyebrow">04 / A CONTINUOUS PRACTICE</p>
-        <h2>
-          MAKE.
-          <br />
-          RELEASE.
-          <br />
-          <em>REPEAT.</em>
-        </h2>
+        <p className="eyebrow">03 / A CONTINUOUS PRACTICE</p>
+        <h2>OBSERVE.<br />BUILD.<br /><em>PUBLISH.</em></h2>
         <FoldMark />
       </div>
       <div className="making-body">
         <p className="making-lead">Published is not finished.</p>
-        <p>
-          Software becomes part of someone’s day. We take that seriously. Every
-          release is a beginning. Every improvement is a reason to keep going.
-        </p>
+        <p>Software becomes part of someone’s day. We take that seriously. Every release is a beginning. Every improvement is a reason to keep going.</p>
         <ol className="making-principles">
-          {studio.principles.map((p) => (
-            <li key={p.number}>
-              <span className="metadata">{p.number}</span>
-              <div>
-                <h3>{p.title}</h3>
-                <p>{p.body}</p>
-              </div>
-            </li>
-          ))}
+          {studio.principles.map((p) => <li key={p.number}><span className="metadata">{p.number}</span><div><h3>{p.title}</h3><p>{p.body}</p></div></li>)}
         </ol>
-        <div className="making-cycle" aria-label="Our process">
-          <span>Observe</span>
-          <Direction />
-          <span>Build</span>
-          <Direction />
-          <span>Publish</span>
-          <Direction />
-          <span>Improve</span>
-          <span className="cycle-again">↺</span>
-        </div>
+        <div className="making-cycle" aria-label="Our process"><span>Observe</span><Direction /><span>Build</span><Direction /><span>Publish</span><Direction /><span>Improve</span><span className="cycle-again">↺</span></div>
       </div>
     </section>
   );
 }
-export function HaruloSite({
-  catalog = liveCatalog,
-  prefix = "",
-  hero,
-}: {
-  catalog?: PublisherCatalog;
-  prefix?: string;
-  hero?: React.ReactNode;
-}) {
-  const products = publicProducts(catalog),
-    releases = productReleases(catalog).slice(0, 3);
+
+export function HaruloSite({ prefix = "", hero }: { prefix?: string; catalog?: PublisherCatalog; hero?: React.ReactNode }) {
+  const products = showcaseCatalog.products;
   return (
     <main id="main" tabIndex={-1} className="harulo-world">
-      {hero ?? (
-        <BrandScene className="hero-scene" systems="01 02 04 05 13 21 23">
-          <HaruloEnvironment material="flow" />
-          <section className="publisher-hero" aria-labelledby="hero-title">
-            <div className="hero-mast">
-              <p className="publisher-eyebrow eyebrow">{studio.role}</p>
-              <span className="metadata">
-                WE DESIGN. BUILD. PUBLISH. MAINTAIN.
-              </span>
-            </div>
-            <div className="hero-world">
-              <div className="hero-statement">
-                <h1 id="hero-title">
-                  <span className="sr-only">Harulo Studio. </span>Software,
-                  <br />
-                  <em>toward</em>
-                  <br />a better day.
-                </h1>
-                <p className="hero-korean" lang="ko">
-                  조금 더 나은 하루로.
-                </p>
-              </div>
-              <SoftwareOrigin />
-            </div>
-            <div className="hero-bottom">
-              <p className="hero-signature">
-                HARULO
-                <span>
-                  STUDIO / <span lang="ko">하루로</span>
-                </span>
-              </p>
-              <div className="hero-introduction">
-                <p className="hero-description">{studio.description}</p>
-                <div className="hero-actions">
-                  <Link
-                    className="primary-link"
-                    href={products.length ? `${prefix}/software` : "#software"}
-                  >
-                    {products.length
-                      ? "Explore our software"
-                      : "Meet the publisher"}
-                    <Direction />
-                  </Link>
-                  <a className="quiet-link" href="#contact">
-                    Say hello
-                    <Direction />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </section>
-        </BrandScene>
-      )}
-      <section
-        className="software-section"
-        id="software"
-        aria-labelledby="software-title"
-      >
-        <div className="section-heading">
-          <p className="eyebrow">01 / SOFTWARE, PUBLISHED.</p>
-          <span className="metadata">
-            {products.length
-              ? `${String(products.length).padStart(2, "0")} EDITIONS / ONE PUBLISHER`
-              : "THE FIRST EDITION IS STILL AHEAD"}
-          </span>
-        </div>
-        <h2 id="software-title" className="catalog-title">
-          Small software.
-          <br />
-          <span>
-            More <em>day.</em>
-          </span>
-        </h2>
-        {products.length ? (
-          <>
-            <p className="catalog-instruction">
-              One publisher. Different ways to make a day better.
-              <br />
-              Open an edition to step inside.
-            </p>
-            <div className="publisher-shelf">
-              {products.slice(0, 6).map((p, i) => (
-                <ProductEdition
-                  key={p.id}
-                  product={p}
-                  prefix={prefix}
-                  initiallyOpen={i === 0}
-                />
-              ))}
-            </div>
-            <Link className="catalog-all" href={`${prefix}/software`}>
-              THE COMPLETE CATALOG
-              <Direction />
-            </Link>
-          </>
-        ) : (
-          <div className="first-edition">
-            <div className="unwritten-edition" aria-hidden="true">
-              <span>H / 001</span>
-              <FoldMark />
-              <span>TO BE CONTINUED.</span>
-            </div>
-            <div>
-              <p className="eyebrow">INDEPENDENT SOFTWARE. FROM THE START.</p>
-              <h3>
-                Good things
-                <br />
-                take <em>making.</em>
-              </h3>
-              <p>
-                Our first product is still ahead. We’re here to make useful
-                software, and this is where it will live—with real versions,
-                release notes and a human way to get help.
-              </p>
-              <Link className="text-link" href="/studio">
-                Inside the studio
-                <Direction />
-              </Link>
-            </div>
+      {hero ?? <BrandScene className="hero-scene" systems="01 02 03 04 05 09 13 17 18 23">
+        <HaruloEnvironment material="flow" />
+        <section className="publisher-hero" aria-labelledby="hero-title">
+          <div className="hero-mast"><p className="publisher-eyebrow eyebrow">{studio.role}</p><span className="metadata">WE DESIGN. BUILD. PUBLISH. MAINTAIN.</span></div>
+          <div className="hero-world">
+            <div className="hero-statement"><h1 id="hero-title"><span className="sr-only">Harulo Studio. </span>Software,<br /><em>toward</em><br />a better day.</h1><p className="hero-korean" lang="ko">조금 더 나은 하루로.</p></div>
+            <SoftwareOrigin />
           </div>
-        )}
-      </section>
-      {releases.length > 0 && (
-        <section className="recent-releases">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">02 / ALWAYS BECOMING</p>
-              <h2>
-                OUT IN
-                <br />
-                <em>THE WORLD.</em>
-              </h2>
-            </div>
-            <Link className="text-link" href={`${prefix}/releases`}>
-              Release archive
-              <Direction />
-            </Link>
-          </div>
-          <ul className="release-list">
-            {releases.map((r) => (
-              <ReleaseRow
-                key={r.id}
-                release={r}
-                product={products.find((p) => p.id === r.productId)!}
-                prefix={prefix}
-              />
-            ))}
-          </ul>
+          <div className="hero-bottom"><p className="hero-signature">HARULO<span>STUDIO / <span lang="ko">하루로</span></span></p><div className="hero-introduction"><p className="hero-description">{studio.description}</p><div className="hero-actions"><Link className="primary-link" href={`${prefix}/software`}>Explore the showcase <Direction /></Link><a className="quiet-link" href="#contact">Say hello <Direction /></a></div></div></div>
         </section>
-      )}
-      {catalog.edition === "demo" && catalog.milestones && (
-        <>
-          <ReleaseRiver
-            releases={productReleases(catalog, products[0]?.id)}
-            products={products}
-            prefix={prefix}
-          />
-          {products.find((p) => p.id === "gyeol") && (
-            <SoftwareXRay product={products.find((p) => p.id === "gyeol")!}>
-              <ProductMedia product={products.find((p) => p.id === "gyeol")!} />
-            </SoftwareXRay>
-          )}
-          <ChronoLens catalog={catalog} prefix={prefix} />
-          <section className="continuity-section">
-            <div>
-              <p className="eyebrow">A PUBLICATION HAS A LIFE AFTER LAUNCH.</p>
-              <h2>
-                Kept useful.
-                <br />
-                Kept accessible.
-              </h2>
-            </div>
-            <div>
-              <p>
-                Some work grows. Some becomes something else. Some reaches its
-                final edition. The record stays readable.
-              </p>
-              <Link className="text-link" href={`${prefix}/archive`}>
-                Visit the permanent archive ↗
-              </Link>
-              <Link className="text-link" href={`${prefix}/support`}>
-                Find your product’s documentation ↗
-              </Link>
-            </div>
-          </section>
-        </>
-      )}
+      </BrandScene>}
+      <section className="software-section" id="software" aria-labelledby="software-title">
+        <div className="section-heading"><p className="eyebrow">01 / SOFTWARE, PUBLISHED.</p><span className="metadata">05 SHOWCASE PUBLICATIONS / ONE PUBLISHER</span></div>
+        <h2 id="software-title" className="catalog-title">Small software.<br /><span>More <em>day.</em></span></h2>
+        <p className="showcase-disclosure">Five interactive publication studies showing how future Harulo software will be presented. <strong>These are showcase concepts, not released products.</strong></p>
+        <div className="publisher-shelf">{products.map((product, index) => <ProductEdition key={product.id} product={product} prefix={prefix} initiallyOpen={index === 0} />)}</div>
+        <Link className="catalog-all" href={`${prefix}/software`}>OPEN THE SHOWCASE <Direction /></Link>
+      </section>
       <StudioStory />
       <MakingSection />
       <ContactSection />

@@ -1,4 +1,5 @@
 import Link from "@/components/site-link";
+import Image from "next/image";
 import { Plus } from "lucide-react";
 import type { Product, Release } from "@/lib/publishing/types";
 import {
@@ -32,7 +33,7 @@ export function ProductMedia({ product }: { product: Product }) {
   );
   if (media)
     return (
-      <img
+      <Image
         className="product-screenshot"
         src={media.src}
         alt={media.alt}
@@ -41,7 +42,7 @@ export function ProductMedia({ product }: { product: Product }) {
         loading="lazy"
       />
     );
-  if (product.provenance === "synthetic")
+  if (product.provenance !== "verified")
     return <ConceptInterface product={product} />;
   return (
     <div className="edition-type-cover">
@@ -82,10 +83,12 @@ export function ProductEdition({
           <span className="edition-spine-meta">
             {product.category}
             <br />
-            {product.version
-              ? `v${product.version}`
-              : statusLabels[product.status]}{" "}
-            / {statusLabels[product.status]}
+            {product.provenance === "showcase"
+              ? "INTERACTIVE CONCEPT"
+              : product.version
+                ? `v${product.version}`
+                : statusLabels[product.status]}{" "}
+            / {product.provenance === "showcase" ? "NOT AVAILABLE" : statusLabels[product.status]}
           </span>
           <span className="edition-toggle">
             <Plus aria-hidden="true" />
@@ -99,10 +102,12 @@ export function ProductEdition({
             <div className="edition-meta metadata">
               <span>{product.platforms.join(" / ")}</span>
               <span>
-                {product.version
-                  ? `VERSION ${product.version}`
-                  : statusLabels[product.status]}{" "}
-                / {statusLabels[product.status].toUpperCase()}
+                {product.provenance === "showcase"
+                  ? "INTERACTIVE CONCEPT"
+                  : product.version
+                    ? `VERSION ${product.version}`
+                    : statusLabels[product.status]}{" "}
+                / {product.provenance === "showcase" ? "NOT AVAILABLE" : statusLabels[product.status].toUpperCase()}
               </span>
             </div>
             <Link
@@ -122,7 +127,7 @@ export function ProductEdition({
           <span>
             <HaruloMark /> A HARULO STUDIO EDITION / {product.edition}
           </span>
-          <span>PUBLICATION → APPLICATION</span>
+            <span>{product.provenance === "showcase" ? "SHOWCASE → SPECIMEN" : "PUBLICATION → APPLICATION"}</span>
         </div>
       </details>
     </article>

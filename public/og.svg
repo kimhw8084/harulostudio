@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <title>Harulo Studio — Independent software publisher</title>
+  <rect width="1200" height="630" fill="#F3F5FF"/>
+  <circle cx="908" cy="270" r="235" fill="#123DFF" opacity=".08"/>
+  <g transform="translate(698 58) scale(4.2)">
+    <circle cx="47.5" cy="41.5" r="18.25" fill="none" stroke="#123DFF" stroke-width="7.25"/>
+    <circle cx="68.9" cy="29.2" r="4.35" fill="#FF5C35"/>
+    <rect x="30" y="58.5" width="40" height="6.8" rx="3.4" fill="#123DFF"/>
+    <rect x="39.2" y="67.6" width="21.6" height="5.5" rx="2.75" fill="#123DFF"/>
+  </g>
+  <text x="72" y="150" fill="#101322" font-family="Arial, sans-serif" font-size="24" font-weight="700" letter-spacing="4">HARULO STUDIO / 하루로</text>
+  <text x="72" y="250" fill="#101322" font-family="Arial, sans-serif" font-size="72" font-weight="700">Independent</text>
+  <text x="72" y="330" fill="#123DFF" font-family="Arial, sans-serif" font-size="72" font-weight="700">software publisher</text>
+  <text x="72" y="526" fill="#101322" font-family="monospace" font-size="20" letter-spacing="2">SOFTWARE, TOWARD A BETTER DAY.</text>
+</svg>

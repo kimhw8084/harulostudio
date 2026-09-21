@@ -8,7 +8,7 @@ export function PublisherSymbol({ className = "" }: { className?: string }) {
     </BrandSlot>
   );
 }
-// Kept only as a source-compatible export for the archived identity research.
+// Kept as a small source-compatible alias for existing shell call sites.
 export const FoldMark = PublisherSymbol;
 export function PublisherMark({ compact = false }: { compact?: boolean }) {
   return (

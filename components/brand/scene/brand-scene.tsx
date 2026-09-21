@@ -68,6 +68,7 @@ export function BrandScene({
         : (quality ?? (coarse || innerWidth < 768 ? "balanced" : "full"));
     el.dataset.quality = level;
     let visible = false,
+      bounds: DOMRect | null = null,
       frame = 0,
       last = 0;
     const paint = (now: number) => {
@@ -110,7 +111,7 @@ export function BrandScene({
     invalidate.current = request;
     const scroll = () => {
       if (!visible) return;
-      const rect = el.getBoundingClientRect();
+      const rect = bounds ?? el.getBoundingClientRect();
       input.current.progress = clamp(
         (innerHeight - rect.top) / (innerHeight + rect.height),
       );
@@ -118,7 +119,7 @@ export function BrandScene({
     };
     const move = (event: PointerEvent) => {
       if (level !== "full" || event.pointerType !== "mouse") return;
-      const rect = el.getBoundingClientRect();
+      const rect = bounds ?? el.getBoundingClientRect();
       input.current.pointer = {
         x: clamp((event.clientX - rect.left) / rect.width, 0, 1) * 2 - 1,
         y: clamp((event.clientY - rect.top) / rect.height, 0, 1) * 2 - 1,
@@ -128,10 +129,6 @@ export function BrandScene({
     };
     const leave = () => {
       input.current.pointer = { x: 0, y: 0 };
-      request();
-    };
-    const activate = () => {
-      input.current.energy = 1;
       request();
     };
     const visibility = () => {
@@ -151,19 +148,23 @@ export function BrandScene({
       },
       { rootMargin: "80px" },
     );
+    const resize = new ResizeObserver(() => {
+      bounds = el.getBoundingClientRect();
+      request();
+    });
     observer.observe(el);
+    resize.observe(el);
     el.addEventListener("pointermove", move, { passive: true });
     el.addEventListener("pointerleave", leave);
-    el.addEventListener("click", activate);
     window.addEventListener("scroll", scroll, { passive: true });
     document.addEventListener("visibilitychange", visibility);
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
+      resize.disconnect();
       invalidate.current = () => {};
       el.removeEventListener("pointermove", move);
       el.removeEventListener("pointerleave", leave);
-      el.removeEventListener("click", activate);
       window.removeEventListener("scroll", scroll);
       document.removeEventListener("visibilitychange", visibility);
     };
