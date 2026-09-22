@@ -16,6 +16,8 @@ const normalize = (value: string) => value.normalize("NFKC").toLocaleLowerCase()
 export function NamuSpecimen() {
   const [notes, setNotes] = useState<Note[]>(initial);
   const [selected, setSelected] = useState("today");
+  const [notice, setNotice] = useState("");
+  const nextId = useRef(0);
   const [query, setQuery] = useState("");
   const [draftTitle, setDraftTitle] = useState("");
   const [draftBody, setDraftBody] = useState("");
@@ -31,12 +33,17 @@ export function NamuSpecimen() {
   };
   const create = () => {
     if (!draftTitle.trim() && !draftBody.trim()) return;
-    const id = `note-${Date.now()}-${notes.length}`;
+    if (notes.length >= 8) {
+      setNotice("This showcase keeps up to 8 notes.");
+      return;
+    }
+    const id = `note-${nextId.current++}`;
     const note = { id, title: draftTitle.trim() || "Untitled", body: draftBody.trim() };
-    setNotes((items) => [...items, note].slice(0, 8));
+    setNotes((items) => [...items, note]);
     setSelected(id);
     setDraftTitle("");
     setDraftBody("");
+    setNotice("");
   };
   const remove = () => {
     if (!current) return;
@@ -52,6 +59,8 @@ export function NamuSpecimen() {
     setDraftTitle("");
     setDraftBody("");
     setLinks({});
+    setNotice("");
+    nextId.current = 0;
   };
   const exportMarkdown = () => {
     const markdown = notes.map((note) => `## ${note.title}\n\n${note.body}`).join("\n\n");
@@ -96,6 +105,7 @@ export function NamuSpecimen() {
         <Button type="button" onClick={create}>Create note</Button>
         <Button type="button" variant="ghost" onClick={exportMarkdown}>Export Markdown</Button>
       </div>
+      <p className="metadata" role="status" aria-live="polite">{notice}</p>
       <ShowcaseFoot onReset={reset} />
     </ShowcaseShell>
   );

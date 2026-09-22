@@ -15,6 +15,7 @@ export default function Privacy() {
         eyebrow="Harulo / Privacy"
         title="A clear account of this website."
         description="Harulo Studio is intentionally small. This page describes the data practices of this website, not future software products."
+        id="privacy-title"
       />
       <article className="article legal-page">
         <h2>What this site stores locally</h2>

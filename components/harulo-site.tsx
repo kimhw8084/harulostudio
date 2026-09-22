@@ -31,21 +31,21 @@ export function ContactSection() {
 
 export function StudioStory({ full = false }: { full?: boolean }) {
   return (
-    <section className="story-section" id="studio" aria-labelledby="story-title">
-      <BrandScene className="meaning-scene" systems="03 10 18 23">
-        <HaruloEnvironment material="day-next" />
-      </BrandScene>
-      <div className="story-index metadata">02 / THE DIRECTION</div>
-      <div className="story-copy">
-        <p className="eyebrow">HARULO · 하루로</p>
-        <h2 id="story-title">{brandCopy.meaningLiteral}</h2>
-        <p>We start with the thing you do again and again. The unnecessary step. The small interruption. Then we build software that gets it out of your way.</p>
-        {full && <p>Harulo Studio is an independent software publisher, built by one maker. We design, build, publish and maintain our own products—carefully, and in public when the work is ready.</p>}
-        <p className="meaning-poetic">{brandCopy.meaningPoetic}</p>
-      </div>
-      <div className="korean-direction" lang="ko"><span>하루</span><ArrowRight aria-hidden="true" /><span>하루<b>로</b></span></div>
-      <div className="language-labels metadata"><span>{brandCopy.motif}</span></div>
-    </section>
+    <BrandScene className="meaning-scene" systems="03 10 18 23">
+      <HaruloEnvironment material="day-next" />
+      <section className="story-section" id="studio" aria-labelledby="story-title">
+        <div className="story-index metadata">02 / THE DIRECTION</div>
+        <div className="story-copy">
+          <p className="eyebrow">HARULO · 하루로</p>
+          <h2 id="story-title">{brandCopy.meaningLiteral}</h2>
+          <p>We start with the thing you do again and again. The unnecessary step. The small interruption. Then we build software that gets it out of your way.</p>
+          {full && <p>Harulo Studio is an independent software publisher, built by one maker. We design, build, publish and maintain our own products—carefully, and in public when the work is ready.</p>}
+          <p className="meaning-poetic">{brandCopy.meaningPoetic}</p>
+        </div>
+        <div className="korean-direction" lang="ko"><span>하루</span><ArrowRight aria-hidden="true" /><span>하루<b>로</b></span></div>
+        <div className="language-labels metadata"><span>{brandCopy.motif}</span></div>
+      </section>
+    </BrandScene>
   );
 }
 

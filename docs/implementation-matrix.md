@@ -1,36 +1,40 @@
-# Harulo production implementation matrix
+# Harulo implementation matrix
 
-Baseline: `eade02d96051ed25ec13aeee562e079f2e2d5a7a`  
+Baseline audited revision: `6b2ad651e679b73fcec7de89fe8d3b67e1a3b422`
 Working branch: `production-audit-fixes`
 
-Status is evidence-based: `VERIFIED` means the command or browser assertion named in the evidence column has run against the compiled Worker; `IMPLEMENTED` means code is present but the final evidence is still pending.
+Statuses are evidence-based. `AUTOMATED VERIFIED` means the named command was
+executed against the compiled local Worker in this pass. `MANUAL VERIFIED` is
+reserved for a human/device review that actually occurred. `UNVERIFIED` records
+work that still needs a human or hosted-environment check.
 
-| Requirement | Implementation | Tests / evidence | Status |
+| Requirement | Implementation | Executed evidence | Status |
 | --- | --- | --- | --- |
-| Permanent High Tension geometry | `lib/brand/geometry.ts`, `components/brand/harulo-mark.tsx`, generated `public/brand/*.svg` | `scripts/verify-brand.mjs`; `tests/unit/brand-geometry.test.mjs`; `tests/brand-render.spec.ts` | VERIFIED |
-| Cobalt Ember light/dark themes and legacy migration | `lib/brand/themes.ts`, `components/experience-provider.tsx`, `app/layout.tsx` | `tests/production.spec.ts` theme control; Chromium/WebKit compiled Worker run | VERIFIED |
-| Approved copy and placements | `lib/brand/copy.ts`, `components/harulo-site.tsx`, `components/site-shell.tsx` | `tests/production.spec.ts` exact hero/genesis/catalog assertions | VERIFIED |
-| Verified/showcase resolver boundary | `lib/publishing/catalog.ts`, `lib/publishing/types.ts`, `lib/publishing/showcase.ts` | `tests/showcase-safety.spec.ts`, `tests/publishing-integrity.spec.ts` | VERIFIED |
-| Exactly five local showcase applications | `components/showcase/*`, `components/application-instrument.tsx` | `tests/showcase-contracts.spec.ts` (Sori, Namu, Goyo, Haru Weather, Dami) | VERIFIED |
-| Guarded verified-only routes | `app/releases`, `app/support`, `app/archive`, `app/history`, `app/software/[slug]/*`, `app/press/[slug]` | `tests/production.spec.ts` confirms unavailable routes return 404; `tests/publishing-integrity.spec.ts` verifies fixture lifecycle paths and schema | VERIFIED (fixture + empty production catalog) |
-| Conditional navigation and sitemap | `lib/publishing/catalog.ts`, `components/site-shell.tsx`, `components/brand/mobile-navigation.tsx`, `app/sitemap.ts` | `tests/production.spec.ts`, `tests/showcase-safety.spec.ts`, `tests/metadata.spec.ts`, `tests/publishing-integrity.spec.ts` | VERIFIED |
-| Genesis closed state, tabs, focus return, no auto-open | `components/brand/software-origin.tsx`, Genesis CSS in `app/globals.css` | `tests/production.spec.ts` Chromium/WebKit | VERIFIED |
-| Shared scene scheduler and bounds lifecycle | `lib/brand/scheduler.ts`, `components/brand/scene/brand-scene.tsx` | `tests/scene-regressions.spec.ts` in compiled Chromium/WebKit suite; pure zero-bound assertions | VERIFIED (covered scope) |
-| Three distinct environments | `components/brand/environments/harulo-environment.tsx` | Homepage/Studio compiled visual captures in `work/visual-*.png`; reduced-motion capture pending | IMPLEMENTED |
-| X-Ray real overlays | `components/brand/software-xray.tsx` | Sori detail route rendered; interaction-specific overlay assertions pending | IMPLEMENTED |
-| Explicit page footer descriptor / Final Return | `components/brand/footer-return.tsx`, `components/site-shell.tsx` | Compiled visual capture `work/visual-home-light.png` | IMPLEMENTED |
-| Metadata, social PNG, icons, manifest | `scripts/generate-brand-assets.mjs`, `public/og.png`, `public/brand/`, `app/layout.tsx`, `public/manifest.webmanifest` | `tests/metadata.spec.ts` in fresh compiled Chromium/WebKit suite | VERIFIED |
-| Security headers and recovery | `next.config.ts`, `app/error.tsx`, `app/global-error.tsx` | `tests/metadata.spec.ts` header responses; `tests/recovery.spec.ts` unknown route/missing asset on compiled Worker | VERIFIED (automated scope) |
-| Accessibility smoke | `tests/a11y.spec.ts` | Axe Chromium: 6 passed | VERIFIED |
-| Visual evidence | `tests/visual.spec.ts` | Chromium deterministic captures for light/dark/home/software/studio/privacy/Sori | VERIFIED |
-| Performance budget | `scripts/perf-check.mjs` | 25 client chunks, 187,144 gzip bytes; local mobile LCP samples 112/92/88ms, CLS 0 | VERIFIED (local profile) |
-| CI gate scripts | `package.json`, `.github/workflows/ci.yml` | Typecheck/lint/build/unit/UI/A11y/visual/perf scripts present; hosted CI run pending | IMPLEMENTED |
-| Cleanup / no fictional 2036 universe or candidate lab | deleted old fixtures/routes/lab, retired unused ExtendedInstrument/minute CSS | `rg` audit + fresh build; 25 client chunks after cleanup | VERIFIED |
+| Immutable High Tension geometry | `lib/brand/geometry.ts`, `lib/brand/verify.ts`, `components/brand/harulo-mark.tsx`, `public/brand/` | `npm run verify:brand`; `npm run test:unit` (3/3); `tests/brand-render.spec.ts` in `npm run test:ui` | AUTOMATED VERIFIED |
+| Cobalt Ember themes and legacy migration | `lib/brand/themes.ts`, `components/experience-provider.tsx`, `app/layout.tsx` | `tests/production.spec.ts` theme assertion; `tests/a11y.spec.ts` light/dark scan | AUTOMATED VERIFIED |
+| Approved copy and placement | `lib/brand/copy.ts`, `components/harulo-site.tsx`, `components/site-shell.tsx` | `tests/production.spec.ts`; visual checkpoints | AUTOMATED VERIFIED |
+| Verified/showcase resolver boundary | `lib/publishing/catalog.ts`, `lib/publishing/types.ts`, `lib/publishing/showcase.ts` | `tests/showcase-safety.spec.ts`, `tests/publishing-integrity.spec.ts` | AUTOMATED VERIFIED |
+| Five functional showcase applications | `components/showcase/{sori,namu,goyo,haru-weather,dami}.tsx` | `tests/showcase-contracts.spec.ts` in Chromium normal/reduced and WebKit; Axe routes | AUTOMATED VERIFIED |
+| Genesis state machine and focus isolation | `components/brand/software-origin.tsx`, `app/globals.css` | `tests/genesis-motion.spec.ts` Chromium normal/WebKit; `tests/production.spec.ts`; reduced project | AUTOMATED VERIFIED |
+| Genesis scroll/layout stability | `components/brand/software-origin.tsx`, inactive tab CSS | Genesis scroll assertion and `home-genesis-open` visual baseline | AUTOMATED VERIFIED |
+| Shared scene scheduler/bounds | `lib/brand/scheduler.ts`, `components/brand/scene/brand-scene.tsx` | `tests/scene-regressions.spec.ts` Chromium/WebKit normal and reduced fallback | AUTOMATED VERIFIED (covered scope) |
+| Flow, membrane, and Day → Next environments | `components/brand/environments/harulo-environment.tsx`, `components/harulo-site.tsx`, `components/brand/software-xray.tsx` | canvas dimensions, pointer wake, scene progress assertions; visual home/studio/X-Ray baselines | AUTOMATED VERIFIED (lifecycle/stable states) |
+| X-Ray overlays | `components/brand/software-xray.tsx`, `app/scenes.css` | `tests/xray.spec.ts`; Axe X-Ray scan | AUTOMATED VERIFIED |
+| Page-specific Final Return anchors | `components/brand/footer-return.tsx`, `components/site-shell.tsx` | `tests/production.spec.ts` descriptor/anchor assertions; `final-return-*` screenshots | AUTOMATED VERIFIED |
+| Guarded verified-only routes and conditional navigation | `app/releases`, `app/support`, `app/archive`, `app/history`, `app/software/[slug]/*`, `app/press/[slug]`, `lib/publishing/catalog.ts` | `tests/production.spec.ts`, `tests/publishing-integrity.spec.ts`, `tests/metadata.spec.ts` | AUTOMATED VERIFIED |
+| Metadata, social PNG, icons, manifest | `scripts/generate-brand-assets.mjs`, `public/og.png`, `public/brand/`, `app/layout.tsx` | `tests/metadata.spec.ts` Chromium/WebKit | AUTOMATED VERIFIED |
+| Recovery and security response headers | `app/error.tsx`, `app/global-error.tsx`, `next.config.ts` | `tests/recovery.spec.ts`, `tests/metadata.spec.ts` | AUTOMATED VERIFIED (local Worker) |
+| Accessibility | `tests/a11y.spec.ts` | `npm run test:a11y`: 39/39 across Chromium/WebKit normal and reduced | AUTOMATED VERIFIED |
+| Visual regression | `tests/visual.spec.ts`, `tests/visual.spec.ts-snapshots/` | `npm run test:visual`: 17/17 Chromium reviewed checkpoints; deterministic baselines | AUTOMATED VERIFIED (Chromium renderer) |
+| Performance budget | `scripts/perf-check.mjs`, `tests/perf.spec.ts` | `npm run test:perf`: 24 chunks / 189,321 gzip bytes; 3 local mobile samples, worst LCP 116ms, CLS 0.0608, JS 171,959 bytes | AUTOMATED VERIFIED (local profile) |
+| Cleanup | `app/scenes.css`, pruned `components/ui/`, removed Drizzle journal and unused dependencies | `npm run build`, `git diff --check`, import/build audit | AUTOMATED VERIFIED |
+| CI workflow | `.github/workflows/ci.yml`, `package.json` | `npm run test:ui`: 129 expected passed, 39 intentional skips; hosted Actions not run in this environment | IMPLEMENTED / HOSTED UNVERIFIED |
 
-## Known unverified items
+## Explicitly unverified
 
-- Hosted GitHub Actions has not run in this environment; workflow action pinning/required-check protection still needs repository-owner verification.
-- The scheduler regression covers cached progress after scroll plus zero bounds in this pass; pointer/nested-scroll/hidden-tab lifecycle remains a manual/CI expansion.
-- Environment and footer/X-Ray interactions have stable visual/route evidence, but reduced-motion recordings and exhaustive pointer-device matrix remain unverified.
-- Physical iPhone/Android, VoiceOver, Korean IME, forced-colors and throttled cold-CWV checks remain manual/CI work.
-- The local Worker was started manually because this macOS image has a Homebrew `simdutf` symlink mismatch when npm child processes spawn; CI Ubuntu should use the normal `npm run start` webServer.
+- Physical iPhone/Android testing, VoiceOver, Korean IME, forced-colors, and
+  real low-bandwidth field Core Web Vitals were not performed here.
+- GitHub Actions hosted execution, required-check branch protection, DNS, and
+  the production hosting response were not verified in this pass.
+- The local Worker required a machine-local Homebrew `simdutf` compatibility
+  symlink before Wrangler could start; CI Ubuntu should use the normal install.

@@ -13,4 +13,4 @@ for (const name of names) {
 largest.sort((a, b) => b.bytes - a.bytes);
 console.log(JSON.stringify({ chunkCount: names.length, totalGzipBytes: total, largest: largest.slice(0, 8) }, null, 2));
 if (!names.length) throw new Error("No client chunks found; build before running the performance check.");
-if (total > 200_000) console.warn(`All lazy client chunks total ${total} bytes; homepage entry is measured by browser evidence, not this aggregate.`);
+if (total > 200_000) throw new Error(`All lazy client chunks total ${total} bytes, above the 200 KB aggregate budget.`);

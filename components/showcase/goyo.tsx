@@ -16,6 +16,7 @@ export function GoyoSpecimen() {
   const [intention, setIntention] = useState("");
   const [state, setState] = useState<TimerState>("ready");
   const [remaining, setRemaining] = useState(minutes * 60_000);
+  const [quietMode, setQuietMode] = useState(false);
   const deadline = useRef<number | null>(null);
   useEffect(() => {
     if (state !== "running") return;
@@ -52,6 +53,7 @@ export function GoyoSpecimen() {
     setState("ready");
     setRemaining(minutes * 60_000);
     setIntention("");
+    setQuietMode(false);
   };
   return (
     <ShowcaseShell name="Goyo">
@@ -65,9 +67,13 @@ export function GoyoSpecimen() {
       <p className="focus-state" role="status">
         {state === "running" ? "Focus is in progress." : state === "paused" ? "Paused. Your remaining time is held." : state === "complete" ? "Session complete. Take the next small step." : "Choose a length, then begin."}
       </p>
+      <label className="checkbox-row">
+        <input type="checkbox" checked={quietMode} onChange={(event) => setQuietMode(event.target.checked)} />
+        Quiet mode (simulated)
+      </label>
       <div className="instrument-actions">
         {state === "running" ? <Button type="button" onClick={pause}>Pause session</Button> : <Button type="button" onClick={start} disabled={state === "complete"}>Start session</Button>}
-        <Button type="button" variant="ghost" onClick={() => { setState("complete"); deadline.current = null; }}>Preview completion</Button>
+        <Button type="button" variant="ghost" onClick={() => { setRemaining(0); deadline.current = null; setState("complete"); }}>Preview completion</Button>
         <Button type="button" variant="ghost" onClick={reset}>Reset</Button>
       </div>
       <ShowcaseFoot onReset={reset} />

@@ -9,6 +9,14 @@
   --field-dy: 0px;
   --tier-ratio: 0.54;
 }
+.meaning-scene {
+  position: relative;
+}
+.meaning-scene > .story-section {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
 .harulo-mark[data-color="brand"] [data-piece="ring"] {
   stroke: var(--brand-structure);
 }
@@ -185,7 +193,6 @@
   flex: none;
   margin-right: 0.5rem;
 }
-.release-river,
 .software-xray {
   padding: clamp(3rem, 7vw, 8rem) var(--gutter);
   margin-block: 2rem;
@@ -193,305 +200,16 @@
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
-.content-page > .release-river,
 .content-page > .software-xray {
   padding-inline: clamp(1.2rem, 4vw, 4rem);
   margin-block: 5rem;
 }
-.river-comparison {
-  display: grid;
-  grid-template-columns: 0.54fr 1fr;
-  gap: clamp(2rem, 7vw, 8rem);
-  align-items: start;
-  min-height: 350px;
-}
-.palimpsest-layer {
-  padding-top: 3rem;
-  color: var(--muted-foreground);
-  border-top: 1px solid var(--border);
-}
-.river-version {
-  font: 600 clamp(2.5rem, 5vw, 5rem)/1.2 var(--font-body);
-  letter-spacing: -0.06em;
-  display: block;
-  margin-block: 1rem;
-}
-.palimpsest-layer p {
-  max-width: 32ch;
-  line-height: 1.7;
-}
-.palimpsest-layer a {
-  display: inline-flex;
-  min-height: 44px;
-  align-items: center;
-  text-decoration: underline;
-}
-.river-current h3 {
-  font-size: clamp(3.3rem, 6vw, 7rem);
-  letter-spacing: -0.065em;
-  color: var(--cobalt);
-  line-height: 1.15;
-  overflow-wrap: anywhere;
-}
-.river-current > p:not(.eyebrow) {
-  font-size: clamp(1.2rem, 2vw, 1.7rem);
-  max-width: 32ch;
-  line-height: 1.5;
-  margin-block: 1rem;
-}
-.river-current time {
-  font: 0.7rem/1.5 var(--font-meta);
-  color: var(--muted-foreground);
-}
-.river-current ul {
-  font-size: 0.9rem;
-  line-height: 1.7;
-  margin-block: 1.4rem;
-  max-width: 55ch;
-  list-style: disc;
-  padding-left: 1.2rem;
-}
-.river-track {
-  margin-top: 3rem;
-  height: 6px;
-  background: var(--border);
-  position: relative;
-  border-radius: 99px;
-}
-.river-track > span {
-  display: block;
-  background: var(--cobalt);
-  width: calc(var(--river-progress) * 100%);
-  height: 100%;
-  border-radius: inherit;
-  transition: width var(--motion-settle) var(--ease-settle);
-}
-.river-track > i {
-  position: absolute;
-  left: clamp(0px, calc(var(--river-progress) * 100% - 8px), calc(100% - 16px));
-  top: -5px;
-  width: 16px;
-  height: 16px;
-  background: var(--brand-signal);
-  border: 3px solid var(--card);
-  border-radius: 50%;
-  transition: left var(--motion-settle) var(--ease-settle);
-}
-.river-controls {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  margin-block: 1.5rem;
-}
-.river-slider {
-  flex: 1;
-  display: grid;
-  gap: 1rem;
-  font: 0.7rem var(--font-meta);
-}
-.river-slider [data-slot="slider"] {
-  min-height: 24px;
-}
 .registration-lock {
   animation: registration-lock var(--motion-settle) var(--ease-settle);
-}
-.chrono-lens {
-  background: var(--background);
-  padding: 6rem var(--gutter);
-  overflow: clip;
-  min-height: 100svh;
-}
-.chrono-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 2rem;
-  border-top: 1px solid var(--border);
-  padding-top: 1.5rem;
 }
 .history-page > .content-page {
   padding-bottom: 0;
   min-height: 0;
-}
-.chrono-top .metadata {
-  font-size: 0.65rem;
-  color: var(--muted-foreground);
-}
-.chrono-world {
-  display: grid;
-  grid-template-columns: 1fr 0.8fr;
-  align-items: center;
-  gap: clamp(2rem, 7vw, 8rem);
-  padding-block: 4rem;
-}
-.chrono-aperture {
-  aspect-ratio: 1;
-  border: clamp(16px, 4.7vw, 64px) solid var(--cobalt);
-  border-radius: 50%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  max-width: 600px;
-  background: var(--background);
-}
-.chrono-year {
-  font: 650 clamp(3.5rem, 9vw, 10rem)/1 var(--font-body);
-  letter-spacing: -0.085em;
-  margin-left: -0.06em;
-  color: var(--foreground);
-}
-.chrono-index {
-  font-size: 0.6rem;
-  text-align: center;
-  line-height: 1.8;
-  margin-top: 1.5rem;
-  color: var(--muted-foreground);
-}
-.chrono-satellite {
-  position: absolute;
-  inset: -16%;
-  pointer-events: none;
-  transition: transform var(--motion-open) var(--ease-open);
-}
-.chrono-satellite > i {
-  display: block;
-  position: absolute;
-  width: 12%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--brand-signal);
-  top: 0;
-  left: 44%;
-  border: 6px solid var(--background);
-}
-.chrono-story h2 {
-  font-size: clamp(2.4rem, 4.5vw, 5.5rem);
-  line-height: 1.08;
-  letter-spacing: -0.05em;
-  margin-bottom: 1.5rem;
-}
-.chrono-story > p {
-  font-size: 1.05rem;
-  line-height: 1.8;
-  color: var(--muted-foreground);
-  max-width: 44ch;
-}
-.chrono-story ul {
-  margin-top: 2rem;
-}
-.chrono-story li {
-  border-top: 1px solid var(--border);
-}
-.chrono-story li a {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  align-items: center;
-  min-height: 48px;
-}
-.chrono-story li span {
-  font: 0.7rem var(--font-meta);
-  color: var(--muted-foreground);
-}
-.chrono-years {
-  display: grid;
-  grid-template-columns: repeat(11, 1fr);
-  border-block: 1px solid var(--border);
-}
-.chrono-years button {
-  position: relative;
-  min-height: 58px;
-  font: 0.72rem var(--font-meta);
-  transition: background var(--motion-hover);
-}
-.chrono-years button[aria-pressed="true"] {
-  background: var(--cobalt);
-  color: var(--primary-foreground);
-}
-.chrono-years button[aria-pressed="true"]::before {
-  content: "";
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  position: absolute;
-  top: -4px;
-  left: calc(50% - 4px);
-  background: var(--brand-signal);
-}
-.chrono-memory {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  align-items: center;
-  margin-top: 1rem;
-  font-size: 0.75rem;
-  color: var(--muted-foreground);
-}
-.publication-atlas {
-  margin-top: 3rem;
-  border-block: 1px solid var(--border);
-}
-.publication-atlas > summary {
-  cursor: pointer;
-  padding: 1.5rem 0;
-  font-weight: 650;
-  min-height: 60px;
-}
-.publication-atlas > summary span {
-  float: right;
-  font: 0.7rem var(--font-meta);
-  color: var(--muted-foreground);
-}
-.publication-atlas > p {
-  font-size: 0.85rem;
-  line-height: 1.7;
-  margin-bottom: 1.5rem;
-}
-.publication-atlas > p a {
-  text-decoration: underline;
-}
-.atlas-scroll {
-  overflow-x: auto;
-  overscroll-behavior-inline: contain;
-  padding-bottom: 1.5rem;
-}
-.atlas-field {
-  display: grid;
-  grid-template-columns: repeat(10, 240px);
-  gap: 1.5rem;
-  min-width: 2600px;
-}
-.atlas-field section {
-  border-top: 5px solid var(--cobalt);
-}
-.atlas-field h3 {
-  font: 0.8rem var(--font-meta);
-  padding: 1rem 0;
-}
-.atlas-field a {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  background: var(--card);
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
-.atlas-field .harulo-mark {
-  width: 100px;
-  height: 100px;
-  align-self: center;
-}
-.atlas-field strong {
-  font-size: 1.5rem;
-}
-.atlas-field .metadata {
-  font-size: 0.6rem;
-}
-.atlas-field p {
-  font-size: 0.85rem;
-  line-height: 1.6;
 }
 .software-xray {
   background: var(--background);
@@ -565,6 +283,28 @@
     0 35px 0 -27px var(--border);
   transform: translate(var(--field-dx), var(--field-dy));
   transition: transform var(--motion-hover);
+}
+.xray-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  align-content: start;
+  gap: .5rem;
+  padding: 1rem;
+  border: 1px solid var(--brand-signal);
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--brand-signal) 8%, transparent);
+  pointer-events: none;
+  font: .68rem/1.5 var(--font-meta);
+}
+.xray-overlay strong,
+.xray-overlay li {
+  color: var(--foreground);
+}
+.xray-overlay ol {
+  margin: 0;
+  padding-left: 1.2rem;
 }
 .xray-reading {
   position: relative;
@@ -741,35 +481,6 @@
   line-height: 1.7;
   color: var(--muted-foreground);
 }
-.system-registry {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 3rem;
-  padding: 3rem;
-}
-.system-registry article {
-  border-top: 1px solid var(--border);
-  padding: 1.5rem 0;
-}
-.system-registry h3 {
-  font-size: 1.2rem;
-  margin-block: 0.5rem;
-}
-.system-registry p {
-  font-size: 0.85rem;
-  line-height: 1.7;
-  color: var(--muted-foreground);
-}
-.environment-review {
-  min-height: 70svh;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  background: var(--card);
-}
-.environment-review > .harulo-mark {
-  width: min(70vw, 560px);
-}
 .engineering-controls {
   display: flex;
   flex-wrap: wrap;
@@ -846,6 +557,27 @@
   letter-spacing: 0.02em;
   color: var(--foreground);
 }
+.return-signal-anchor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  left: 50%;
+  top: 50%;
+}
+.return-closing {
+  position: absolute;
+  inset: auto 0 1.5rem;
+  margin: 0;
+  text-align: center;
+  font: 600 .72rem/1.4 var(--font-meta);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+.footer-return[data-complete="true"] .return-closing {
+  opacity: 1;
+}
 @keyframes registration-lock {
   0% {
     filter: drop-shadow(-1px 0 var(--cobalt))
@@ -894,12 +626,6 @@
   .origin-controls p {
     max-width: none;
   }
-  .chrono-world {
-    gap: 2.5rem;
-  }
-  .chrono-story h2 {
-    font-size: 2.8rem;
-  }
   .xray-world {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -915,9 +641,6 @@
   }
   .publication-loom {
     grid-template-columns: 1fr 0.54fr;
-  }
-  .river-comparison {
-    gap: 2rem;
   }
   .news-entry {
     grid-template-columns: 0.3fr 1fr;
@@ -997,86 +720,6 @@
     width: 54%;
     font-size: 0.6rem;
   }
-  .river-comparison {
-    grid-template-columns: 1fr;
-    min-height: 0;
-  }
-  .palimpsest-layer {
-    display: grid;
-    grid-template-columns: 0.54fr 1fr;
-    gap: 0.5rem 1rem;
-    padding-top: 0;
-    align-items: center;
-  }
-  .palimpsest-layer .eyebrow {
-    grid-column: 1/-1;
-  }
-  .river-version {
-    font-size: 2rem;
-  }
-  .palimpsest-layer p {
-    font-size: 0.8rem;
-  }
-  .palimpsest-layer a {
-    grid-column: 1/-1;
-    font-size: 0.8rem;
-  }
-  .river-current h3 {
-    font-size: 3.3rem;
-  }
-  .river-controls {
-    gap: 0.5rem;
-  }
-  .river-controls button {
-    font-size: 0.75rem;
-    padding: 0.6rem;
-  }
-  .river-slider {
-    font-size: 0.6rem;
-  }
-  .chrono-lens {
-    padding-block: 4rem;
-  }
-  .chrono-top {
-    align-items: start;
-  }
-  .chrono-top .metadata {
-    max-width: 12ch;
-  }
-  .chrono-world {
-    grid-template-columns: 1fr;
-    padding-block: 3rem;
-  }
-  .chrono-aperture {
-    width: 88%;
-    margin: 1rem auto;
-    border-width: 26px;
-  }
-  .chrono-year {
-    font-size: 22vw;
-  }
-  .chrono-story h2 {
-    font-size: 2.5rem;
-  }
-  .chrono-years {
-    grid-template-columns: repeat(6, 1fr);
-  }
-  .chrono-years button {
-    min-height: 48px;
-  }
-  .chrono-memory {
-    align-items: start;
-    flex-direction: column;
-  }
-  .publication-atlas > summary span {
-    display: block;
-    float: none;
-    margin-top: 0.7rem;
-  }
-  .atlas-field {
-    grid-template-columns: repeat(10, 200px);
-    min-width: 2200px;
-  }
   .continuity-section {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -1102,10 +745,6 @@
   }
   .news-entry > p {
     grid-column: auto;
-  }
-  .system-registry {
-    grid-template-columns: 1fr;
-    padding: 1.5rem;
   }
   .engineering-controls {
     padding: 1.5rem;
@@ -1134,10 +773,7 @@
     animation: none !important;
   }
   .software-origin,
-  .xray-ui,
-  .chrono-satellite,
-  .river-track > span,
-  .river-track > i {
+  .xray-ui {
     transform: none;
     transition: none;
   }
@@ -1176,17 +812,12 @@ html[data-motion="paused"] .xray-ui {
   .harulo-environment {
     display: none;
   }
-  .chrono-aperture,
   .primary-plane,
   .secondary-plane {
     border-color: CanvasText;
   }
-  .ember-point,
-  .chrono-satellite > i {
+  .ember-point {
     background: Highlight;
-  }
-  .chrono-years button[aria-pressed="true"] {
-    outline: 2px solid Highlight;
   }
   .xray-lens {
     display: none;

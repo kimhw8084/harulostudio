@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type TransitionEvent } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type TransitionEvent } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -18,7 +18,8 @@ export function SoftwareOrigin() {
   const id = useId();
   const [selected, setSelected] = useState(showcaseProducts[0]?.slug ?? "");
   const [phase, setPhase] = useState<GenesisPhase>("resting");
-  const token = useRef(0);
+  const requestedOpen = useRef(false);
+  const preservedScroll = useRef<number | null>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const { reduced } = useExperience();
@@ -27,6 +28,13 @@ export function SoftwareOrigin() {
   const acceptingInput = phase === "open" || phase === "switching";
   const selectedProduct = showcaseProducts.find((product) => product.slug === selected) ?? showcaseProducts[0];
   const panelId = `${id}-panel`;
+
+  useLayoutEffect(() => {
+    if (preservedScroll.current === null) return;
+    const top = preservedScroll.current;
+    preservedScroll.current = null;
+    window.scrollTo({ top, behavior: "auto" });
+  }, [phase, selected]);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -39,12 +47,16 @@ export function SoftwareOrigin() {
   });
 
   function open() {
-    token.current += 1;
+    if (requestedOpen.current && phase !== "closing") return;
+    requestedOpen.current = true;
+    preservedScroll.current = window.scrollY;
     scene?.emit({ type: "publication.open", productId: selected });
     setPhase(reduced ? "open" : "opening");
   }
   function close() {
-    token.current += 1;
+    if (!requestedOpen.current && phase === "resting") return;
+    requestedOpen.current = false;
+    preservedScroll.current = window.scrollY;
     scene?.emit({ type: "publication.close" });
     if (panelRef.current?.contains(document.activeElement)) {
       triggerRef.current?.focus();
@@ -53,15 +65,21 @@ export function SoftwareOrigin() {
   }
   function select(slug: string) {
     if (slug === selected) return;
-    token.current += 1;
     scene?.emit({ type: "publication.select", productId: slug });
+    preservedScroll.current = window.scrollY;
     setSelected(slug);
     if (active) setPhase(reduced ? "open" : "switching");
   }
-  function onStageTransition(event: TransitionEvent<HTMLDivElement>) {
-    if (event.target !== event.currentTarget || event.propertyName !== "clip-path") return;
+  function handleInterfaceTransitionEnd(event: TransitionEvent<HTMLDivElement>) {
+    if (event.propertyName !== "clip-path") return;
     if (phase === "opening" || phase === "switching") setPhase("open");
     if (phase === "closing") setPhase("resting");
+  }
+  function handleInterfaceTransitionCancel(event: TransitionEvent<HTMLDivElement>) {
+    if (event.propertyName !== "clip-path") return;
+    // CSS reverses from the current interpolated clip-path. Re-assert the
+    // latest intent rather than allowing an interrupted phase to strand.
+    setPhase(requestedOpen.current ? (reduced ? "open" : "opening") : (reduced ? "resting" : "closing"));
   }
 
   return (
@@ -71,24 +89,28 @@ export function SoftwareOrigin() {
         <span>SHOWCASE ONLY · NOTHING SAVED OR SENT</span>
       </div>
       <div
+        id="genesis-stage"
         className="genesis-stage"
         data-open={active}
         data-phase={phase}
         data-product={selectedProduct?.slug}
-        onTransitionEnd={onStageTransition}
       >
         <div className="genesis-mark" aria-hidden="true">
           <HaruloMark />
-          <span className="genesis-signal" />
+        </div>
+        <div className="genesis-identity-rails" aria-hidden="true">
+          <span className="genesis-primary-rail" />
+          <span className="genesis-secondary-rail" />
         </div>
         <div
           id={panelId}
           ref={panelRef}
           className="genesis-interface"
+          onTransitionEnd={handleInterfaceTransitionEnd}
+          onTransitionCancel={handleInterfaceTransitionCancel}
           aria-label="Showcase publication workspace"
           aria-hidden={!acceptingInput}
           inert={!acceptingInput ? true : undefined}
-          hidden={!active}
         >
           <div className="genesis-interface-topline metadata">
             <span>HARULO / SHOWCASE</span>

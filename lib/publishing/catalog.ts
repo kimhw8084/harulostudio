@@ -81,11 +81,25 @@ export function publicProducts(catalog: PublisherCatalog) {
         p.provenance === "verified"),
   );
 }
+export function publicVerifiedProductIds(catalog: PublisherCatalog) {
+  return new Set(
+    publicProducts(catalog)
+      .filter((product): product is VerifiedProduct => product.provenance === "verified")
+      .map((product) => product.id),
+  );
+}
 export function hasVerifiedReleases(catalog: PublisherCatalog) {
-  return catalog.releases.some((release) => release.provenance === "verified");
+  const ids = publicVerifiedProductIds(catalog);
+  return catalog.releases.some((release) => release.provenance === "verified" && ids.has(release.productId));
 }
 export function hasVerifiedSupport(catalog: PublisherCatalog) {
-  return catalog.supportArticles.some((article) => article.provenance === "verified");
+  const ids = publicVerifiedProductIds(catalog);
+  return catalog.supportArticles.some((article) => article.provenance === "verified" && ids.has(article.productId));
+}
+export function hasProductSupport(catalog: PublisherCatalog, productId: string) {
+  return publicVerifiedProductIds(catalog).has(productId) && catalog.supportArticles.some(
+    (article) => article.productId === productId && article.provenance === "verified",
+  );
 }
 export function hasArchive(catalog: PublisherCatalog) {
   return publicProducts(catalog).some((product) => ["archived", "discontinued"].includes(product.status));

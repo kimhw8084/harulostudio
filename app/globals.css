@@ -2574,20 +2574,39 @@ html[data-motion="paused"] *::after {
   width: min(18rem, 42vw);
   filter: drop-shadow(0 0 2rem color-mix(in srgb, var(--brand-structure) 24%, transparent));
 }
-.genesis-signal {
+.genesis-identity-rails {
   position: absolute;
-  width: .6rem;
-  height: .6rem;
-  right: 18%;
-  top: 28%;
-  border-radius: 50%;
-  background: var(--brand-signal);
-  box-shadow: 0 0 1.25rem color-mix(in srgb, var(--brand-signal) 55%, transparent);
+  inset: 0;
+  pointer-events: none;
+}
+.genesis-identity-rails span {
+  position: absolute;
+  left: 27%;
+  height: 1px;
+  background: var(--brand-structure);
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 560ms var(--ease-settle), opacity 220ms ease;
+  opacity: .72;
+}
+.genesis-primary-rail {
+  top: 60%;
+  width: 64%;
+}
+.genesis-secondary-rail {
+  top: 68%;
+  width: 36%;
+  opacity: .42 !important;
+}
+.genesis-stage[data-open="true"] .genesis-identity-rails span {
+  transform: scaleX(1);
 }
 .genesis-interface {
   position: relative;
   z-index: 1;
   min-width: 0;
+  max-height: clamp(22rem, 42vw, 38rem);
+  overflow: auto;
   padding: clamp(.75rem, 2vw, 2rem);
   color: var(--stage-ink);
   border: 1px solid color-mix(in srgb, var(--stage-ink) 18%, transparent);
@@ -2626,6 +2645,9 @@ html[data-motion="paused"] *::after {
   border-color: color-mix(in srgb, var(--stage-ink) 22%, transparent);
   background: transparent;
 }
+.genesis-interface [role="tabpanel"][data-state="inactive"] {
+  display: none;
+}
 .genesis-controls {
   display: grid;
   grid-template-columns: minmax(15rem, .8fr) minmax(0, 1.5fr) auto;
@@ -2659,6 +2681,14 @@ html[data-motion="paused"] *::after {
   color: var(--primary-foreground);
   border-color: var(--primary);
   background: var(--primary);
+}
+.genesis-interface [role="tab"][data-state="active"]::before {
+  content: "";
+  width: .45rem;
+  height: .45rem;
+  margin-right: .35rem;
+  border-radius: 50%;
+  background: var(--brand-signal);
 }
 .genesis-product-tabs button .metadata {
   opacity: .72;
@@ -2753,7 +2783,7 @@ html[data-motion="paused"] *::after {
 @media (max-width: 900px) {
   .genesis-stage {
     grid-template-columns: 1fr;
-    min-height: 0;
+    min-height: 22rem;
   }
   .genesis-mark {
     min-height: 12rem;

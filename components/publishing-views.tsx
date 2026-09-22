@@ -26,6 +26,7 @@ import {
   formatDate,
   releasePath,
   getPublicPublications,
+  hasProductSupport,
 } from "@/lib/publishing/catalog";
 import { brandCopy } from "@/lib/brand/copy";
 import { Direction, PublisherMark, FoldMark } from "./publisher-mark";
@@ -41,15 +42,17 @@ export function PageIntro({
   eyebrow,
   title,
   description,
+  id,
 }: {
   eyebrow: string;
   title: string;
   description: string;
+  id?: string;
 }) {
   return (
     <div className="page-intro">
       <p className="eyebrow">{eyebrow}</p>
-      <h1>{title}</h1>
+      <h1 id={id}>{title}</h1>
       <p>{description}</p>
     </div>
   );
@@ -397,6 +400,7 @@ export function ProductView({
   prefix?: string;
 }) {
   const releases = productReleases(catalog, product.id);
+  const productHasSupport = hasProductSupport(catalog, product.id);
   const related = publicProducts(catalog)
     .filter((p) => p.id !== product.id)
     .slice(0, 2);
@@ -408,7 +412,7 @@ export function ProductView({
       <section className="product-detail-hero">
         <div>
           <p className="eyebrow">HARULO / SOFTWARE EDITION {product.edition}</p>
-          <h1>{product.name}</h1>
+          <h1 id="product-detail-title">{product.name}</h1>
           <p className="product-tagline">{product.tagline}</p>
           <p className="product-description">{product.description}</p>
           <div className="product-detail-meta">
@@ -431,7 +435,7 @@ export function ProductView({
                 <Direction />
               </a>
             )}
-            {product.provenance === "verified" && <Link className="text-link" href={`${prefix}/support/${product.slug}`}>Product support <Direction /></Link>}
+            {productHasSupport && <Link className="text-link" href={`${prefix}/support/${product.slug}`}>Product support <Direction /></Link>}
           </div>
           {product.provenance === "verified" && product.status === "preview" && (
             <p className="resource-note">

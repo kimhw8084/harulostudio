@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { HaruloMark } from "./harulo-mark";
 import { useBrandMotion } from "./use-brand-motion";
 import {
@@ -34,9 +34,38 @@ export function FooterReturn({ descriptor }: { descriptor: PageBrandDescriptor }
     paused,
   } = useBrandMotion(motion.orbit);
   const once = useRef(false);
+  const [sourcePose, setSourcePose] = useState<BrandPose>(PAGE_COMPOSITION_POSE);
+  const [anchorsMeasured, setAnchorsMeasured] = useState(false);
   useEffect(() => {
     const node = stageRef.current;
     if (!node) return;
+    const measureAnchors = () => {
+      const stageRect = node.getBoundingClientRect();
+      if (!stageRect.width || !stageRect.height) return;
+      const rectFor = (key: keyof PageBrandDescriptor["anchors"]) => {
+        const id = descriptor.anchors[key];
+        return id ? document.getElementById(id)?.getBoundingClientRect() ?? null : null;
+      };
+      const toRing = (rect: DOMRect | null) => rect
+        ? { x: ((rect.left - stageRect.left) / stageRect.width) * 100, y: ((rect.top - stageRect.top) / stageRect.height) * 100, width: (rect.width / stageRect.width) * 100, height: (rect.height / stageRect.height) * 100, rx: Math.min(rect.width, rect.height) / stageRect.width * 50, strokeWidth: 3.4 }
+        : PAGE_COMPOSITION_POSE.ring;
+      const toTier = (rect: DOMRect | null, fallback: BrandPose["primary"]) => rect
+        ? { x: ((rect.left - stageRect.left) / stageRect.width) * 100, y: ((rect.top - stageRect.top) / stageRect.height) * 100, width: (rect.width / stageRect.width) * 100, height: Math.max(1, (rect.height / stageRect.height) * 100), rx: 1 }
+        : fallback;
+      const signal = rectFor("signal");
+      setSourcePose({
+        ring: toRing(rectFor("aperture")),
+        primary: toTier(rectFor("primary"), PAGE_COMPOSITION_POSE.primary),
+        secondary: toTier(rectFor("secondary"), PAGE_COMPOSITION_POSE.secondary),
+        satellite: signal
+          ? { cx: ((signal.left + signal.width / 2 - stageRect.left) / stageRect.width) * 100, cy: ((signal.top + signal.height / 2 - stageRect.top) / stageRect.height) * 100, r: Math.max(2, signal.width / stageRect.width * 50) }
+          : PAGE_COMPOSITION_POSE.satellite,
+      });
+      setAnchorsMeasured(true);
+    };
+    measureAnchors();
+    const resize = new ResizeObserver(measureAnchors);
+    resize.observe(node);
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !once.current) {
@@ -47,20 +76,23 @@ export function FooterReturn({ descriptor }: { descriptor: PageBrandDescriptor }
       { threshold: 0.55 },
     );
     observer.observe(node);
-    return () => observer.disconnect();
-  }, [stageRef, play]);
+    return () => { observer.disconnect(); resize.disconnect(); };
+  }, [stageRef, play, descriptor]);
   const pose = reduced || paused
     ? REST
-    : interpolatePose(PAGE_COMPOSITION_POSE, REST, ease(progress));
+    : interpolatePose(sourcePose, REST, ease(progress));
   return (
     <div
       className="footer-return"
       ref={stageRef}
+      id="footer-return-stage"
       data-systems="17 24"
+      data-page={descriptor.pageId}
+      data-anchors-measured={anchorsMeasured}
+      data-complete={reduced || paused || progress >= 1}
       style={
         {
-          "--return-progress":
-            reduced || paused || progress === 0 ? 1 : progress,
+          "--return-progress": reduced || paused ? 1 : progress,
         } as CSSProperties
       }
     >
@@ -73,9 +105,9 @@ export function FooterReturn({ descriptor }: { descriptor: PageBrandDescriptor }
         </div>
       </div>
       <HaruloMark pose={pose} />
-      <button onClick={replay} aria-label="Replay mark assembly">
-        Replay return
-      </button>
+      <span className="return-signal-anchor" aria-hidden="true" />
+      <p className="return-closing">{descriptor.title}</p>
+      {!reduced && !paused && <button onClick={replay} aria-label="Replay mark assembly">Replay return</button>}
     </div>
   );
 }

@@ -1,4 +1,6 @@
+"use client";
 import Link from "@/components/site-link";
+import { usePathname } from "next/navigation";
 import { ArrowUp } from "lucide-react";
 import { studio } from "@/lib/site-content";
 import { ThemeControl, MotionControl } from "./experience-provider";
@@ -40,14 +42,26 @@ export function SiteHeader() {
     </>
   );
 }
-export function SiteFooter() {
-  const navigation = publicNavigation(liveCatalog);
-  const descriptor: PageBrandDescriptor = {
-    pageId: "site-shell",
+function descriptorForPath(pathname: string): PageBrandDescriptor {
+  const clean = pathname.replace(/\/$/, "") || "/";
+  const page = clean === "/" ? "home" : clean.startsWith("/software/") ? "product-detail" : clean.slice(1).replaceAll("/", "-") || "home";
+  return {
+    pageId: page,
     title: brandCopy.closing,
     metadata: ["HARULO STUDIO", "INDEPENDENT SOFTWARE PUBLISHER", brandCopy.master],
-    anchors: { aperture: "footer-return-mark", primary: "footer-philosophy", secondary: "footer-wordmark", signal: "footer-return-signal" },
+    anchors: {
+      aperture: page === "home" ? "genesis-stage" : page === "studio" ? "story-title" : page === "press" ? "press-title" : page === "privacy" ? "privacy-title" : page === "product-detail" ? "product-detail-art" : "main",
+      primary: page === "studio" ? "story-title" : page === "product-detail" ? "product-detail-title" : "footer-philosophy",
+      secondary: page === "home" ? "software-title" : "footer-wordmark",
+      signal: page === "home" ? "genesis-stage" : page === "studio" ? "story-title" : page === "product-detail" ? "product-detail-art" : page === "press" ? "press-title" : page === "privacy" ? "privacy-title" : "main",
+    },
   };
+}
+
+export function SiteFooter() {
+  const pathname = usePathname() || "/";
+  const navigation = publicNavigation(liveCatalog);
+  const descriptor = descriptorForPath(pathname);
   return (
     <footer className="site-footer">
       <div className="footer-top">
@@ -65,8 +79,8 @@ export function SiteFooter() {
           </a>
         </nav>
       </div>
-      <p className="footer-philosophy">{brandCopy.master}</p>
-      <div className="footer-wordmark">
+      <p className="footer-philosophy" id="footer-philosophy">{brandCopy.master}</p>
+      <div className="footer-wordmark" id="footer-wordmark">
         <span aria-hidden="true">HARULO</span>
         <FooterReturn descriptor={descriptor} />
       </div>

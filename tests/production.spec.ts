@@ -57,4 +57,17 @@ test.describe("public Harulo production surface", () => {
     await theme.click();
     await expect(theme).not.toHaveAttribute("aria-label", first ?? "");
   });
+
+  test("final return consumes page-specific anchors", async ({ page }) => {
+    await page.goto("/");
+    const homeFooter = page.locator("#footer-return-stage");
+    await expect(homeFooter).toHaveAttribute("data-page", "home");
+    await homeFooter.scrollIntoViewIfNeeded();
+    await expect(homeFooter).toHaveAttribute("data-anchors-measured", "true");
+    await page.goto("/privacy");
+    const privacyFooter = page.locator("#footer-return-stage");
+    await expect(privacyFooter).toHaveAttribute("data-page", "privacy");
+    await privacyFooter.scrollIntoViewIfNeeded();
+    await expect(privacyFooter).toHaveAttribute("data-anchors-measured", "true");
+  });
 });

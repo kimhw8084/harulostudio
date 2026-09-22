@@ -20,6 +20,7 @@ export default function Press() {
       <PageIntro
         eyebrow="Harulo / Press room"
         title="A small introduction."
+        id="press-title"
         description="Company information and identity assets for writing about Harulo Studio."
       />
       <div className="detail-grid">
