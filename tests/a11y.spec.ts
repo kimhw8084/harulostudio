@@ -1,6 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
+test.describe("accessibility checks @a11y", () => {
 for (const path of ["/", "/software", "/studio", "/press", "/privacy", "/software/sori"]) {
   test(`axe smoke: ${path}`, async ({ page }) => {
     await page.goto(path);
@@ -43,4 +44,5 @@ test("mobile navigation dialog has focus containment and an Escape path", async 
   expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
   await page.keyboard.press("Escape");
   await expect(page.getByRole("button", { name: /Menu/ })).toBeFocused();
+});
 });

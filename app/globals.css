@@ -1395,6 +1395,65 @@ button:hover .direction {
 .content-page {
   padding-block: 4rem 6rem;
   min-height: 65vh;
+  position: relative;
+}
+.return-source-map {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.return-source-map > span,
+.return-source-signal {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+  opacity: 0;
+}
+.return-source-aperture {
+  width: min(22rem, 28vw);
+  height: min(14rem, 20vw);
+  border: 1px solid var(--brand-structure);
+  border-radius: 50%;
+  left: 5%;
+  top: 8%;
+}
+.return-source-primary {
+  width: 42%;
+  height: 6px;
+  background: var(--brand-structure);
+  left: 7%;
+  top: 31%;
+}
+.return-source-secondary {
+  width: 22%;
+  height: 4px;
+  background: var(--brand-structure);
+  left: 7%;
+  top: 34%;
+}
+.return-source-signal {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand-signal);
+  left: 72%;
+  top: 12%;
+}
+.story-section {
+  position: relative;
+}
+.genesis-stage > .return-source-aperture {
+  left: 7%;
+  top: 5%;
+  width: min(38vw, 30rem);
+  height: min(38vw, 30rem);
+  border-width: clamp(2rem, 5vw, 5rem);
+  opacity: 0;
+}
+.genesis-return-signal {
+  left: 68.9%;
+  top: 29.2%;
 }
 .page-intro {
   padding: 1.5rem 0 4rem;

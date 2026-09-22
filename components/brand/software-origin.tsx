@@ -99,9 +99,11 @@ export function SoftwareOrigin() {
           <HaruloMark />
         </div>
         <div className="genesis-identity-rails" aria-hidden="true">
-          <span className="genesis-primary-rail" />
-          <span className="genesis-secondary-rail" />
+          <span id="genesis-primary-rail" className="genesis-primary-rail" />
+          <span id="genesis-secondary-rail" className="genesis-secondary-rail" />
         </div>
+        <span id="home-return-aperture" className="return-source-aperture" aria-hidden="true" />
+        <span id="home-return-signal" className="return-source-signal genesis-return-signal" aria-hidden="true" />
         <div
           id={panelId}
           ref={panelRef}

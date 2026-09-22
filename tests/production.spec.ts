@@ -59,15 +59,21 @@ test.describe("public Harulo production surface", () => {
   });
 
   test("final return consumes page-specific anchors", async ({ page }) => {
-    await page.goto("/");
-    const homeFooter = page.locator("#footer-return-stage");
-    await expect(homeFooter).toHaveAttribute("data-page", "home");
-    await homeFooter.scrollIntoViewIfNeeded();
-    await expect(homeFooter).toHaveAttribute("data-anchors-measured", "true");
-    await page.goto("/privacy");
-    const privacyFooter = page.locator("#footer-return-stage");
-    await expect(privacyFooter).toHaveAttribute("data-page", "privacy");
-    await privacyFooter.scrollIntoViewIfNeeded();
-    await expect(privacyFooter).toHaveAttribute("data-anchors-measured", "true");
+    const pages = [
+      ["/", "home", ["home-return-aperture", "genesis-primary-rail", "genesis-secondary-rail", "home-return-signal"]],
+      ["/software", "software", ["software-return-aperture", "software-return-primary", "software-return-secondary", "software-return-signal"]],
+      ["/studio", "studio", ["studio-return-aperture", "studio-return-primary", "studio-return-secondary", "studio-return-signal"]],
+      ["/press", "press", ["press-return-aperture", "press-return-primary", "press-return-secondary", "press-return-signal"]],
+      ["/privacy", "privacy", ["privacy-return-aperture", "privacy-return-primary", "privacy-return-secondary", "privacy-return-signal"]],
+      ["/software/sori", "product-detail", ["product-detail-return-aperture", "product-detail-return-primary", "product-detail-return-secondary", "product-detail-return-signal"]],
+    ] as const;
+    for (const [path, pageId, anchorIds] of pages) {
+      await page.goto(path);
+      for (const id of anchorIds) await expect(page.locator(`#${id}`)).toHaveCount(1);
+      const footer = page.locator("#footer-return-stage");
+      await expect(footer).toHaveAttribute("data-page", pageId);
+      await footer.scrollIntoViewIfNeeded();
+      await expect(footer).toHaveAttribute("data-anchors-measured", "true");
+    }
   });
 });

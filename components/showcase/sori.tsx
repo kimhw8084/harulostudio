@@ -27,11 +27,19 @@ export function SoriSpecimen() {
     setOutput("Studio speakers");
     setQuiet(false);
   };
+  const updateChannel = (id: string, updater: (channel: Channel) => Channel) => {
+    setChannels((items) => items.map((item) => (item.id === id ? updater(item) : item)));
+  };
+  const toggleMute = (id: string) => {
+    updateChannel(id, (channel) => channel.muted
+      ? { ...channel, muted: false, level: channel.remembered }
+      : { ...channel, muted: true, remembered: channel.level });
+  };
   return (
     <ShowcaseShell name="Sori">
       <p className="concept-title">A little more control.</p>
       <p className="showcase-note">Audio behavior is simulated; this does not control operating-system audio.</p>
-      {channels.map((channel, index) => (
+      {channels.map((channel) => (
         <div className="mixer-row" key={channel.id}>
           <label htmlFor={`sori-${channel.id}`}>{channel.label}</label>
           <input
@@ -43,7 +51,7 @@ export function SoriSpecimen() {
             aria-valuetext={`${channel.muted || quiet ? 0 : channel.level}%`}
             onChange={(event) => {
               const value = clampInt(Number(event.target.value), 0, 100);
-              setChannels((items) => items.map((item, i) => i === index ? { ...item, level: value, remembered: value, muted: false } : item));
+              updateChannel(channel.id, (item) => ({ ...item, level: value, remembered: value, muted: false }));
             }}
           />
           <output htmlFor={`sori-${channel.id}`}>{channel.muted || quiet ? 0 : channel.level}%</output>
@@ -52,7 +60,7 @@ export function SoriSpecimen() {
             variant="ghost"
             aria-pressed={channel.muted}
             aria-label={`${channel.muted ? "Unmute" : "Mute"} ${channel.label}`}
-            onClick={() => setChannels((items) => items.map((item, i) => i === index ? { ...item, muted: !item.muted, level: item.muted ? item.remembered : item.level } : item))}
+            onClick={() => toggleMute(channel.id)}
           >
             {channel.muted ? "Unmute" : "Mute"}
           </Button>

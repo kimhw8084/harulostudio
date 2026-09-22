@@ -6,9 +6,14 @@ test.describe("five local showcase application contracts", () => {
     const slider = page.getByRole("slider", { name: "Music" });
     await slider.fill("42");
     await expect(slider).toHaveValue("42");
-    await page.getByRole("button", { name: "Mute Music" }).click();
-    await page.getByRole("button", { name: "Unmute Music" }).click();
-    await expect(slider).not.toHaveValue("0");
+    const muteButton = page.getByRole("button", { name: /^(Mute|Unmute) Music$/ });
+    await expect(muteButton).toHaveAttribute("aria-pressed", "false");
+    await muteButton.click();
+    await expect(muteButton).toHaveAttribute("aria-pressed", "true");
+    await expect(slider).toHaveValue("0");
+    await muteButton.click();
+    await expect(muteButton).toHaveAttribute("aria-pressed", "false");
+    await expect(slider).toHaveValue("42");
     await page.getByRole("combobox", { name: "Output device (example)" }).selectOption({ label: "Reading headphones" });
     await page.getByRole("checkbox", { name: /Quiet mode/ }).check();
     await expect(page.getByRole("checkbox", { name: /Quiet mode/ })).toBeChecked();
@@ -51,6 +56,8 @@ test.describe("five local showcase application contracts", () => {
     await page.getByRole("button", { name: "Start session" }).click();
     await expect(page.getByRole("button", { name: "Pause session" })).toBeVisible();
     await page.getByRole("button", { name: "Pause session" }).click();
+    await expect(page.getByRole("button", { name: "Start session" })).toBeVisible();
+    await expect(page.locator(".focus-state")).toContainText("Paused");
     await page.getByRole("button", { name: "Preview completion" }).click();
     await expect(page.locator(".focus-state")).toContainText("Session complete");
     await expect(page.locator(".focus-clock")).toHaveText("00:00");

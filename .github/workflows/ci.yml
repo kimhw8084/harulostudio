@@ -5,13 +5,16 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
-  verify:
+  quality:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -21,16 +24,110 @@ jobs:
       - run: npm run verify:brand
       - run: npm run test:unit
       - run: npm run build
+
+  functional:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run test:ui
-      - run: npm run test:a11y
-      - run: npm run test:visual
-      - run: npm run test:perf
       - if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
-          name: harulo-test-evidence
+          name: harulo-functional-evidence
           path: |
             work/
             test-results/
           if-no-files-found: ignore
+
+  accessibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run test:a11y
+      - if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: harulo-accessibility-evidence
+          path: |
+            work/
+            test-results/
+          if-no-files-found: ignore
+
+  visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run test:visual
+      - if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: harulo-visual-evidence
+          path: |
+            work/
+            test-results/
+          if-no-files-found: ignore
+
+  performance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run test:perf
+      - if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: harulo-performance-evidence
+          path: |
+            work/
+            test-results/
+          if-no-files-found: ignore
+
+  production-gate:
+    if: always()
+    needs: [quality, functional, accessibility, visual, performance]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every production check
+        env:
+          QUALITY: ${{ needs.quality.result }}
+          FUNCTIONAL: ${{ needs.functional.result }}
+          ACCESSIBILITY: ${{ needs.accessibility.result }}
+          VISUAL: ${{ needs.visual.result }}
+          PERFORMANCE: ${{ needs.performance.result }}
+        run: |
+          test "$QUALITY" = success
+          test "$FUNCTIONAL" = success
+          test "$ACCESSIBILITY" = success
+          test "$VISUAL" = success
+          test "$PERFORMANCE" = success

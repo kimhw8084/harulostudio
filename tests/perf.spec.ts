@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("compiled homepage meets documented mobile performance budgets", async ({ browser }, testInfo) => {
+test("compiled homepage meets documented mobile performance budgets @perf", async ({ browser }, testInfo) => {
   test.skip(testInfo.project.name !== "chromium", "Performance gate uses Chromium's stable renderer.");
   const samples: { fcp: number; lcp: number; cls: number; js: number }[] = [];
   for (let index = 0; index < 3; index += 1) {

@@ -45,16 +45,24 @@ export function SiteHeader() {
 function descriptorForPath(pathname: string): PageBrandDescriptor {
   const clean = pathname.replace(/\/$/, "") || "/";
   const page = clean === "/" ? "home" : clean.startsWith("/software/") ? "product-detail" : clean.slice(1).replaceAll("/", "-") || "home";
+  const anchors = page === "home"
+    ? { aperture: "home-return-aperture", primary: "genesis-primary-rail", secondary: "genesis-secondary-rail", signal: "home-return-signal" }
+    : page === "software"
+      ? { aperture: "software-return-aperture", primary: "software-return-primary", secondary: "software-return-secondary", signal: "software-return-signal" }
+      : page === "studio"
+        ? { aperture: "studio-return-aperture", primary: "studio-return-primary", secondary: "studio-return-secondary", signal: "studio-return-signal" }
+        : page === "press"
+          ? { aperture: "press-return-aperture", primary: "press-return-primary", secondary: "press-return-secondary", signal: "press-return-signal" }
+          : page === "privacy"
+            ? { aperture: "privacy-return-aperture", primary: "privacy-return-primary", secondary: "privacy-return-secondary", signal: "privacy-return-signal" }
+            : page === "product-detail"
+              ? { aperture: "product-detail-return-aperture", primary: "product-detail-return-primary", secondary: "product-detail-return-secondary", signal: "product-detail-return-signal" }
+              : { aperture: "main", primary: "footer-philosophy", secondary: "footer-wordmark", signal: "main" };
   return {
     pageId: page,
     title: brandCopy.closing,
     metadata: ["HARULO STUDIO", "INDEPENDENT SOFTWARE PUBLISHER", brandCopy.master],
-    anchors: {
-      aperture: page === "home" ? "genesis-stage" : page === "studio" ? "story-title" : page === "press" ? "press-title" : page === "privacy" ? "privacy-title" : page === "product-detail" ? "product-detail-art" : "main",
-      primary: page === "studio" ? "story-title" : page === "product-detail" ? "product-detail-title" : "footer-philosophy",
-      secondary: page === "home" ? "software-title" : "footer-wordmark",
-      signal: page === "home" ? "genesis-stage" : page === "studio" ? "story-title" : page === "product-detail" ? "product-detail-art" : page === "press" ? "press-title" : page === "privacy" ? "privacy-title" : "main",
-    },
+    anchors,
   };
 }
 

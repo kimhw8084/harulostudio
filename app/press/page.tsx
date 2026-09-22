@@ -1,5 +1,5 @@
 import Link from "@/components/site-link";
-import { PageIntro } from "@/components/publishing-views";
+import { PageIntro, ReturnSourceAnchors } from "@/components/publishing-views";
 import { PublisherMark, Direction } from "@/components/publisher-mark";
 import { liveCatalog, publicProducts } from "@/lib/publishing/catalog";
 import { studio } from "@/lib/site-content";
@@ -23,6 +23,7 @@ export default function Press() {
         id="press-title"
         description="Company information and identity assets for writing about Harulo Studio."
       />
+      <ReturnSourceAnchors page="press" />
       <div className="detail-grid">
         <div>
           <PublisherMark />

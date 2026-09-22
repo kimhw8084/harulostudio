@@ -13,10 +13,10 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "brand:assets": "node --experimental-strip-types scripts/generate-brand-assets.mjs",
     "typecheck": "tsc --noEmit",
-    "test:ui": "playwright test",
+    "test:ui": "playwright test --grep-invert \"@visual|@a11y|@perf\"",
     "test:unit": "node --experimental-strip-types --test tests/unit/*.test.mjs",
     "test:a11y": "playwright test tests/a11y.spec.ts",
-    "test:visual": "playwright test tests/visual.spec.ts",
+    "test:visual": "playwright test tests/visual.spec.ts --project=chromium",
     "test:perf": "node scripts/perf-check.mjs && playwright test tests/perf.spec.ts --project=chromium",
     "verify:brand": "node --experimental-strip-types scripts/verify-brand.mjs"
   },

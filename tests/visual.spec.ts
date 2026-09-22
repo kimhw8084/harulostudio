@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test.describe("reviewed visual checkpoints", () => {
+test.describe("reviewed visual checkpoints @visual", () => {
   test.beforeEach(({}, testInfo) => {
     test.skip(testInfo.project.name !== "chromium", "Baselines are pinned to Chromium normal motion.");
   });

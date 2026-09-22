@@ -57,6 +57,17 @@ export function PageIntro({
     </div>
   );
 }
+
+export function ReturnSourceAnchors({ page }: { page: "software" | "studio" | "press" | "privacy" | "product-detail" }) {
+  return (
+    <span className={`return-source-map return-source-map-${page}`} aria-hidden="true">
+      <span id={`${page}-return-aperture`} className="return-source-aperture" />
+      <span id={`${page}-return-primary`} className="return-source-primary" />
+      <span id={`${page}-return-secondary`} className="return-source-secondary" />
+      <span id={`${page}-return-signal`} className="return-source-signal" />
+    </span>
+  );
+}
 export function EmptyPublication({
   title,
   children,
@@ -163,8 +174,9 @@ export function CatalogView({
       <PageIntro
         eyebrow={catalog.edition === "showcase" ? "Harulo / showcase" : "The Harulo catalog"}
         title={catalog.edition === "showcase" ? brandCopy.catalog : "Software for everyday life."}
-        description={catalog.edition === "showcase" ? "Five interactive concepts showing how Harulo software can be introduced, explored and maintained. These are not currently available products." : "Thoughtful tools, published with care. Find something that makes a small part of your day a little better."}
+        description={catalog.edition === "showcase" ? "Interactive concepts showing how Harulo software can be introduced, explored and maintained. These are not currently available products." : "Thoughtful tools, published with care. Find something that makes a small part of your day a little better."}
       />
+      {catalog.edition === "showcase" && <ReturnSourceAnchors page="software" />}
       {catalog.edition === "showcase" && <p className="showcase-disclosure page-disclosure">SHOWCASE PUBLICATION · INTERACTIVE CONCEPT · NOT CURRENTLY AVAILABLE</p>}
       {!all.length ? (
         <EmptyPublication title="The first edition is still ahead.">
@@ -241,6 +253,7 @@ export function SoftwareCatalogView({ query = {} }: { query?: Query }) {
         title={brandCopy.catalog}
         description="Published software when it is ready; interactive concepts while the work is still becoming."
       />
+      <ReturnSourceAnchors page="software" />
       <form className="filters" method="get" action="/software">
         <label>Search <Input name="q" defaultValue={queryValue(query, "q")} placeholder="Name, category or purpose" /></label>
         <label>Platform <NativeSelect name="platform" defaultValue={queryValue(query, "platform")}>
@@ -265,7 +278,7 @@ export function SoftwareCatalogView({ query = {} }: { query?: Query }) {
       )}
       <section className="catalog-section" aria-labelledby="showcase-software-title">
         <div className="section-heading">
-          <p className="eyebrow">SHOWCASE / {showcase.length} STUDIES</p>
+            <p className="eyebrow">SHOWCASE STUDIES</p>
           <h2 id="showcase-software-title">{brandCopy.catalog}</h2>
         </div>
         <p className="showcase-disclosure page-disclosure">
@@ -406,6 +419,7 @@ export function ProductView({
     .slice(0, 2);
   return (
     <main id="main" tabIndex={-1} className="content-page page-width">
+      <ReturnSourceAnchors page="product-detail" />
       <div className="detail-breadcrumb">
         <Link href={`${prefix}/software`}>Software</Link> / {product.name}
       </div>

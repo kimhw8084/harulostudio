@@ -1,4 +1,4 @@
-import { PageIntro } from "@/components/publishing-views";
+import { PageIntro, ReturnSourceAnchors } from "@/components/publishing-views";
 import { studio } from "@/lib/site-content";
 import { pageMetadata } from "@/lib/publishing/metadata";
 
@@ -17,6 +17,7 @@ export default function Privacy() {
         description="Harulo Studio is intentionally small. This page describes the data practices of this website, not future software products."
         id="privacy-title"
       />
+      <ReturnSourceAnchors page="privacy" />
       <article className="article legal-page">
         <h2>What this site stores locally</h2>
         <p>Your selected light or dark theme and motion preference may be stored in your browser so the site can respect your choice on a later visit.</p>

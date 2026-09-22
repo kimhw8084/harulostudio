@@ -9,6 +9,7 @@ import { ProductEdition } from "./product-edition";
 import { BrandScene } from "./brand/scene/brand-scene";
 import { HaruloEnvironment } from "./brand/environments/harulo-environment";
 import { brandCopy } from "@/lib/brand/copy";
+import { ReturnSourceAnchors } from "./publishing-views";
 
 export function ContactSection() {
   return (
@@ -44,6 +45,7 @@ export function StudioStory({ full = false }: { full?: boolean }) {
         </div>
         <div className="korean-direction" lang="ko"><span>하루</span><ArrowRight aria-hidden="true" /><span>하루<b>로</b></span></div>
         <div className="language-labels metadata"><span>{brandCopy.motif}</span></div>
+        <ReturnSourceAnchors page="studio" />
       </section>
     </BrandScene>
   );
@@ -86,9 +88,9 @@ export function HaruloSite({ prefix = "", hero }: { prefix?: string; hero?: Reac
         </section>
       </BrandScene>}
       <section className="software-section" id="software" aria-labelledby="software-title">
-        <div className="section-heading"><p className="eyebrow">01 / SOFTWARE, PUBLISHED.</p><span className="metadata">{products.length} PUBLICATIONS / ONE PUBLISHER</span></div>
+        <div className="section-heading"><p className="eyebrow">01 / SOFTWARE, PUBLISHED.</p><span className="metadata">SHOWCASE STUDIES / ONE PUBLISHER</span></div>
         <h2 id="software-title" className="catalog-title">{brandCopy.catalog}</h2>
-        {showcase.length > 0 && <p className="showcase-disclosure">{showcase.length} interactive publication studies showing how future Harulo software will be presented. <strong>Interactive concept — not released software.</strong></p>}
+        {showcase.length > 0 && <p className="showcase-disclosure">Interactive publication studies showing how future Harulo software can be presented. <strong>Interactive concept — not released software.</strong></p>}
         <div className="publisher-shelf">{products.map((product, index) => <ProductEdition key={product.id} product={product} prefix={prefix} initiallyOpen={index === 0} />)}</div>
         <Link className="catalog-all" href={`${prefix}/software`}>OPEN THE SHOWCASE <Direction /></Link>
       </section>

@@ -1,79 +1,113 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useReducer } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ShowcaseFoot, ShowcaseShell } from "./shared";
 
 type TimerState = "ready" | "running" | "paused" | "complete";
+type FocusState = {
+  phase: TimerState;
+  durationMs: number;
+  remainingMs: number;
+  deadline: number | null;
+  intention: string;
+  quietMode: boolean;
+};
+type FocusAction =
+  | { type: "SET_DURATION"; minutes: number }
+  | { type: "SET_INTENTION"; value: string }
+  | { type: "START"; now: number }
+  | { type: "PAUSE"; now: number }
+  | { type: "TICK"; now: number }
+  | { type: "PREVIEW_COMPLETE" }
+  | { type: "TOGGLE_QUIET"; value: boolean }
+  | { type: "RESET" };
+
+const durationFor = (minutes: number) => minutes * 60_000;
+
+function focusReducer(state: FocusState, action: FocusAction): FocusState {
+  switch (action.type) {
+    case "SET_DURATION": {
+      const durationMs = durationFor(action.minutes);
+      return { ...state, phase: "ready", durationMs, remainingMs: durationMs, deadline: null };
+    }
+    case "SET_INTENTION":
+      return { ...state, intention: action.value };
+    case "START":
+      if (state.phase === "complete") return state;
+      return { ...state, phase: "running", deadline: action.now + state.remainingMs };
+    case "PAUSE": {
+      if (state.phase !== "running") return state;
+      const remainingMs = Math.max(0, (state.deadline ?? action.now) - action.now);
+      return remainingMs === 0
+        ? { ...state, phase: "complete", remainingMs: 0, deadline: null }
+        : { ...state, phase: "paused", remainingMs, deadline: null };
+    }
+    case "TICK": {
+      if (state.phase !== "running") return state;
+      const remainingMs = Math.max(0, (state.deadline ?? action.now) - action.now);
+      return remainingMs === 0
+        ? { ...state, phase: "complete", remainingMs: 0, deadline: null }
+        : { ...state, remainingMs };
+    }
+    case "PREVIEW_COMPLETE":
+      return { ...state, phase: "complete", remainingMs: 0, deadline: null };
+    case "TOGGLE_QUIET":
+      return { ...state, quietMode: action.value };
+    case "RESET":
+      return {
+        ...state,
+        phase: "ready",
+        remainingMs: state.durationMs,
+        deadline: null,
+        intention: "",
+        quietMode: false,
+      };
+  }
+}
+
+const initialFocusState: FocusState = {
+  phase: "ready",
+  durationMs: durationFor(15),
+  remainingMs: durationFor(15),
+  deadline: null,
+  intention: "",
+  quietMode: false,
+};
+
 const format = (ms: number) => {
   const seconds = Math.max(0, Math.ceil(ms / 1000));
   return `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
 };
 
 export function GoyoSpecimen() {
-  const [minutes, setMinutes] = useState(15);
-  const [intention, setIntention] = useState("");
-  const [state, setState] = useState<TimerState>("ready");
-  const [remaining, setRemaining] = useState(minutes * 60_000);
-  const [quietMode, setQuietMode] = useState(false);
-  const deadline = useRef<number | null>(null);
+  const [state, dispatch] = useReducer(focusReducer, initialFocusState);
   useEffect(() => {
-    if (state !== "running") return;
-    const tick = () => {
-      const next = Math.max(0, (deadline.current ?? Date.now()) - Date.now());
-      setRemaining(next);
-      if (next <= 0) {
-        deadline.current = null;
-        setState("complete");
-      }
-    };
-    tick();
-    const id = window.setInterval(tick, 250);
+    if (state.phase !== "running") return;
+    const id = window.setInterval(() => dispatch({ type: "TICK", now: Date.now() }), 250);
     return () => window.clearInterval(id);
-  }, [state]);
-  const choose = (value: number) => {
-    setMinutes(value);
-    setRemaining(value * 60_000);
-    setState("ready");
-    deadline.current = null;
-  };
-  const start = () => {
-    if (state === "paused") deadline.current = Date.now() + remaining;
-    else deadline.current = Date.now() + remaining;
-    setState("running");
-  };
-  const pause = () => {
-    setRemaining(Math.max(0, (deadline.current ?? Date.now()) - Date.now()));
-    deadline.current = null;
-    setState("paused");
-  };
-  const reset = () => {
-    deadline.current = null;
-    setState("ready");
-    setRemaining(minutes * 60_000);
-    setIntention("");
-    setQuietMode(false);
-  };
+  }, [state.phase]);
+  const reset = () => dispatch({ type: "RESET" });
   return (
     <ShowcaseShell name="Goyo">
       <p className="concept-title">A calmer place for attention.</p>
       <label className="concept-label" htmlFor="goyo-intention">Today’s intention</label>
-      <Input id="goyo-intention" value={intention} maxLength={120} onChange={(event) => setIntention(event.target.value)} placeholder="One small thing" />
+      <Input id="goyo-intention" value={state.intention} maxLength={120} onChange={(event) => dispatch({ type: "SET_INTENTION", value: event.target.value })} placeholder="One small thing" />
       <div className="weather-switches" aria-label="Focus duration">
-        {[5, 15, 25].map((value) => <Button key={value} type="button" variant="ghost" aria-pressed={minutes === value} disabled={state === "running"} onClick={() => choose(value)}>{value} min</Button>)}
+        {[5, 15, 25].map((value) => <Button key={value} type="button" variant="ghost" aria-pressed={state.durationMs === durationFor(value)} disabled={state.phase === "running"} onClick={() => dispatch({ type: "SET_DURATION", minutes: value })}>{value} min</Button>)}
       </div>
-      <output className="focus-clock" aria-live="polite">{format(remaining)}</output>
+      <output className="focus-clock" aria-live="polite">{format(state.remainingMs)}</output>
       <p className="focus-state" role="status">
-        {state === "running" ? "Focus is in progress." : state === "paused" ? "Paused. Your remaining time is held." : state === "complete" ? "Session complete. Take the next small step." : "Choose a length, then begin."}
+        {state.phase === "running" ? "Focus is in progress." : state.phase === "paused" ? "Paused. Your remaining time is held." : state.phase === "complete" ? "Session complete. Take the next small step." : "Choose a length, then begin."}
       </p>
       <label className="checkbox-row">
-        <input type="checkbox" checked={quietMode} onChange={(event) => setQuietMode(event.target.checked)} />
+        <input type="checkbox" checked={state.quietMode} onChange={(event) => dispatch({ type: "TOGGLE_QUIET", value: event.target.checked })} />
         Quiet mode (simulated)
       </label>
       <div className="instrument-actions">
-        {state === "running" ? <Button type="button" onClick={pause}>Pause session</Button> : <Button type="button" onClick={start} disabled={state === "complete"}>Start session</Button>}
-        <Button type="button" variant="ghost" onClick={() => { setRemaining(0); deadline.current = null; setState("complete"); }}>Preview completion</Button>
+        {state.phase === "running" ? <Button type="button" onClick={() => dispatch({ type: "PAUSE", now: Date.now() })}>Pause session</Button> : <Button type="button" onClick={() => dispatch({ type: "START", now: Date.now() })} disabled={state.phase === "complete"}>Start session</Button>}
+        <Button type="button" variant="ghost" onClick={() => dispatch({ type: "PREVIEW_COMPLETE" })}>Preview completion</Button>
         <Button type="button" variant="ghost" onClick={reset}>Reset</Button>
       </div>
       <ShowcaseFoot onReset={reset} />

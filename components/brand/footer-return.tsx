@@ -34,6 +34,7 @@ export function FooterReturn({ descriptor }: { descriptor: PageBrandDescriptor }
     paused,
   } = useBrandMotion(motion.orbit);
   const once = useRef(false);
+  const measureRef = useRef<() => void>(() => undefined);
   const [sourcePose, setSourcePose] = useState<BrandPose>(PAGE_COMPOSITION_POSE);
   const [anchorsMeasured, setAnchorsMeasured] = useState(false);
   useEffect(() => {
@@ -58,25 +59,31 @@ export function FooterReturn({ descriptor }: { descriptor: PageBrandDescriptor }
         primary: toTier(rectFor("primary"), PAGE_COMPOSITION_POSE.primary),
         secondary: toTier(rectFor("secondary"), PAGE_COMPOSITION_POSE.secondary),
         satellite: signal
-          ? { cx: ((signal.left + signal.width / 2 - stageRect.left) / stageRect.width) * 100, cy: ((signal.top + signal.height / 2 - stageRect.top) / stageRect.height) * 100, r: Math.max(2, signal.width / stageRect.width * 50) }
+          ? { cx: ((signal.left + signal.width / 2 - stageRect.left) / stageRect.width) * 100, cy: ((signal.top + signal.height / 2 - stageRect.top) / stageRect.height) * 100, r: Math.min(6, Math.max(2, signal.width / stageRect.width * 50)) }
           : PAGE_COMPOSITION_POSE.satellite,
       });
       setAnchorsMeasured(true);
     };
+    measureRef.current = measureAnchors;
     measureAnchors();
     const resize = new ResizeObserver(measureAnchors);
     resize.observe(node);
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !once.current) {
+          measureAnchors();
           once.current = true;
-          play();
+          requestAnimationFrame(() => play());
         }
       },
       { threshold: 0.55 },
     );
     observer.observe(node);
-    return () => { observer.disconnect(); resize.disconnect(); };
+    return () => {
+      observer.disconnect();
+      resize.disconnect();
+      if (measureRef.current === measureAnchors) measureRef.current = () => undefined;
+    };
   }, [stageRef, play, descriptor]);
   const pose = reduced || paused
     ? REST
@@ -107,7 +114,7 @@ export function FooterReturn({ descriptor }: { descriptor: PageBrandDescriptor }
       <HaruloMark pose={pose} />
       <span className="return-signal-anchor" aria-hidden="true" />
       <p className="return-closing">{descriptor.title}</p>
-      {!reduced && !paused && <button onClick={replay} aria-label="Replay mark assembly">Replay return</button>}
+      {!reduced && !paused && <button onClick={() => { measureRef.current(); requestAnimationFrame(() => replay()); }} aria-label="Replay mark assembly">Replay return</button>}
     </div>
   );
 }
