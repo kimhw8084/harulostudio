@@ -112,6 +112,7 @@ export function ExperienceProvider({
           manualTheme.current = v;
           write("harulo-theme", v);
           setTheme(v);
+          window.dispatchEvent(new CustomEvent("harulo:theme-change", { detail: v }));
         },
         setPaused(v) {
           write("harulo-motion", v ? "paused" : "running");
@@ -131,12 +132,12 @@ export function ThemeControl() {
       variant="ghost"
       type="button"
       disabled={!ready}
-      aria-label="Dark mode"
-      aria-pressed={theme === "dark"}
+      aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+      title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
       <HaruloMark key={theme} className="theme-orbit" />
-      <span>{theme === "dark" ? "Dark" : "Light"}</span>
+      <span>{theme === "dark" ? "Dark mode" : "Light mode"}</span>
     </Button>
   );
 }

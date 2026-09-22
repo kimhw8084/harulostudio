@@ -7,18 +7,24 @@ import {
   ease,
   interpolatePose,
   motion,
-  studyById,
+  type BrandPose,
 } from "@/lib/brand/motion";
 
-export function FooterReturn() {
-  const publication = {
-    title: "A little better, every day.",
-    lines: [
-      "HARULO STUDIO",
-      "INDEPENDENT SOFTWARE PUBLISHER",
-      "조금 더 나은 하루로.",
-    ],
-  };
+const PAGE_COMPOSITION_POSE: BrandPose = {
+  ring: { x: 14, y: 18, width: 72, height: 52, rx: 26, strokeWidth: 3.4 },
+  satellite: { cx: 82, cy: 18, r: 3.2 },
+  primary: { x: 12, y: 76, width: 76, height: 4, rx: 2 },
+  secondary: { x: 12, y: 86, width: 41, height: 3, rx: 1.5 },
+};
+
+export type PageBrandDescriptor = {
+  pageId: string;
+  title: string;
+  metadata: string[];
+  anchors: { aperture?: string; primary?: string; secondary?: string; signal?: string };
+};
+
+export function FooterReturn({ descriptor }: { descriptor: PageBrandDescriptor }) {
   const {
     ref: stageRef,
     play,
@@ -43,10 +49,9 @@ export function FooterReturn() {
     observer.observe(node);
     return () => observer.disconnect();
   }, [stageRef, play]);
-  const pose =
-    reduced || paused || progress === 0 || progress >= 1
-      ? REST
-      : interpolatePose(studyById("closure").target, REST, ease(progress));
+  const pose = reduced || paused
+    ? REST
+    : interpolatePose(PAGE_COMPOSITION_POSE, REST, ease(progress));
   return (
     <div
       className="footer-return"
@@ -60,16 +65,16 @@ export function FooterReturn() {
       }
     >
       <div className="return-publication" aria-hidden="true">
-        <strong>{publication.title}</strong>
+        <strong>{descriptor.title}</strong>
         <div>
-          {publication.lines.map((line, i) => (
-            <span key={i}>{line}</span>
+          {descriptor.metadata.map((line) => (
+            <span key={line}>{line}</span>
           ))}
         </div>
       </div>
       <HaruloMark pose={pose} />
       <button onClick={replay} aria-label="Replay mark assembly">
-        One day → next
+        Replay return
       </button>
     </div>
   );

@@ -48,9 +48,20 @@ try {
       omitBackground: true,
     });
   }
+  for (const size of [180, 192]) {
+    await page.setViewportSize({ width: size, height: size });
+    await page.screenshot({
+      path: fileURLToPath(new URL(`harulo-${size}.png`, dir)),
+      omitBackground: true,
+    });
+  }
+  const social = await browser.newPage({ deviceScaleFactor: 1, viewport: { width: 1200, height: 630 } });
+  await social.setContent(`<style>html,body{margin:0;width:1200px;height:630px;background:#F3F5FF;color:#101322;font-family:Arial,sans-serif}main{height:100%;display:grid;grid-template-columns:260px 1fr;align-items:center;padding:0 84px;box-sizing:border-box;gap:64px}svg{width:230px;height:230px}p{margin:0;font-size:22px;letter-spacing:.08em;text-transform:uppercase;color:#123DFF}h1{margin:16px 0 0;font-size:72px;line-height:.95;letter-spacing:-.06em}span{display:block;margin-top:28px;font-size:18px;letter-spacing:.08em;color:#505979}</style><main>${assets["harulo-cobalt-ember.svg"]}<div><p>Independent software publisher</p><h1>Software that gives a little of the day back.</h1><span>HARULO STUDIO / 하루로</span></div></main>`);
+  await social.screenshot({ path: fileURLToPath(new URL("og.png", root)) });
+  await social.close();
 } finally {
   await browser.close();
 }
 console.log(
-  "Generated 5 vector lockups, exact-geometry favicon and 9 PNG sizes from the canonical source.",
+  "Generated vector lockups, exact-geometry icons, a 1200×630 social image, and PNG sizes from the canonical source.",
 );

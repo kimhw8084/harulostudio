@@ -11,6 +11,11 @@ export type ProductStatus =
   | "discontinued";
 export type ReleaseChannel = "stable" | "preview" | "beta";
 export type Provenance = "verified" | "showcase" | "synthetic";
+export type VerifiedProduct = Product & { provenance: "verified" };
+export type ShowcaseProduct = Product & { provenance: "showcase" };
+export type ResolvedPublication =
+  | { kind: "verified"; product: VerifiedProduct }
+  | { kind: "showcase"; product: ShowcaseProduct };
 export type ProductTone =
   "clay" | "olive" | "forest" | "sky" | "ochre" | "plum";
 
@@ -115,8 +120,6 @@ export interface Product extends ProductCopy {
   relatedProductIds?: string[];
   successorId?: string;
   migration?: string;
-  specimen?:
-    "clipboard" | "transfer" | "diff" | "capture" | "backup" | "reading";
 }
 export interface Release {
   id: string;

@@ -20,4 +20,12 @@ test.describe("showcase provenance boundary", () => {
     const structuredData = await page.locator('script[type="application/ld+json"]').allTextContents();
     expect(structuredData.join("\n")).not.toMatch(/Sori|Namu|Goyo|Haru Weather|Dami/);
   });
+
+  test("showcase detail does not imply a release, download, or publisher claim", async ({ page }) => {
+    await page.goto("/software/sori");
+    const body = await page.locator("body").innerText();
+    expect(body).toMatch(/Interactive concept/i);
+    expect(body).toMatch(/not available/i);
+    expect(body).not.toMatch(/Latest version|Release channels|Designed, built and published by Harulo Studio|Download details/i);
+  });
 });

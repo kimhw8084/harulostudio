@@ -12,7 +12,6 @@ import { ApplicationInstrument } from "./application-instrument";
 import { BrandSlot } from "./brand-slot";
 import { ProductGlyph } from "./brand/product-glyph";
 import { HaruloMark } from "./brand/harulo-mark";
-import { ExtendedInstrument } from "./extended-instrument";
 
 export function ProductIcon({ product }: { product: Product }) {
   return (
@@ -24,7 +23,6 @@ export function ProductIcon({ product }: { product: Product }) {
   );
 }
 export function ConceptInterface({ product }: { product: Product }) {
-  if (product.specimen) return <ExtendedInstrument product={product} />;
   return <ApplicationInstrument name={product.name} kind={product.icon} />;
 }
 export function ProductMedia({ product }: { product: Product }) {
@@ -125,7 +123,7 @@ export function ProductEdition({
         </div>
         <div className="edition-imprint">
           <span>
-            <HaruloMark /> A HARULO STUDIO EDITION / {product.edition}
+            <HaruloMark /> {product.provenance === "showcase" ? "HARULO STUDIO / SHOWCASE STUDY" : `A HARULO STUDIO EDITION / ${product.edition}`}
           </span>
             <span>{product.provenance === "showcase" ? "SHOWCASE → SPECIMEN" : "PUBLICATION → APPLICATION"}</span>
         </div>

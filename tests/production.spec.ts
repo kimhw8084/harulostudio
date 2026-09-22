@@ -1,38 +1,60 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("public Harulo production surface", () => {
-  test("homepage explains the publisher and exposes the showcase", async ({ page }) => {
+  test("homepage is immediately clear and genesis starts resting", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByText("Independent software publisher").first()).toBeVisible();
-    await expect(page.getByText("SHOWCASE ONLY · NOTHING SAVED OR SENT")).toBeVisible();
-    await expect(page.getByRole("tab", { name: /Sori/ })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Software that gives a little of the day back." })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "One mark. One working idea." })).toBeVisible();
+    await expect(page.getByText("Interactive concept — not released software.").first()).toBeVisible();
+    const trigger = page.getByRole("button", { name: "Open example" });
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(page.getByRole("tab", { name: "Sori" })).toBeHidden();
     await expect(page.getByRole("link", { name: "Press" }).first()).toBeVisible();
   });
 
-  test("all five showcase publications are visible and clearly labelled", async ({ page }) => {
+  test("genesis opens with real tabs and closes with focus return", async ({ page }) => {
+    await page.goto("/");
+    const trigger = page.getByRole("button", { name: "Open example" });
+    await trigger.click();
+    await expect(page.getByRole("tab", { name: "Sori" })).toBeVisible();
+    const close = page.getByRole("button", { name: "Close example" });
+    await expect(close).toHaveAttribute("aria-expanded", "true");
+    await page.getByRole("tab", { name: "Namu" }).click();
+    await expect(page.getByRole("tabpanel", { name: "Namu" })).toContainText("Namu");
+    await page.getByRole("tab", { name: "Namu" }).focus();
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("button", { name: "Open example" })).toBeFocused();
+    await expect(page.getByRole("tab", { name: "Sori" })).toBeHidden();
+  });
+
+  test("software catalog contains exactly five clearly separated showcase publications", async ({ page }) => {
     await page.goto("/software");
-    await expect(page.getByText("Five interactive concepts", { exact: false })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Different software. Same direction." }).first()).toBeVisible();
+    await expect(page.getByText("Interactive concept — not released software.").first()).toBeVisible();
     for (const name of ["Sori", "Namu", "Goyo", "Haru Weather", "Dami"]) {
       await expect(page.getByRole("heading", { name: new RegExp(`^${name}`) })).toBeVisible();
     }
-    await expect(page.getByText("NOT CURRENTLY AVAILABLE").first()).toBeVisible();
+    await expect(page.getByText("Published editions.")).toHaveCount(0);
+    await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(0);
   });
 
-  test("showcase controls remain local and functional", async ({ page }) => {
-    await page.goto("/software/namu");
-    const editor = page.getByRole("textbox", { name: "Try a Namu note" });
-    await editor.fill("A note for today.");
-    await page.getByRole("button", { name: "Add note" }).click();
-    await expect(page.getByText("A note for today.")).toBeVisible();
-    await expect(page.getByText("Showcase publication").first()).toBeVisible();
-  });
-
-  test("truthful navigation has no empty release or support destinations", async ({ page }) => {
+  test("conditional navigation does not advertise unavailable archives", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("link", { name: "Releases" })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "Support" })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "Archive" })).toHaveCount(0);
-    await page.goto("/privacy");
-    await expect(page.getByRole("heading", { name: "A clear account of this website." })).toBeVisible();
+    await expect(page.getByRole("link", { name: "History" })).toHaveCount(0);
+    await expect((await page.request.get("/releases")).status()).toBe(404);
+    await expect((await page.request.get("/support")).status()).toBe(404);
+  });
+
+  test("theme control exposes an unambiguous action", async ({ page }) => {
+    await page.goto("/");
+    const theme = page.getByRole("button", { name: /Switch to (dark|light) mode/ });
+    await expect(theme).toBeVisible();
+    const first = await theme.getAttribute("aria-label");
+    await theme.click();
+    await expect(theme).not.toHaveAttribute("aria-label", first ?? "");
   });
 });

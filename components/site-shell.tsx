@@ -3,9 +3,12 @@ import { ArrowUp } from "lucide-react";
 import { studio } from "@/lib/site-content";
 import { ThemeControl, MotionControl } from "./experience-provider";
 import { PublisherMark, Direction, FoldMark } from "./publisher-mark";
-import { FooterReturn } from "./brand/footer-return";
+import { FooterReturn, type PageBrandDescriptor } from "./brand/footer-return";
 import { MobileNavigation } from "./brand/mobile-navigation";
+import { brandCopy } from "@/lib/brand/copy";
+import { liveCatalog, publicNavigation } from "@/lib/publishing/catalog";
 export function SiteHeader() {
+  const navigation = publicNavigation(liveCatalog);
   return (
     <>
       <a className="skip-link" href="#main">
@@ -22,15 +25,11 @@ export function SiteHeader() {
           </span>
         </Link>
         <nav aria-label="Main navigation">
-          <Link href="/software">
-            Software<span aria-hidden="true">01</span>
-          </Link>
-          <Link href="/studio">
-            Studio<span aria-hidden="true">02</span>
-          </Link>
-          <Link href="/press">
-            Press<span aria-hidden="true">03</span>
-          </Link>
+          {navigation.map((item, index) => (
+            <Link href={item.href} key={item.href}>
+              {item.label}<span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+            </Link>
+          ))}
         </nav>
         <ThemeControl />
         <MobileNavigation />
@@ -42,13 +41,19 @@ export function SiteHeader() {
   );
 }
 export function SiteFooter() {
+  const navigation = publicNavigation(liveCatalog);
+  const descriptor: PageBrandDescriptor = {
+    pageId: "site-shell",
+    title: brandCopy.closing,
+    metadata: ["HARULO STUDIO", "INDEPENDENT SOFTWARE PUBLISHER", brandCopy.master],
+    anchors: { aperture: "footer-return-mark", primary: "footer-philosophy", secondary: "footer-wordmark", signal: "footer-return-signal" },
+  };
   return (
     <footer className="site-footer">
       <div className="footer-top">
         <PublisherMark />
         <nav aria-label="Publisher navigation">
-          <Link href="/software">Software</Link>
-          <Link href="/press">Press</Link>
+          {navigation.map((item) => <Link href={item.href} key={item.href}>{item.label}</Link>)}
           <Link href="/privacy">Privacy</Link>
           <a href={studio.github}>
             GitHub
@@ -60,10 +65,10 @@ export function SiteFooter() {
           </a>
         </nav>
       </div>
-      <p className="footer-philosophy">A little better, every day.</p>
+      <p className="footer-philosophy">{brandCopy.master}</p>
       <div className="footer-wordmark">
         <span aria-hidden="true">HARULO</span>
-        <FooterReturn />
+        <FooterReturn descriptor={descriptor} />
       </div>
       <div className="footer-bottom">
         <div>

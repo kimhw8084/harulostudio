@@ -1,5 +1,4 @@
-import { CatalogView } from "@/components/publishing-views";
-import { showcaseCatalog } from "@/lib/publishing/showcase";
+import { SoftwareCatalogView } from "@/components/publishing-views";
 import { pageMetadata } from "@/lib/publishing/metadata";
 import type { Query } from "@/lib/publishing/types";
 export const metadata = pageMetadata(
@@ -12,5 +11,5 @@ export default async function Software({
 }: {
   searchParams: Promise<Query>;
 }) {
-  return <CatalogView catalog={showcaseCatalog} query={await searchParams} />;
+  return <SoftwareCatalogView query={await searchParams} />;
 }

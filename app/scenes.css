@@ -635,43 +635,6 @@
 .xray-ui .mixer-row {
   border-color: var(--border);
 }
-.extended-instrument label {
-  display: grid;
-  gap: 0.6rem;
-  font-size: 0.8rem;
-}
-.extended-instrument button {
-  margin-top: 0.5rem;
-}
-.diff-inputs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-.diff-inputs textarea {
-  font: 0.8rem/1.6 var(--font-meta);
-  min-height: 100px;
-}
-.device-choices {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-block: 1rem;
-}
-.device-choices [aria-pressed="true"] {
-  background: var(--primary);
-  color: var(--primary-foreground);
-}
-.instrument-output {
-  display: block;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  margin-block: 1rem;
-  font: 0.8rem/1.8 var(--font-meta);
-  color: inherit;
-  min-height: 1.8em;
-}
 .specimen-items {
   margin-top: 1rem;
 }
@@ -683,18 +646,6 @@
   border-top: 1px solid var(--border);
   font-size: 0.85rem;
   min-height: 48px;
-}
-.extended-instrument blockquote {
-  border-left: 3px solid var(--cobalt);
-  padding-left: 1rem;
-  margin-bottom: 1rem;
-}
-.extended-instrument cite {
-  display: block;
-  font-size: 0.7rem;
-  font-style: normal;
-  color: var(--muted-foreground);
-  margin-top: 0.5rem;
 }
 .continuity-section {
   padding: 6rem var(--gutter);
@@ -1133,9 +1084,6 @@
   }
   .continuity-section h2 {
     font-size: 2.8rem;
-  }
-  .diff-inputs {
-    grid-template-columns: 1fr;
   }
   .software-xray [role="tab"] {
     font-size: 0.7rem;

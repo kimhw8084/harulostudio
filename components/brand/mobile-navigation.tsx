@@ -9,9 +9,11 @@ import {
 } from "@/components/ui/dialog";
 import { HaruloMark, HaruloLockup } from "./harulo-mark";
 import { Direction } from "@/components/publisher-mark";
+import { liveCatalog, publicNavigation } from "@/lib/publishing/catalog";
 
 export function MobileNavigation() {
   const [open, setOpen] = useState(false);
+  const navigation = publicNavigation(liveCatalog);
   return (
     <div className="mobile-navigation">
       <Dialog open={open} onOpenChange={setOpen}>
@@ -25,11 +27,11 @@ export function MobileNavigation() {
             Independent software. A little better, every day.
           </DialogDescription>
           <nav aria-label="Mobile navigation">
-            {["Software", "Studio", "Press", "Privacy"].map(
-              (label, i) => (
-                <a href={`/${label.toLowerCase()}`} key={label}>
-                  <span className="metadata">0{i + 1}</span>
-                  {label}
+            {navigation.concat({ label: "Privacy", href: "/privacy" }).map(
+              (item, i) => (
+                <a href={item.href} key={item.href}>
+                  <span className="metadata">{String(i + 1).padStart(2, "0")}</span>
+                  {item.label}
                   <Direction />
                 </a>
               ),

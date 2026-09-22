@@ -16,13 +16,13 @@ export function pageMetadata(
       url: `${studio.url}${path}`,
       type: "website",
       siteName: studio.name,
-      images: [{ url: "/og.svg", width: 1200, height: 630, alt: "Harulo Studio" }],
+      images: [{ url: "/og.png", width: 1200, height: 630, alt: "Harulo Studio — independent software publisher" }],
     },
     twitter: {
       card: "summary_large_image",
       title: `${title} — Harulo Studio`,
       description,
-      images: ["/og.svg"],
+      images: ["/og.png"],
     },
   };
 }

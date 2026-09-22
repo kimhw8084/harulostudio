@@ -25,7 +25,9 @@ import {
   statusLabels,
   formatDate,
   releasePath,
+  getPublicPublications,
 } from "@/lib/publishing/catalog";
+import { brandCopy } from "@/lib/brand/copy";
 import { Direction, PublisherMark, FoldMark } from "./publisher-mark";
 import { SoftwareXRay } from "./brand/software-xray";
 import {
@@ -157,7 +159,7 @@ export function CatalogView({
     <main id="main" tabIndex={-1} className="content-page page-width">
       <PageIntro
         eyebrow={catalog.edition === "showcase" ? "Harulo / showcase" : "The Harulo catalog"}
-        title={catalog.edition === "showcase" ? "Publication studies." : "Software for everyday life."}
+        title={catalog.edition === "showcase" ? brandCopy.catalog : "Software for everyday life."}
         description={catalog.edition === "showcase" ? "Five interactive concepts showing how Harulo software can be introduced, explored and maintained. These are not currently available products." : "Thoughtful tools, published with care. Find something that makes a small part of your day a little better."}
       />
       {catalog.edition === "showcase" && <p className="showcase-disclosure page-disclosure">SHOWCASE PUBLICATION · INTERACTIVE CONCEPT · NOT CURRENTLY AVAILABLE</p>}
@@ -183,15 +185,17 @@ export function CatalogView({
               query={query}
               options={platforms.map((p) => ({ value: p, label: p }))}
             />
-            <SelectFilter
-              name="status"
-              label="States"
-              query={query}
-              options={statuses.map((s) => ({
-                value: s,
-                label: statusLabels[s],
-              }))}
-            />
+            {!(catalog.edition === "showcase" && statuses.length <= 1) && (
+              <SelectFilter
+                name="status"
+                label="States"
+                query={query}
+                options={statuses.map((s) => ({
+                  value: s,
+                  label: statusLabels[s],
+                }))}
+              />
+            )}
             <Button type="submit">Filter software</Button>
             <Link className="quiet-link" href={path}>
               Reset
@@ -217,6 +221,59 @@ export function CatalogView({
           <Pagination path={path} query={query} {...result} />
         </>
       )}
+    </main>
+  );
+}
+
+/** Production software index: verified work first, concepts clearly separated. */
+export function SoftwareCatalogView({ query = {} }: { query?: Query }) {
+  const { verified: allVerified, showcase: allShowcase } = getPublicPublications();
+  const verified = filterProducts(allVerified, query);
+  const showcase = filterProducts(allShowcase, query);
+  const platformOptions = [...new Set([...allVerified, ...allShowcase].flatMap((product) => product.platforms))].sort();
+  return (
+    <main id="main" tabIndex={-1} className="content-page page-width">
+      <PageIntro
+        eyebrow="Harulo / software"
+        title={brandCopy.catalog}
+        description="Published software when it is ready; interactive concepts while the work is still becoming."
+      />
+      <form className="filters" method="get" action="/software">
+        <label>Search <Input name="q" defaultValue={queryValue(query, "q")} placeholder="Name, category or purpose" /></label>
+        <label>Platform <NativeSelect name="platform" defaultValue={queryValue(query, "platform")}>
+          <NativeSelectOption value="">All platforms</NativeSelectOption>
+          {platformOptions.map((platform) => <NativeSelectOption key={platform} value={platform}>{platform}</NativeSelectOption>)}
+        </NativeSelect></label>
+        <Button type="submit">Filter</Button>
+        <Link href="/software">Reset</Link>
+      </form>
+      {verified.length > 0 && (
+        <section className="catalog-section" aria-labelledby="verified-software-title">
+          <div className="section-heading">
+            <p className="eyebrow">AVAILABLE SOFTWARE</p>
+            <h2 id="verified-software-title">Published editions.</h2>
+          </div>
+          <div className="publisher-shelf">
+            {verified.map((product) => (
+              <ProductEdition key={product.id} product={product} />
+            ))}
+          </div>
+        </section>
+      )}
+      <section className="catalog-section" aria-labelledby="showcase-software-title">
+        <div className="section-heading">
+          <p className="eyebrow">SHOWCASE / {showcase.length} STUDIES</p>
+          <h2 id="showcase-software-title">{brandCopy.catalog}</h2>
+        </div>
+        <p className="showcase-disclosure page-disclosure">
+          Interactive concept — not released software.
+        </p>
+        <div className="publisher-shelf">
+          {showcase.map((product) => (
+            <ProductEdition key={product.id} product={product} />
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
@@ -376,7 +433,7 @@ export function ProductView({
             )}
             {product.provenance === "verified" && <Link className="text-link" href={`${prefix}/support/${product.slug}`}>Product support <Direction /></Link>}
           </div>
-          {product.status === "preview" && (
+          {product.provenance === "verified" && product.status === "preview" && (
             <p className="resource-note">
               A preview is still evolving.{" "}
               {product.expectedRelease
@@ -457,10 +514,12 @@ export function ProductView({
               <dt>Platforms</dt>
               <dd>{product.platforms.join(", ")}</dd>
             </div>
-            <div>
-              <dt>Latest version</dt>
-              <dd>{product.version || "Not announced"}</dd>
-            </div>
+            {product.provenance === "verified" && (
+              <div>
+                <dt>Latest version</dt>
+                <dd>{product.version || "Not announced"}</dd>
+              </div>
+            )}
             {product.provenance === "verified" && product.firstReleasedAt && (
               <div>
                 <dt>First edition</dt>
@@ -477,10 +536,12 @@ export function ProductView({
               <dt>Languages</dt>
               <dd>{product.languages.join(", ")}</dd>
             </div>
-            <div>
-              <dt>Release channels</dt>
-              <dd>{product.channels.join(", ")}</dd>
-            </div>
+            {product.provenance === "verified" && (
+              <div>
+                <dt>Release channels</dt>
+                <dd>{product.channels.join(", ")}</dd>
+              </div>
+            )}
             {product.provenance === "verified" && product.price && (
               <div>
                 <dt>Pricing</dt>
@@ -557,7 +618,7 @@ export function ProductView({
       )}
       <div className="closing-line">
         <PublisherMark />
-        <p>Designed, built and published by Harulo Studio.</p>
+        <p>{product.provenance === "showcase" ? "An interactive Harulo Studio publication study." : "Designed, built and published by Harulo Studio."}</p>
       </div>
     </main>
   );

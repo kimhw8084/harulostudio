@@ -4,7 +4,7 @@ The permanent identity is code-native. No raster artwork, canvas, video or WebGL
 is required for the public homepage.
 
 - **Master mark:** owner-supplied canonical 06 · High Tension geometry, rooted in ㅎ. One ring, one satellite, two rounded tiers. `lib/brand/geometry.ts` is authoritative; `components/brand/harulo-mark.tsx` renders it everywhere.
-- **Social and app assets:** `public/og.svg` and `public/manifest.webmanifest` use the same exact Cobalt Ember mark.
+- **Social and app assets:** `public/og.png` (1200×630), the PNG icon family in `public/brand/`, and `public/manifest.webmanifest` are generated from the exact Cobalt Ember mark with `npm run brand:assets`.
 - **Product glyphs:** repo-native application identifiers derived from circular controls, satellite state and tier relationships. They are not alternate publisher marks.
 - **Concept applications:** working HTML controls, clearly labeled as showcase concepts and not available products. No generated screenshot is represented as shipping software.
 - **UI icons:** the existing lucide-react dependency.

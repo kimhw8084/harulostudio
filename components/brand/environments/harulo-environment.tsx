@@ -1,150 +1,130 @@
 "use client";
+
 import { useEffect, useRef } from "react";
 import { useBrandScene } from "../scene/brand-scene";
 import { useExperience } from "@/components/experience-provider";
-import {
-  resolveChannels,
-  quietScene,
-  type SceneMaterial,
-} from "@/lib/brand/scene";
+import { resolveChannels, quietScene, type SceneMaterial } from "@/lib/brand/scene";
 
-/** Event-driven Canvas 2D. No particles, shaders, network assets, or idle RAF loop. */
-export function HaruloEnvironment({
-  material = "flow",
-}: {
-  material?: SceneMaterial;
-}) {
-  const canvas = useRef<HTMLCanvasElement>(null),
-    scene = useBrandScene();
-  const subscribe = scene?.subscribe;
+/** Shared lifecycle, three deliberately different low-cost materials. */
+export function HaruloEnvironment({ material = "flow" }: { material?: SceneMaterial }) {
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const scene = useBrandScene();
   const { theme, reduced, paused } = useExperience();
   useEffect(() => {
-    const element = canvas.current,
-      context = element?.getContext("2d", { alpha: true });
-    if (!element || !context || !subscribe || reduced || paused) return;
-    let width = 0,
-      height = 0,
-      state = resolveChannels(quietScene),
-      active = false;
-    const draw = () => {
-      if (!active || document.hidden || !width || !height) return;
-      context.clearRect(0, 0, width, height);
-      const dark = theme === "dark",
-        cobalt = dark ? "111,134,255" : "18,61,255";
-      const x = width * state.ring.center.x,
-        y = height * state.ring.center.y;
-      const phase = state.secondaryTier.historyProgress,
-        energy = state.satellite.energy;
-      const radius =
-        Math.min(width, height) * (0.31 + state.ring.reveal * 0.06);
-      context.lineWidth = 0.8;
-      for (let i = 0; i < 12; i++) {
-        context.strokeStyle = `rgba(${cobalt},${dark ? 0.12 : 0.09})`;
+    const element = canvas.current;
+    const context = element?.getContext("2d", { alpha: true });
+    if (!element || !context || !scene?.subscribe || reduced || paused) return;
+    let width = 0;
+    let height = 0;
+    let active = false;
+    let state = resolveChannels(quietScene);
+    const palette = () => theme === "dark" ? { cobalt: "111,134,255", ember: "255,113,82" } : { cobalt: "18,61,255", ember: "255,92,53" };
+    const drawFlow = () => {
+      const { cobalt, ember } = palette();
+      const ringX = width * state.ring.center.x;
+      const ringY = height * state.ring.center.y;
+      const radius = Math.min(width, height) * state.ring.radius;
+      for (let stream = 0; stream < 10; stream += 1) {
+        const baseline = height * (stream + 1) / 11;
         context.beginPath();
-        if (material === "flow") {
-          const baseline = (height * (i + 1)) / 13;
-          context.moveTo(-30, baseline);
-          context.bezierCurveTo(
-            width * 0.22,
-            baseline - 70 * phase,
-            x,
-            baseline + (y - baseline) * 0.34 + energy * 20,
-            width + 30,
-            baseline - 45,
-          );
-        } else if (material === "chrono") {
-          const baseline = height * (0.13 + i * 0.064);
-          context.moveTo(width * 0.05, baseline);
-          context.lineTo(width * (0.2 + phase * 0.25), baseline);
-          context.bezierCurveTo(
-            x - radius,
-            baseline,
-            x - radius,
-            y + radius * 0.5,
-            width * 0.92,
-            baseline,
-          );
-        } else {
-          const baseline = (height * (i + 1)) / 13;
-          context.moveTo(0, baseline);
-          context.bezierCurveTo(
-            x * 0.6,
-            baseline,
-            x * 0.8,
-            baseline + (y - baseline) * (0.3 + energy * 0.15),
-            x,
-            baseline + energy * 12,
-          );
-          context.bezierCurveTo(
-            x * 1.2,
-            baseline + energy * 12,
-            width * 0.85,
-            baseline,
-            width,
-            baseline,
-          );
+        context.moveTo(-40, baseline);
+        let x = -40;
+        let y = baseline;
+        for (let step = 0; step < 18; step += 1) {
+          x += (width + 80) / 18;
+          const dy = (ringY - y) * Math.exp(-Math.pow((x - ringX) / (radius * 2.5), 2)) * 0.12;
+          const pointer = state.satellite.target.y * 8 * Math.exp(-Math.pow((x - ringX) / (radius * 3), 2));
+          y += dy + pointer;
+          context.lineTo(x, y);
         }
+        context.strokeStyle = `rgba(${cobalt},${0.055 + stream % 3 * 0.018})`;
+        context.lineWidth = stream === 5 ? 1.2 : 0.7;
         context.stroke();
       }
-      // The four material properties: aperture, signal, primary plane, historical echo.
-      context.strokeStyle = `rgba(${cobalt},.16)`;
-      context.lineWidth = Math.max(1, radius * 0.012);
+      context.strokeStyle = `rgba(${cobalt},.18)`;
+      context.lineWidth = Math.max(1, radius * 0.018);
       context.beginPath();
-      context.arc(x, y, radius, Math.PI * 0.72, Math.PI * 1.95);
+      context.arc(ringX, ringY, radius, Math.PI * 0.18, Math.PI * 1.75);
       context.stroke();
-      context.fillStyle = dark ? "rgba(255,113,82,.38)" : "rgba(255,92,53,.4)";
-      const sx = width * state.satellite.position.x,
-        sy = height * state.satellite.position.y;
+      context.fillStyle = `rgba(${ember},${0.25 + state.satellite.energy * 0.5})`;
       context.beginPath();
-      context.arc(sx, sy, 3 + energy * 4, 0, Math.PI * 2);
+      context.arc(width * state.satellite.position.x, height * state.satellite.position.y, 2.5 + state.satellite.energy * 5, 0, Math.PI * 2);
       context.fill();
+    };
+    const drawMembrane = () => {
+      const { cobalt, ember } = palette();
+      const ringX = width * state.ring.center.x;
+      const ringY = height * state.ring.center.y;
+      const radius = Math.min(width, height) * state.ring.radius;
+      for (let row = 0; row <= 12; row += 1) {
+        context.beginPath();
+        for (let col = 0; col <= 20; col += 1) {
+          const x = col / 20 * width;
+          const y = row / 12 * height;
+          const distance = Math.hypot(x - ringX, y - ringY);
+          const tension = Math.max(0, 1 - distance / (radius * 3.8)) * 16 * (state.ring.focus + 0.25);
+          const primary = Math.exp(-Math.pow((y - height * .58) / 42, 2)) * 8;
+          const point = col === 0 ? context.moveTo.bind(context) : context.lineTo.bind(context);
+          point(x, y + tension + primary);
+        }
+        context.strokeStyle = `rgba(${cobalt},${0.04 + row % 3 * 0.018})`;
+        context.lineWidth = .7;
+        context.stroke();
+      }
+      context.fillStyle = `rgba(${ember},${0.22 + state.satellite.energy * .4})`;
+      context.beginPath();
+      context.arc(width * state.satellite.position.x, height * state.satellite.position.y, 3 + state.satellite.energy * 4, 0, Math.PI * 2);
+      context.fill();
+    };
+    const drawDayNext = () => {
+      const { cobalt, ember } = palette();
+      const progress = state.primaryTier.contentProgress;
+      const railY = height * .42;
+      context.lineWidth = 1;
+      context.strokeStyle = `rgba(${cobalt},.16)`;
+      context.beginPath();
+      context.moveTo(width * .08, railY);
+      context.lineTo(width * (.24 + progress * .64), railY);
+      context.moveTo(width * .08, railY + 20);
+      context.lineTo(width * (.18 + state.secondaryTier.extension * .72), railY + 20);
+      context.stroke();
+      context.fillStyle = `rgba(${ember},${0.25 + state.satellite.energy * .5})`;
+      context.beginPath();
+      context.arc(width * (.18 + progress * .62), railY, 3 + state.satellite.energy * 4, 0, Math.PI * 2);
+      context.fill();
+      context.strokeStyle = `rgba(${cobalt},.1)`;
+      context.beginPath();
+      context.arc(width * .5, height * .52, Math.min(width, height) * .18, Math.PI * .08, Math.PI * 1.86);
+      context.stroke();
+    };
+    const draw = () => {
+      if (!active || document.hidden || width <= 0 || height <= 0) return;
+      context.clearRect(0, 0, width, height);
+      if (material === "flow") drawFlow();
+      else if (material === "membrane") drawMembrane();
+      else drawDayNext();
     };
     const resize = new ResizeObserver(([entry]) => {
       width = entry.contentRect.width;
       height = entry.contentRect.height;
-      const dpr = Math.min(
-        devicePixelRatio || 1,
-        matchMedia("(pointer: coarse)").matches ? 1 : 1.5,
-      );
-      element.width = Math.round(width * dpr);
-      element.height = Math.round(height * dpr);
+      const dpr = Math.min(devicePixelRatio || 1, matchMedia("(pointer: coarse)").matches ? 1 : 1.5);
+      element.width = Math.max(1, Math.round(width * dpr));
+      element.height = Math.max(1, Math.round(height * dpr));
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
       draw();
     });
-    const observer = new IntersectionObserver(([entry]) => {
-      active = entry.isIntersecting;
-      draw();
-    });
+    const observer = new IntersectionObserver(([entry]) => { active = entry.isIntersecting; draw(); }, { rootMargin: "80px" });
     resize.observe(element);
     observer.observe(element);
-    const unsubscribe = subscribe((value) => {
-      state = value;
-      draw();
-    });
-    return () => {
-      unsubscribe();
-      resize.disconnect();
-      observer.disconnect();
-      context.clearRect(0, 0, width, height);
-    };
-  }, [subscribe, material, theme, reduced, paused]);
+    const unsubscribe = scene.subscribe((value) => { state = value; draw(); });
+    const visibility = () => draw();
+    document.addEventListener("visibilitychange", visibility);
+    return () => { unsubscribe(); resize.disconnect(); observer.disconnect(); document.removeEventListener("visibilitychange", visibility); context.clearRect(0, 0, width, height); };
+  }, [scene, material, theme, reduced, paused]);
   return (
-    <div
-      className={`harulo-environment environment-${material}`}
-      aria-hidden="true"
-      data-environment={material}
-    >
-      <svg
-        className="environment-static"
-        viewBox="0 0 1000 700"
-        preserveAspectRatio="xMidYMid slice"
-      >
-        <path
-          d="M0 420H310C420 420 330 160 500 160S660 420 760 420H1000M0 445H340C450 445 370 210 500 210S630 445 790 445H1000"
-          fill="none"
-          stroke="currentColor"
-        />
-        <path d="M110 540H790M230 565H597" stroke="currentColor" />
+    <div className={`harulo-environment environment-${material}`} aria-hidden="true" data-environment={material}>
+      <svg className="environment-static" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice">
+        {material === "flow" ? <path d="M0 420H310C420 420 330 160 500 160S660 420 760 420H1000M0 445H340C450 445 370 210 500 210S630 445 790 445H1000" fill="none" stroke="currentColor" /> : material === "membrane" ? <path d="M0 380H1000M0 420H1000M0 460H1000M420 0C470 180 470 520 420 700M580 0C530 180 530 520 580 700" fill="none" stroke="currentColor" /> : <><path d="M90 330H910M90 355H700" fill="none" stroke="currentColor" /><circle cx="500" cy="390" r="120" fill="none" stroke="currentColor" /></>}
       </svg>
       <canvas ref={canvas} />
     </div>

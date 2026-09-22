@@ -1,4 +1,4 @@
-import type { Product, PublisherCatalog } from "./types";
+import type { Product, PublisherCatalog, ShowcaseProduct } from "./types";
 
 const shared = {
   provenance: "showcase" as const,
@@ -9,8 +9,8 @@ const shared = {
   resources: {},
   requirements: [],
   accessibility: ["Keyboard accessible controls", "Visible focus states"],
-  languages: ["English", "Korean"],
-  channels: ["preview" as const],
+  languages: ["English"],
+  channels: [],
   status: "preview" as const,
 };
 
@@ -30,11 +30,11 @@ function product(
     | "description"
     | "features"
   >,
-): Product {
+): ShowcaseProduct {
   return { ...shared, ...fields };
 }
 
-export const showcaseProducts: Product[] = [
+export const showcaseProducts: ShowcaseProduct[] = [
   product({
     id: "sori",
     slug: "sori",
@@ -139,4 +139,3 @@ export const showcaseCatalog: PublisherCatalog = {
   supportArticles: [],
   pressItems: [],
 };
-

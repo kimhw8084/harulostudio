@@ -20,21 +20,24 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "Harulo Studio",
-    images: [{ url: "/og.svg", width: 1200, height: 630, alt: "Harulo Studio — independent software publisher" }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Harulo Studio — independent software publisher" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Harulo Studio",
     description: studio.description,
-    images: ["/og.svg"],
+    images: ["/og.png"],
   },
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
-    apple: "/brand/harulo-128.png",
+    apple: "/brand/harulo-180.png",
   },
   manifest: "/manifest.webmanifest",
-  themeColor: "#123DFF",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#123DFF" },
+    { media: "(prefers-color-scheme: dark)", color: "#090B17" },
+  ],
 };
 
 export default function RootLayout({

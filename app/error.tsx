@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
 import { HaruloMark } from "@/components/brand/harulo-mark";
 
 export default function Error({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
@@ -14,7 +13,9 @@ export default function Error({ reset }: { error: Error & { digest?: string }; r
       <p>Something did not settle correctly. You can try again or return to the studio.</p>
       <div className="error-actions">
         <button type="button" onClick={() => reset()}>Try again</button>
-        <Link href="/">Return home</Link>
+        {/* Recovery remains native so it works even when the app router is unavailable. */}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a href="/">Return home</a>
       </div>
     </main>
   );

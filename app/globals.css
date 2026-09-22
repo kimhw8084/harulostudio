@@ -559,67 +559,6 @@ button:hover .direction {
   width: 100%;
 }
 
-/* The useful experiment is real, local, and makes no product claim. */
-.minute-instrument {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.9rem;
-  padding: 1.5rem;
-  min-height: 100%;
-  container-type: inline-size;
-  text-align: center;
-}
-.instrument-kicker {
-  font: 0.75rem/1.5 var(--font-meta);
-  letter-spacing: 0.04em;
-}
-.minute-clock {
-  font: 500 clamp(2rem, 25cqw, 7rem) / 1 var(--font-body);
-  letter-spacing: -0.075em;
-  font-variant-numeric: tabular-nums;
-}
-.minute-clock > span {
-  opacity: 0.55;
-}
-.minute-message {
-  font-size: 0.8125rem;
-  max-width: 29ch;
-}
-.minute-actions {
-  display: flex;
-  gap: 0.7rem;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.instrument-button {
-  min-height: 44px;
-  height: auto;
-  padding: 0.75rem 1rem;
-  background: #101322;
-  color: #F3F5FF;
-  border: 1px solid #101322;
-  border-radius: var(--radius-tier);
-  font-size: 0.8125rem;
-}
-.instrument-button:hover {
-  background: #2444C7;
-  color: #fff;
-}
-.instrument-reset {
-  min-width: 44px;
-  min-height: 44px;
-  color: inherit;
-  border: 1px solid currentColor;
-  border-radius: 50%;
-}
-.instrument-reset:hover {
-  background: transparent;
-  color: inherit;
-}
-
 /* Publishing planes: the primary rail and its .54 companion. */
 .software-section {
   padding: var(--space-section) var(--gutter) 0;
@@ -1379,15 +1318,6 @@ button:hover .direction {
   margin-bottom: 1rem;
   letter-spacing: 0.06em;
 }
-.concept-interface .minute-instrument {
-  min-height: 310px;
-  background: #11172B;
-  color: #F3F5FF;
-}
-.concept-interface .minute-clock {
-  font-size: clamp(1.8rem, 26cqw, 6.5rem);
-  color: var(--edition);
-}
 .weather-switches {
   display: flex;
   gap: 0.5rem;
@@ -2072,13 +2002,6 @@ html[data-publication-transition="true"]::view-transition-new(root) {
   .origin-trigger {
     width: 100%;
   }
-  .origin-application .minute-instrument {
-    gap: 0.6rem;
-    padding: 1rem;
-  }
-  .origin-application .instrument-kicker {
-    font-size: 0.65rem;
-  }
   .origin-publication {
     gap: 0.6rem;
     font-size: 0.6rem;
@@ -2220,19 +2143,6 @@ html[data-publication-transition="true"]::view-transition-new(root) {
   }
   .origin-trigger {
     min-height: 52px;
-  }
-  .origin-application .minute-instrument {
-    padding: 0.7rem;
-    gap: 0.7rem;
-  }
-  .origin-application .minute-clock {
-    font-size: clamp(3rem, 18vw, 6rem);
-  }
-  .origin-application .instrument-kicker {
-    font-size: 0.65rem;
-  }
-  .minute-message {
-    font-size: 0.875rem;
   }
   .hero-bottom {
     grid-template-columns: 1fr;
@@ -2601,7 +2511,6 @@ html[data-motion="paused"] *::after {
     color: CanvasText;
   }
   .origin-mark,
-  .minute-clock,
   .hero-statement h1 em,
   .publisher-eyebrow {
     color: CanvasText;
@@ -2683,13 +2592,26 @@ html[data-motion="paused"] *::after {
   color: var(--stage-ink);
   border: 1px solid color-mix(in srgb, var(--stage-ink) 18%, transparent);
   background: color-mix(in srgb, var(--stage) 88%, transparent);
+  clip-path: circle(0% at 16% 50%);
+  opacity: 0;
   transform: translateX(calc((1 - var(--scene-energy, 0)) * 1.25rem));
-  transition: transform var(--motion-publish) var(--ease-settle), opacity var(--motion-interface) ease;
+  transition:
+    clip-path 560ms var(--ease-settle),
+    transform 560ms var(--ease-settle),
+    opacity 220ms ease;
 }
-.genesis-stage:not([data-open="true"]) .genesis-interface {
-  opacity: .12;
-  pointer-events: none;
-  transform: translateX(2rem) scale(.98);
+.genesis-stage[data-open="true"] .genesis-interface {
+  clip-path: circle(150% at 16% 50%);
+  opacity: 1;
+  transform: translateX(0);
+}
+.genesis-stage[data-phase="switching"] .genesis-interface {
+  clip-path: circle(165% at 16% 50%);
+}
+.genesis-stage[data-phase="closing"] .genesis-interface {
+  clip-path: circle(0% at 16% 50%);
+  opacity: 0;
+  transform: translateX(1.25rem);
 }
 .genesis-interface-topline,
 .origin-topline {

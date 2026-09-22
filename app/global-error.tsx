@@ -1,7 +1,6 @@
 "use client";
 
 import "./globals.css";
-import Link from "next/link";
 import { HaruloMark } from "@/components/brand/harulo-mark";
 
 export default function GlobalError() {
@@ -13,7 +12,11 @@ export default function GlobalError() {
           <p className="eyebrow">A TEMPORARY INTERRUPTION</p>
           <h1>Harulo will<br /><em>return.</em></h1>
           <p>The page could not be loaded. Please refresh or return home.</p>
-          <Link href="/">Return home</Link>
+          <div className="error-actions">
+            <button type="button" onClick={() => window.location.reload()}>Reload</button>
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+            <a href="/">Return home</a>
+          </div>
         </main>
       </body>
     </html>

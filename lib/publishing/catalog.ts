@@ -4,7 +4,11 @@ import type {
   PublisherCatalog,
   Query,
   Release,
+  ResolvedPublication,
+  ShowcaseProduct,
+  VerifiedProduct,
 } from "./types";
+import { showcaseCatalog } from "./showcase";
 
 export const publicStatuses: ProductStatus[] = [
   "preview",
@@ -36,6 +40,37 @@ export const liveCatalog: PublisherCatalog = {
   pressItems: [],
 };
 
+function eligibleProducts(catalog: PublisherCatalog) {
+  return publicProducts(catalog);
+}
+
+/** The public resolver keeps verified records authoritative on slug collisions. */
+type PublicSources = { live: PublisherCatalog; showcase: PublisherCatalog };
+const defaultSources: PublicSources = { live: liveCatalog, showcase: showcaseCatalog };
+
+export function resolvePublication(slug: string, sources: PublicSources = defaultSources): ResolvedPublication | undefined {
+  const verified = eligibleProducts(sources.live).find((product) => product.slug === slug);
+  if (verified) return { kind: "verified", product: verified as VerifiedProduct };
+  const showcase = eligibleProducts(sources.showcase).find((product) => product.slug === slug);
+  return showcase
+    ? { kind: "showcase", product: showcase as ShowcaseProduct }
+    : undefined;
+}
+
+export function getPublicPublications(sources: PublicSources = defaultSources): {
+  verified: VerifiedProduct[];
+  showcase: ShowcaseProduct[];
+} {
+  return {
+    verified: eligibleProducts(sources.live).filter(
+      (product): product is VerifiedProduct => product.provenance === "verified",
+    ),
+    showcase: eligibleProducts(sources.showcase).filter(
+      (product): product is ShowcaseProduct => product.provenance === "showcase",
+    ),
+  };
+}
+
 export function publicProducts(catalog: PublisherCatalog) {
   return catalog.products.filter(
     (p) =>
@@ -46,20 +81,26 @@ export function publicProducts(catalog: PublisherCatalog) {
         p.provenance === "verified"),
   );
 }
-export function hasPublicSoftware(catalog: PublisherCatalog) {
-  return publicProducts(catalog).length > 0;
-}
 export function hasVerifiedReleases(catalog: PublisherCatalog) {
   return catalog.releases.some((release) => release.provenance === "verified");
 }
 export function hasVerifiedSupport(catalog: PublisherCatalog) {
   return catalog.supportArticles.some((article) => article.provenance === "verified");
 }
-export function hasVerifiedPress(catalog: PublisherCatalog) {
-  return catalog.pressItems.some((item) => item.provenance === "verified");
-}
 export function hasArchive(catalog: PublisherCatalog) {
   return publicProducts(catalog).some((product) => ["archived", "discontinued"].includes(product.status));
+}
+export function publicNavigation(catalog: PublisherCatalog = liveCatalog) {
+  const items = [
+    { label: "Software", href: "/software" },
+    { label: "Studio", href: "/studio" },
+    { label: "Press", href: "/press" },
+  ];
+  if (hasVerifiedReleases(catalog)) items.push({ label: "Releases", href: "/releases" });
+  if (hasVerifiedSupport(catalog)) items.push({ label: "Support", href: "/support" });
+  if (hasArchive(catalog)) items.push({ label: "Archive", href: "/archive" });
+  if (catalog.milestones?.some((milestone) => milestone.provenance === "verified")) items.push({ label: "History", href: "/history" });
+  return items;
 }
 export function productBySlug(catalog: PublisherCatalog, slug: string) {
   return publicProducts(catalog).find((p) => p.slug === slug);

@@ -5,6 +5,7 @@ import { liveCatalog, publicProducts } from "@/lib/publishing/catalog";
 import { studio } from "@/lib/site-content";
 import { pageMetadata } from "@/lib/publishing/metadata";
 import { HaruloMark, HaruloLockup } from "@/components/brand/harulo-mark";
+import { brandCopy } from "@/lib/brand/copy";
 export const metadata = pageMetadata(
   "Press",
   "Harulo Studio company description, identity assets and press contact.",
@@ -33,6 +34,7 @@ export default function Press() {
             <span lang="ko">하루로</span> carries the studio’s direction: toward
             a day made a little better.
           </p>
+          <p>{brandCopy.master}</p>
           <p>
             Website: <a href={studio.url}>harulostudio.com</a>
             <br />

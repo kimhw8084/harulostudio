@@ -1,83 +1,142 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useId, useRef, useState, type TransitionEvent } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ApplicationInstrument } from "@/components/application-instrument";
 import { showcaseProducts } from "@/lib/publishing/showcase";
+import { brandCopy } from "@/lib/brand/copy";
+import { useExperience } from "@/components/experience-provider";
 import { HaruloMark } from "./harulo-mark";
+import { useBrandScene } from "./scene/brand-scene";
 
-/** Publication Genesis: the canonical mark stays visible while a local,
- * functional showcase instrument grows from its four primitives. */
+export type GenesisPhase = "resting" | "opening" | "open" | "switching" | "closing";
+
+/** The mark and specimen share one stage; closed panels stay inert but mounted. */
 export function SoftwareOrigin() {
-  const [selected, setSelected] = useState(0);
-  const [open, setOpen] = useState(true);
-  const product = showcaseProducts[selected];
+  const id = useId();
+  const [selected, setSelected] = useState(showcaseProducts[0]?.slug ?? "");
+  const [phase, setPhase] = useState<GenesisPhase>("resting");
+  const token = useRef(0);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const { reduced } = useExperience();
+  const scene = useBrandScene();
+  const active = phase !== "resting";
+  const acceptingInput = phase === "open" || phase === "switching";
+  const selectedProduct = showcaseProducts.find((product) => product.slug === selected) ?? showcaseProducts[0];
+  const panelId = `${id}-panel`;
+
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key !== "Escape" || event.defaultPrevented || !active) return;
+      event.preventDefault();
+      close();
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  });
+
+  function open() {
+    token.current += 1;
+    scene?.emit({ type: "publication.open", productId: selected });
+    setPhase(reduced ? "open" : "opening");
+  }
+  function close() {
+    token.current += 1;
+    scene?.emit({ type: "publication.close" });
+    if (panelRef.current?.contains(document.activeElement)) {
+      triggerRef.current?.focus();
+    }
+    setPhase(reduced ? "resting" : "closing");
+  }
+  function select(slug: string) {
+    if (slug === selected) return;
+    token.current += 1;
+    scene?.emit({ type: "publication.select", productId: slug });
+    setSelected(slug);
+    if (active) setPhase(reduced ? "open" : "switching");
+  }
+  function onStageTransition(event: TransitionEvent<HTMLDivElement>) {
+    if (event.target !== event.currentTarget || event.propertyName !== "clip-path") return;
+    if (phase === "opening" || phase === "switching") setPhase("open");
+    if (phase === "closing") setPhase("resting");
+  }
 
   return (
-    <section className="software-origin publication-genesis" aria-labelledby="genesis-title">
+    <section className="software-origin publication-genesis" aria-labelledby={`${id}-title`}>
       <div className="origin-topline metadata">
-        <span id="genesis-title">PUBLICATION GENESIS / A WORKING STUDY</span>
+        <h2 id={`${id}-title`}>{brandCopy.genesis}</h2>
         <span>SHOWCASE ONLY · NOTHING SAVED OR SENT</span>
       </div>
-      <div className="genesis-stage" data-open={open} data-product={product.slug}>
+      <div
+        className="genesis-stage"
+        data-open={active}
+        data-phase={phase}
+        data-product={selectedProduct?.slug}
+        onTransitionEnd={onStageTransition}
+      >
         <div className="genesis-mark" aria-hidden="true">
           <HaruloMark />
           <span className="genesis-signal" />
         </div>
-        <div className="genesis-interface">
+        <div
+          id={panelId}
+          ref={panelRef}
+          className="genesis-interface"
+          aria-label="Showcase publication workspace"
+          aria-hidden={!acceptingInput}
+          inert={!acceptingInput ? true : undefined}
+          hidden={!active}
+        >
           <div className="genesis-interface-topline metadata">
-            <span>HARULO / EDITION {product.edition}</span>
+            <span>HARULO / SHOWCASE</span>
             <span>INTERACTIVE CONCEPT</span>
           </div>
-          <ApplicationInstrument name={product.name} kind={product.icon} />
+          <Tabs value={selected} onValueChange={select} orientation="horizontal">
+            <TabsList aria-label="Showcase publications">
+              {showcaseProducts.map((product) => (
+                <TabsTrigger key={product.slug} value={product.slug}>
+                  {product.name}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            {showcaseProducts.map((product) => (
+              <TabsContent key={product.slug} value={product.slug} forceMount>
+                <ApplicationInstrument name={product.name} kind={product.icon} />
+              </TabsContent>
+            ))}
+          </Tabs>
         </div>
       </div>
       <div className="genesis-controls">
         <div>
-          <p className="eyebrow">THE MARK BECOMES SOFTWARE</p>
+          <p className="eyebrow">{active ? "THE MARK IS WORKING" : "THE MARK AT REST"}</p>
           <p className="genesis-copy">
-            Choose a showcase publication. The same four-part identity becomes
+            Select an interactive concept. The same four-part identity becomes
             its working interface.
           </p>
         </div>
-        <div className="genesis-product-tabs" role="tablist" aria-label="Showcase publications">
-          {showcaseProducts.map((item, index) => (
-            <button
-              key={item.id}
-              type="button"
-              role="tab"
-              aria-selected={selected === index}
-              className={selected === index ? "is-active" : ""}
-              onClick={() => {
-                setSelected(index);
-                setOpen(true);
-              }}
-            >
-              <span className="metadata">{item.edition}</span>
-              {item.name}
-            </button>
-          ))}
-        </div>
         <Button
+          ref={triggerRef}
           className="genesis-toggle"
           type="button"
           variant="outline"
-          aria-expanded={open}
-          onClick={() => setOpen((value) => !value)}
+          aria-controls={panelId}
+          aria-expanded={active}
+          onClick={() => (active ? close() : open())}
         >
-          {open ? "Return to the mark" : `Generate ${product.name}`}
+          {active ? "Close example" : "Open example"}
           <ArrowUpRight aria-hidden="true" />
         </Button>
       </div>
-      <p className="genesis-disclosure">
-        Showcase publication · Interactive concept · Not currently available
-      </p>
+      <p className="genesis-disclosure">Interactive concept — not released software.</p>
       <noscript>
         <p className="origin-noscript">
-          The interactive publication studies need JavaScript. Harulo is an
-          independent software publisher; no showcase product is currently
-          available.
+          The publication studies need JavaScript for their working controls.
+          Harulo is an independent software publisher; no showcase product is
+          currently available.
         </p>
       </noscript>
     </section>
