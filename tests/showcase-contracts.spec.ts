@@ -3,7 +3,9 @@ import { expect, test } from "@playwright/test";
 test.describe("five local showcase application contracts", () => {
   test("Sori supports bounded volume, mute restoration, output and quiet mode", async ({ page }) => {
     await page.goto("/software/sori");
-    await expect(page.locator(".showcase-fieldset")).toBeEnabled();
+    await expect(
+      page.getByRole("group", { name: "Sori interactive concept" }).locator("fieldset"),
+    ).toBeEnabled();
     const slider = page.getByRole("slider", { name: "Music" });
     await slider.fill("42");
     await expect(slider).toHaveValue("42");
@@ -48,7 +50,9 @@ test.describe("five local showcase application contracts", () => {
 
   test("Goyo uses a real remaining-time state and an explicit preview completion", async ({ page }) => {
     await page.goto("/software/goyo");
-    await expect(page.locator(".showcase-fieldset")).toBeEnabled();
+    await expect(
+      page.getByRole("group", { name: "Goyo interactive concept" }).locator("fieldset"),
+    ).toBeEnabled();
     await page.getByRole("button", { name: "5 min", exact: true }).click();
     await page.getByRole("checkbox", { name: /Quiet mode/ }).check();
     await page.getByRole("button", { name: "Start session" }).click();
