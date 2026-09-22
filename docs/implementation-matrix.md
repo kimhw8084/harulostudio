@@ -28,7 +28,7 @@ work that still needs a human or hosted-environment check.
 | Visual regression | `tests/visual.spec.ts`, `tests/visual.spec.ts-snapshots/` | `npm run test:visual`: 17/17 Chromium reviewed checkpoints; deterministic baselines | AUTOMATED VERIFIED (Chromium renderer) |
 | Performance budget | `scripts/perf-check.mjs`, `tests/perf.spec.ts` | `npm run test:perf`: 24 chunks / 189,321 gzip bytes; 3 local mobile samples, worst LCP 116ms, CLS 0.0608, JS 171,959 bytes | AUTOMATED VERIFIED (local profile) |
 | Cleanup | `app/scenes.css`, pruned `components/ui/`, removed Drizzle journal and unused dependencies | `npm run build`, `git diff --check`, import/build audit | AUTOMATED VERIFIED |
-| CI workflow | `.github/workflows/ci.yml`, `package.json` | `npm run test:ui`: 129 expected passed, 39 intentional skips; hosted Actions not run in this environment | IMPLEMENTED / HOSTED UNVERIFIED |
+| CI workflow | `.github/workflows/ci.yml`, `package.json` | `npm run test:ui`: 129 passed, 42 intentional skips; hosted Actions not run in this environment | IMPLEMENTED / HOSTED UNVERIFIED |
 
 ## Explicitly unverified
 
