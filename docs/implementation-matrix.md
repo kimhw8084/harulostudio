@@ -1,7 +1,9 @@
 # Harulo implementation matrix
 
-Baseline audited revision: `6b2ad651e679b73fcec7de89fe8d3b67e1a3b422`
-Working branch: `production-audit-fixes`
+Baseline audited revision: `9cd83277732d71fe1d8fca86970e013432ca7dba`
+Verified revision: `8297e66d6e0274aed64fde9d35ac376cde57b851`
+Hosted workflow: [run 35730995667](https://github.com/kimhw8084/harulostudio/actions/runs/35730995667)
+Working branch: `production-audit-fixes` (pushed to `main` for hosted verification)
 
 Statuses are evidence-based. `AUTOMATED VERIFIED` means the named command was
 executed against the compiled local Worker in this pass. `MANUAL VERIFIED` is
@@ -24,17 +26,17 @@ work that still needs a human or hosted-environment check.
 | Guarded verified-only routes and conditional navigation | `app/releases`, `app/support`, `app/archive`, `app/history`, `app/software/[slug]/*`, `app/press/[slug]`, `lib/publishing/catalog.ts` | `tests/production.spec.ts`, `tests/publishing-integrity.spec.ts`, `tests/metadata.spec.ts` | AUTOMATED VERIFIED |
 | Metadata, social PNG, icons, manifest | `scripts/generate-brand-assets.mjs`, `public/og.png`, `public/brand/`, `app/layout.tsx` | `tests/metadata.spec.ts` Chromium/WebKit | AUTOMATED VERIFIED |
 | Recovery and security response headers | `app/error.tsx`, `app/global-error.tsx`, `next.config.ts` | `tests/recovery.spec.ts`, `tests/metadata.spec.ts` | AUTOMATED VERIFIED (local Worker) |
-| Accessibility | `tests/a11y.spec.ts` | `npm run test:a11y`: 39/39 across Chromium/WebKit normal and reduced | AUTOMATED VERIFIED |
-| Visual regression | `tests/visual.spec.ts`, `tests/visual.spec.ts-snapshots/` | `npm run test:visual`: 17/17 Chromium reviewed checkpoints; deterministic baselines | AUTOMATED VERIFIED (Chromium renderer) |
-| Performance budget | `scripts/perf-check.mjs`, `tests/perf.spec.ts` | `npm run test:perf`: 24 chunks / 189,321 gzip bytes; 3 local mobile samples, worst LCP 116ms, CLS 0.0608, JS 171,959 bytes | AUTOMATED VERIFIED (local profile) |
+| Accessibility | `tests/a11y.spec.ts` | Hosted run 35730995667: `npm run test:a11y` passed; local light/dark route scans retained | HOSTED AUTOMATED VERIFIED |
+| Visual regression | `tests/visual.spec.ts`, `tests/visual.spec.ts-snapshots/` | Hosted Ubuntu Chromium run 35730995667: `npm run test:visual` passed against reviewed `*-chromium-linux.png` baselines | HOSTED AUTOMATED VERIFIED |
+| Performance budget | `scripts/perf-check.mjs`, `tests/perf.spec.ts` | Hosted run 35730995667: `npm run test:perf` passed; local evidence remains 24 chunks / 189,321 gzip bytes, 3 mobile samples, worst LCP 116ms, CLS 0.0608, JS 171,959 bytes | HOSTED AUTOMATED VERIFIED (synthetic profile) |
 | Cleanup | `app/scenes.css`, pruned `components/ui/`, removed Drizzle journal and unused dependencies | `npm run build`, `git diff --check`, import/build audit | AUTOMATED VERIFIED |
-| CI workflow | `.github/workflows/ci.yml`, `package.json` | `npm run test:ui`: 129 passed, 42 intentional skips; hosted Actions not run in this environment | IMPLEMENTED / HOSTED UNVERIFIED |
+| CI workflow | `.github/workflows/ci.yml`, `package.json` | Hosted run 35730995667: quality, functional Chromium/Chromium-reduced/WebKit, accessibility, visual, performance, and production-gate jobs all passed | HOSTED AUTOMATED VERIFIED |
 
 ## Explicitly unverified
 
 - Physical iPhone/Android testing, VoiceOver, Korean IME, forced-colors, and
   real low-bandwidth field Core Web Vitals were not performed here.
-- GitHub Actions hosted execution, required-check branch protection, DNS, and
-  the production hosting response were not verified in this pass.
+- Required-check branch protection, DNS, and the production hosting response
+  were not verified in this pass.
 - The local Worker required a machine-local Homebrew `simdutf` compatibility
   symlink before Wrangler could start; CI Ubuntu should use the normal install.
