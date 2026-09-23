@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Menu } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -7,18 +8,23 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { HaruloMark, HaruloLockup } from "./harulo-mark";
+import { HaruloLockup } from "./harulo-mark";
 import { Direction } from "@/components/publisher-mark";
 import { liveCatalog, publicNavigation } from "@/lib/publishing/catalog";
 
 export function MobileNavigation() {
   const [open, setOpen] = useState(false);
   const navigation = publicNavigation(liveCatalog);
+  useEffect(() => {
+    const onResize = () => { if (window.innerWidth > 960) setOpen(false); };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
   return (
     <div className="mobile-navigation">
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger className="mobile-menu-trigger">
-          <HaruloMark /> <span>Menu</span>
+        <DialogTrigger className="mobile-menu-trigger" aria-label="Menu">
+          <Menu aria-hidden="true" /> <span>Menu</span>
         </DialogTrigger>
         <DialogContent className="harulo-mobile-dialog">
           <HaruloLockup />

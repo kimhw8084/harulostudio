@@ -4,22 +4,18 @@ import {
   createContext,
   useContext,
   useEffect,
-  useId,
   useRef,
   useState,
 } from "react";
-import { Pause, Play } from "lucide-react";
-import { HaruloMark } from "@/components/brand/harulo-mark";
+import { Moon, Sun } from "lucide-react";
 import { migrateTheme, type Theme } from "@/lib/brand/themes";
 import { Button } from "@/components/ui/button";
 
 type Preferences = {
   ready: boolean;
   theme: Theme;
-  paused: boolean;
   reduced: boolean;
   setTheme: (v: Theme) => void;
-  setPaused: (v: boolean) => void;
 };
 const Context = createContext<Preferences | null>(null);
 function read(key: string) {
@@ -49,7 +45,6 @@ export function ExperienceProvider({
 }) {
   const [ready, setReady] = useState(false);
   const [theme, setTheme] = useState<Theme>("light");
-  const [paused, setPaused] = useState(false);
   const [reduced, setReduced] = useState(false);
   const manualTheme = useRef<string | null>(null);
   /* eslint-disable react-hooks/set-state-in-effect -- Read external browser preferences once after deterministic SSR hydration. No render-derived state or update loop. */
@@ -71,15 +66,12 @@ export function ExperienceProvider({
         manualTheme.current = migrateTheme(read("harulo-theme"));
         syncTheme();
       }
-      if (e.key === "harulo-motion" || e.key === null)
-        setPaused(read("harulo-motion") === "paused");
     };
     const visibility = () => {
       document.documentElement.dataset.pageVisible = String(!document.hidden);
     };
     syncTheme();
     syncMotion();
-    setPaused(read("harulo-motion") === "paused");
     setReady(true);
     visibility();
     motion.addEventListener("change", syncMotion);
@@ -97,26 +89,20 @@ export function ExperienceProvider({
   useEffect(() => {
     if (!ready) return;
     document.documentElement.dataset.theme = theme;
-    document.documentElement.dataset.motion =
-      paused || reduced ? "paused" : "running";
+    document.documentElement.dataset.motion = reduced ? "paused" : "running";
     document.documentElement.dataset.enhanced = "true";
-  }, [ready, theme, paused, reduced]);
+  }, [ready, theme, reduced]);
   return (
     <Context.Provider
       value={{
         ready,
         theme,
-        paused,
         reduced,
         setTheme(v) {
           manualTheme.current = v;
           write("harulo-theme", v);
           setTheme(v);
           window.dispatchEvent(new CustomEvent("harulo:theme-change", { detail: v }));
-        },
-        setPaused(v) {
-          write("harulo-motion", v ? "paused" : "running");
-          setPaused(v);
         },
       }}
     >
@@ -136,36 +122,8 @@ export function ThemeControl() {
       title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
-      <HaruloMark key={theme} className="theme-orbit" />
+      {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
       <span>{theme === "dark" ? "Dark mode" : "Light mode"}</span>
     </Button>
-  );
-}
-export function MotionControl() {
-  const { ready, paused, reduced, setPaused } = useExperience();
-  const preferenceId = useId();
-  return (
-    <div className="motion-tools">
-      <Button
-        className="motion-button control-button"
-        variant="ghost"
-        type="button"
-        disabled={!ready || reduced}
-        onClick={() => setPaused(!paused)}
-        aria-describedby={reduced ? preferenceId : undefined}
-      >
-        {paused || reduced ? (
-          <Play aria-hidden="true" />
-        ) : (
-          <Pause aria-hidden="true" />
-        )}
-        {reduced ? "Motion reduced" : paused ? "Resume motion" : "Pause motion"}
-      </Button>
-      {reduced && (
-        <span className="metadata" id={preferenceId}>
-          Following your device preference.
-        </span>
-      )}
-    </div>
   );
 }

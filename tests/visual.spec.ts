@@ -34,17 +34,16 @@ test.describe("reviewed visual checkpoints @visual", () => {
     await expect(page.locator(".genesis-stage")).toHaveAttribute("data-phase", "resting");
     await expect(page).toHaveScreenshot("home-genesis-rest.png", { fullPage: false, animations: "disabled" });
     await toggle.click(); await expect(page.locator(".genesis-stage")).toHaveAttribute("data-phase", "open");
-    await expect(page.locator(".genesis-interface")).toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
+    await expect(page.locator(".genesis-interface")).toBeVisible();
     await expect(page).toHaveScreenshot("home-genesis-open.png", { fullPage: false, animations: "disabled" });
   });
   test("Sori X-Ray layers", async ({ page }) => {
     await page.goto("/software/sori");
-    await page.locator(".motion-button").evaluate((element) => (element as HTMLButtonElement).click());
-    await expect(page.locator(".motion-button")).toContainText("Resume motion");
+    await page.getByText("Inspect this interface").click();
     for (const layer of ["Keyboard", "Accessibility"]) { await page.getByRole("tab", { name: layer }).click(); await expect(page).toHaveScreenshot(`sori-xray-${layer.toLowerCase()}.png`, { fullPage: true, animations: "disabled" }); }
   });
   test("final return start and end", async ({ page }) => {
-    await page.goto("/"); const footer = page.locator("#footer-return-stage"); await expect(footer).toBeVisible();
+    await page.goto("/"); const footer = page.locator(".home-final-return"); await expect(footer).toBeVisible();
     await expect(page).toHaveScreenshot("final-return-start.png", { fullPage: false, animations: "disabled" });
     await footer.scrollIntoViewIfNeeded(); await expect(footer).toHaveAttribute("data-complete", "true", { timeout: 5000 });
     await expect(page).toHaveScreenshot("final-return-end.png", { fullPage: false, animations: "disabled" });

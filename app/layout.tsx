@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
+import "./tailwind.css";
 import "./globals.css";
 import "./scenes.css";
+import "./remediation.css";
+import "@/components/showcase/showcase.css";
 import { ExperienceProvider } from "@/components/experience-provider";
 import { SiteHeader, SiteFooter } from "@/components/site-shell";
 import { studio } from "@/lib/site-content";
 import { pageTransitionScript } from "@/lib/brand/page-transitions";
 import { themeStyles, themeBootstrap } from "@/lib/brand/themes";
+import { motionStyles } from "@/lib/brand/motion";
 
 export const metadata: Metadata = {
   metadataBase: new URL(studio.url),
@@ -49,6 +53,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <style dangerouslySetInnerHTML={{ __html: themeStyles }} />
+        <style dangerouslySetInnerHTML={{ __html: motionStyles }} />
         <script dangerouslySetInnerHTML={{ __html: pageTransitionScript }} />
         <script
           dangerouslySetInnerHTML={{

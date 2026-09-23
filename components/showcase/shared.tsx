@@ -6,19 +6,18 @@ import { useExperience } from "@/components/experience-provider";
 
 export function ShowcaseShell({
   name,
+  kind,
+  mode = "detail",
   children,
 }: {
   name: string;
+  kind: "sori" | "namu" | "goyo" | "haru-weather" | "dami";
+  mode?: "genesis" | "detail";
   children: ReactNode;
 }) {
   const { ready } = useExperience();
   return (
-    <div className="concept-interface" role="group" aria-label={`${name} interactive concept`}>
-      <div className="concept-chrome">
-        <span className="window-register" aria-hidden="true">↗</span>
-        <strong>{name}</strong>
-        <span className="metadata">SIMULATED / LOCAL</span>
-      </div>
+    <div className="concept-interface showcase-shell" role="group" aria-label={`${name} interactive concept`} data-showcase={kind} data-mode={mode}>
       <fieldset disabled={!ready} className="concept-body showcase-fieldset">
         {children}
       </fieldset>

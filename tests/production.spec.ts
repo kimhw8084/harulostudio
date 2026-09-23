@@ -21,7 +21,7 @@ test.describe("public Harulo production surface", () => {
     const close = page.getByRole("button", { name: "Close example" });
     await expect(close).toHaveAttribute("aria-expanded", "true");
     await page.getByRole("tab", { name: "Namu" }).click();
-    await expect(page.getByRole("tabpanel", { name: "Namu" })).toContainText("Namu");
+    await expect(page.getByRole("tabpanel", { name: "Namu" })).toContainText("Selected note");
     await page.getByRole("tab", { name: "Namu" }).focus();
     await page.keyboard.press("Escape");
     await expect(page.getByRole("button", { name: "Open example" })).toBeFocused();
@@ -58,22 +58,16 @@ test.describe("public Harulo production surface", () => {
     await expect(theme).not.toHaveAttribute("aria-label", first ?? "");
   });
 
-  test("final return consumes page-specific anchors", async ({ page }) => {
-    const pages = [
-      ["/", "home", ["home-return-aperture", "genesis-primary-rail", "genesis-secondary-rail", "home-return-signal"]],
-      ["/software", "software", ["software-return-aperture", "software-return-primary", "software-return-secondary", "software-return-signal"]],
-      ["/studio", "studio", ["studio-return-aperture", "studio-return-primary", "studio-return-secondary", "studio-return-signal"]],
-      ["/press", "press", ["press-return-aperture", "press-return-primary", "press-return-secondary", "press-return-signal"]],
-      ["/privacy", "privacy", ["privacy-return-aperture", "privacy-return-primary", "privacy-return-secondary", "privacy-return-signal"]],
-      ["/software/sori", "product-detail", ["product-detail-return-aperture", "product-detail-return-primary", "product-detail-return-secondary", "product-detail-return-signal"]],
-    ] as const;
-    for (const [path, pageId, anchorIds] of pages) {
+  test("final return is bounded and home-only", async ({ page }) => {
+    await page.goto("/");
+    const signature = page.locator(".home-final-return");
+    await expect(signature).toHaveCount(1);
+    await signature.scrollIntoViewIfNeeded();
+    await expect(signature).toHaveAttribute("data-complete", "true");
+    for (const path of ["/software", "/studio", "/press", "/privacy", "/software/sori", "/not-found"]) {
       await page.goto(path);
-      for (const id of anchorIds) await expect(page.locator(`#${id}`)).toHaveCount(1);
-      const footer = page.locator("#footer-return-stage");
-      await expect(footer).toHaveAttribute("data-page", pageId);
-      await footer.scrollIntoViewIfNeeded();
-      await expect(footer).toHaveAttribute("data-anchors-measured", "true");
+      await expect(page.locator(".home-final-return")).toHaveCount(0);
+      await expect(page.locator(".compact-footer")).toBeVisible();
     }
   });
 });

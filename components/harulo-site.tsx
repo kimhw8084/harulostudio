@@ -9,14 +9,12 @@ import { ProductEdition } from "./product-edition";
 import { BrandScene } from "./brand/scene/brand-scene";
 import { HaruloEnvironment } from "./brand/environments/harulo-environment";
 import { brandCopy } from "@/lib/brand/copy";
-import { ReturnSourceAnchors } from "./publishing-views";
 
 export function ContactSection() {
   return (
     <section className="contact-section" id="contact" aria-labelledby="contact-title">
       <div className="contact-top">
-        <p className="eyebrow">THERE IS ALWAYS A NEXT DAY.</p>
-        <span className="metadata" lang="ko">조금 더 나은 하루로.</span>
+        <p className="eyebrow">CONTACT / TODAY → TOWARD</p>
       </div>
       <h2 id="contact-title">{brandCopy.contact}<Direction /></h2>
       <div className="contact-bottom">
@@ -37,15 +35,11 @@ export function StudioStory({ full = false }: { full?: boolean }) {
       <section className="story-section" id="studio" aria-labelledby="story-title">
         <div className="story-index metadata">02 / THE DIRECTION</div>
         <div className="story-copy">
-          <p className="eyebrow">HARULO · 하루로</p>
           <h2 id="story-title">{brandCopy.meaningLiteral}</h2>
-          <p>We start with the thing you do again and again. The unnecessary step. The small interruption. Then we build software that gets it out of your way.</p>
-          {full && <p>Harulo Studio is an independent software publisher, built by one maker. We design, build, publish and maintain our own products—carefully, and in public when the work is ready.</p>}
+          {full && <p>Harulo Studio designs, builds, publishes and maintains independent software.</p>}
           <p className="meaning-poetic">{brandCopy.meaningPoetic}</p>
         </div>
-        <div className="korean-direction" lang="ko"><span>하루</span><ArrowRight aria-hidden="true" /><span>하루<b>로</b></span></div>
-        <div className="language-labels metadata"><span>{brandCopy.motif}</span></div>
-        <ReturnSourceAnchors page="studio" />
+        <div className="korean-direction" lang="ko"><span>하루</span><ArrowRight aria-hidden="true" /><span>로</span></div>
       </section>
     </BrandScene>
   );
@@ -76,22 +70,20 @@ export function HaruloSite({ prefix = "", hero }: { prefix?: string; hero?: Reac
   const products = [...verified, ...showcase];
   return (
     <main id="main" tabIndex={-1} className="harulo-world">
-      {hero ?? <BrandScene className="hero-scene" systems="01 02 03 04 05 09 13 17 18 23">
-        <HaruloEnvironment material="flow" />
+      {hero ?? <div className="hero-scene">
         <section className="publisher-hero" aria-labelledby="hero-title">
-          <div className="hero-mast"><p className="publisher-eyebrow eyebrow">{studio.role}</p><span className="metadata">WE DESIGN. BUILD. PUBLISH. MAINTAIN.</span></div>
+          <div className="hero-mast"><p className="publisher-eyebrow eyebrow">{studio.role}</p></div>
           <div className="hero-world">
-            <div className="hero-statement"><h1 id="hero-title">{brandCopy.hero}</h1><p className="hero-korean" lang="ko">조금 더 나은 하루로.</p><p className="metadata hero-motif">{brandCopy.motif}</p></div>
+            <div className="hero-statement"><h1 id="hero-title">{brandCopy.hero}</h1><p className="hero-description">{studio.description}</p><div className="hero-actions"><Link className="primary-link" href={`${prefix}/software`}>Explore software <Direction /></Link><Link className="quiet-link" href={`${prefix}/studio`}>Studio <Direction /></Link></div></div>
             <SoftwareOrigin />
           </div>
-          <div className="hero-bottom"><p className="hero-signature">HARULO<span>STUDIO / <span lang="ko">하루로</span></span></p><div className="hero-introduction"><p className="hero-description">{studio.description}</p><div className="hero-actions"><Link className="primary-link" href={`${prefix}/software`}>Explore the showcase <Direction /></Link><a className="quiet-link" href="#contact">Say hello <Direction /></a></div></div></div>
         </section>
-      </BrandScene>}
+      </div>}
       <section className="software-section" id="software" aria-labelledby="software-title">
-        <div className="section-heading"><p className="eyebrow">01 / SOFTWARE, PUBLISHED.</p><span className="metadata">SHOWCASE STUDIES / ONE PUBLISHER</span></div>
+        <div className="section-heading"><p className="eyebrow">01 / SOFTWARE</p></div>
         <h2 id="software-title" className="catalog-title">{brandCopy.catalog}</h2>
-        {showcase.length > 0 && <p className="showcase-disclosure">Interactive publication studies showing how future Harulo software can be presented. <strong>Interactive concept — not released software.</strong></p>}
-        <div className="publisher-shelf">{products.map((product, index) => <ProductEdition key={product.id} product={product} prefix={prefix} initiallyOpen={index === 0} />)}</div>
+        {showcase.length > 0 && <p className="showcase-disclosure">Five local interactive concepts, not released software.</p>}
+        <div className="publisher-shelf">{products.map((product) => <ProductEdition key={product.id} product={product} prefix={prefix} variant="home" />)}</div>
         <Link className="catalog-all" href={`${prefix}/software`}>OPEN THE SHOWCASE <Direction /></Link>
       </section>
       <StudioStory />

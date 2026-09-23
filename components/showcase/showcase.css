@@ -1,0 +1,139 @@
+/* Each specimen owns its anatomy. The shared shell owns only legibility and controls. */
+.showcase-shell { --ui-surface: #f6f7ff; --ui-panel: #fff; --ui-ink: #101322; --ui-muted: #505979; --ui-line: #c6cde6; --ui-accent: #123dff; width: 100%; overflow: visible; border: 1px solid var(--ui-line); border-radius: 12px; background: var(--ui-surface); color: var(--ui-ink); box-shadow: 0 20px 50px color-mix(in srgb, var(--ui-ink) 8%, transparent); }
+.showcase-shell .showcase-fieldset { min-width: 0; margin: 0; padding: clamp(1.25rem, 3vw, 2.5rem); border: 0; }
+.showcase-shell .concept-title { font: 650 clamp(1.45rem, 3vw, 2.7rem)/1.13 var(--font-display); letter-spacing: -.04em; margin: 0 0 1rem; }
+.showcase-shell .showcase-note { max-width: 68ch; margin: -.25rem 0 1.25rem; color: var(--ui-muted); font-size: .86rem; }
+.showcase-shell .concept-label, .showcase-shell .showcase-select-label { display: block; margin: 1rem 0 .4rem; color: var(--ui-muted); font: 650 .82rem/1.4 var(--font-body); letter-spacing: 0; }
+.showcase-shell :is(input:not([type="checkbox"]):not([type="range"]), textarea, select) { display: block; width: 100%; min-width: 0; min-height: 44px; padding: .65rem .8rem; color: var(--ui-ink); background: var(--ui-panel); border: 1px solid var(--ui-line); border-radius: 6px; box-shadow: none; font-size: .95rem; }
+.showcase-shell :is(input, textarea, select, button):focus-visible { outline: 3px solid var(--ui-accent); outline-offset: 2px; }
+.showcase-shell button { min-height: 44px; padding: .55rem .85rem; border-radius: 6px; font-size: .9rem; }
+.showcase-shell button[aria-pressed="true"] { background: var(--ui-accent); border-color: var(--ui-accent); color: #fff; }
+.showcase-shell .weather-switches { gap: .5rem; margin: .75rem 0 1.25rem; }
+.showcase-shell .weather-switches button { border: 1px solid var(--ui-line); color: var(--ui-ink); background: var(--ui-panel); }
+.showcase-shell .weather-switches button[aria-pressed="true"] { background: var(--ui-accent); color: #fff; border-color: var(--ui-accent); }
+.showcase-shell .check-row, .showcase-shell .checkbox-row { display: flex; align-items: center; gap: .75rem; min-height: 44px; margin-top: 1rem; font-size: .92rem; cursor: pointer; }
+.showcase-shell input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--ui-accent); }
+.showcase-shell .instrument-actions { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; margin-top: 1.5rem; }
+.showcase-shell .concept-foot { border-top: 1px solid var(--ui-line); padding-top: 1rem; margin-top: 2rem; color: var(--ui-muted); font: .8rem/1.4 var(--font-body); }
+.showcase-shell .concept-foot button { color: var(--ui-ink); border: 1px solid var(--ui-line); background: transparent; }
+.showcase-shell .metadata { color: var(--ui-muted); font-size: .78rem; }
+.showcase-shell .showcase-table { width: 100%; border-collapse: collapse; margin-top: 2rem; font-size: .9rem; font-variant-numeric: tabular-nums; }
+.showcase-shell .showcase-table caption { text-align: left; margin-bottom: .6rem; color: var(--ui-muted); font-size: .8rem; }
+.showcase-shell .showcase-table :is(th,td) { padding: .7rem .6rem; text-align: left; border-bottom: 1px solid var(--ui-line); }
+.showcase-shell .showcase-table th { font-weight: 650; }
+.showcase-shell .showcase-table td { font-weight: 500; }
+
+/* Sori: precise audio instrument. */
+.showcase-shell[data-showcase="sori"] { --ui-surface: #111b33; --ui-panel: #1e2c49; --ui-ink: #f3f5ff; --ui-muted: #b9c7e8; --ui-line: #415475; --ui-accent: #6f86ff; border-color: #415475; }
+.showcase-shell[data-showcase="sori"] .concept-title { max-width: 24ch; }
+.showcase-shell[data-showcase="sori"] .mixer-row { grid-template-columns: minmax(5rem, .6fr) minmax(5rem, 2fr) 3.4rem minmax(5rem, .8fr); gap: clamp(.5rem, 1.5vw, 1.25rem); align-items: center; padding: 1rem 0; border-color: var(--ui-line); font-size: .95rem; }
+.showcase-shell[data-showcase="sori"] .mixer-row label { font-weight: 650; }
+.showcase-shell[data-showcase="sori"] input[type="range"] { width: 100%; min-height: 44px; accent-color: #8b9fff; cursor: pointer; }
+.showcase-shell[data-showcase="sori"] .mixer-row output { text-align: right; font: 650 1rem var(--font-meta); font-variant-numeric: tabular-nums; }
+.showcase-shell[data-showcase="sori"] .mixer-row button { border: 1px solid var(--ui-line); background: transparent; color: var(--ui-ink); }
+.showcase-shell[data-showcase="sori"] .mixer-row button[aria-pressed="true"] { background: #ff7152; color: #101322; border-color: #ff7152; }
+.showcase-shell[data-showcase="sori"] .check-row { padding: .65rem 1rem; border: 1px solid var(--ui-line); background: var(--ui-panel); }
+.showcase-shell[data-showcase="sori"] select { max-width: 24rem; }
+
+/* Namu: a connected notebook with a library and a writing surface. */
+.showcase-shell[data-showcase="namu"] { --ui-surface: #f4f1ff; --ui-panel: #fff; --ui-ink: #211c43; --ui-muted: #615a7e; --ui-line: #cbc3e4; --ui-accent: #594398; }
+.showcase-shell[data-showcase="namu"] .showcase-fieldset { padding: 0; }
+.showcase-shell[data-showcase="namu"] .showcase-split { display: grid; grid-template-columns: minmax(12rem, .7fr) minmax(0, 1.5fr); min-height: 420px; }
+.showcase-shell[data-showcase="namu"] .namu-library { min-width: 0; padding: 1.5rem; border-right: 1px solid var(--ui-line); background: color-mix(in srgb, var(--ui-surface) 90%, #d8d0f3); }
+.showcase-shell[data-showcase="namu"] .namu-editor { min-width: 0; padding: 1.5rem; background: var(--ui-panel); }
+.showcase-shell[data-showcase="namu"] .specimen-items { display: grid; gap: .4rem; padding: 0; margin: 1rem 0; list-style: none; }
+.showcase-shell[data-showcase="namu"] .specimen-items li { border: 0; padding: 0; }
+.showcase-shell[data-showcase="namu"] .specimen-items button { width: 100%; text-align: left; border: 1px solid transparent; color: var(--ui-ink); background: transparent; }
+.showcase-shell[data-showcase="namu"] .specimen-items button.is-selected { border-color: var(--ui-line); background: var(--ui-panel); box-shadow: inset 3px 0 var(--ui-accent); }
+.showcase-shell[data-showcase="namu"] #namu-title { font: 650 1.35rem var(--font-display); border: 0; border-bottom: 1px solid var(--ui-line); border-radius: 0; padding-inline: 0; }
+.showcase-shell[data-showcase="namu"] #namu-body { min-height: 180px; resize: vertical; border: 0; padding-inline: 0; line-height: 1.7; }
+.showcase-shell[data-showcase="namu"] .namu-link-row { display: grid; grid-template-columns: auto minmax(8rem, 1fr) auto; align-items: end; gap: .75rem; padding-top: 1rem; border-top: 1px solid var(--ui-line); }
+.showcase-shell[data-showcase="namu"] .namu-link-row .concept-label { margin: 0 0 .8rem; }
+.showcase-shell[data-showcase="namu"] .namu-link-row button { color: #8d3c3c; border: 1px solid var(--ui-line); background: transparent; }
+.showcase-shell[data-showcase="namu"] .namu-create { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto auto; align-items: end; gap: .75rem; padding: 1.5rem; border-top: 1px solid var(--ui-line); }
+.showcase-shell[data-showcase="namu"] .namu-create-title { grid-column: 1/-1; font-size: 1rem; font-weight: 650; }
+.showcase-shell[data-showcase="namu"] .namu-create textarea { min-height: 44px; height: 44px; resize: vertical; }
+.showcase-shell[data-showcase="namu"] .concept-foot, .showcase-shell[data-showcase="namu"] .showcase-fieldset > .metadata { margin: 0 1.5rem 1rem; }
+
+/* Goyo: the clock and its current state are the composition. */
+.showcase-shell[data-showcase="goyo"] { --ui-surface: #222033; --ui-panel: #302d43; --ui-ink: #f5f1ff; --ui-muted: #c3bed5; --ui-line: #615c78; --ui-accent: #b8a7ff; border-color: var(--ui-line); }
+.showcase-shell[data-showcase="goyo"] .showcase-fieldset { max-width: 640px; margin-inline: auto; }
+.showcase-shell[data-showcase="goyo"] .concept-title { font-size: clamp(1.25rem, 2vw, 1.9rem); }
+.showcase-shell[data-showcase="goyo"] .focus-clock { display: block; margin: 1rem auto .5rem; text-align: center; font: 600 clamp(5rem, 13vw, 9rem)/1 var(--font-display); letter-spacing: -.08em; font-variant-numeric: tabular-nums; }
+.showcase-shell[data-showcase="goyo"] .focus-state { min-height: 0; padding: .5rem 0; border: 0; background: transparent; color: var(--ui-muted); text-align: center; font-size: .95rem; }
+.showcase-shell[data-showcase="goyo"] .weather-switches { justify-content: center; }
+.showcase-shell[data-showcase="goyo"] .weather-switches button[aria-pressed="true"] { color: #211c43; }
+.showcase-shell[data-showcase="goyo"] .instrument-actions { justify-content: center; }
+.showcase-shell[data-showcase="goyo"] .instrument-actions button:first-child { min-width: 150px; background: #b8a7ff; color: #211c43; border: 1px solid #b8a7ff; }
+.showcase-shell[data-showcase="goyo"] .instrument-actions button:not(:first-child) { background: transparent; color: var(--ui-muted); border: 1px solid var(--ui-line); }
+.showcase-shell[data-showcase="goyo"] .checkbox-row { justify-content: center; }
+
+/* Haru Weather: readable forecast before graph decoration. */
+.showcase-shell[data-showcase="haru-weather"] { --ui-surface: #dff2ff; --ui-panel: #f8fcff; --ui-ink: #102b45; --ui-muted: #45627a; --ui-line: #accfe6; --ui-accent: #255d91; }
+.showcase-shell[data-showcase="haru-weather"] .concept-title { max-width: 30ch; }
+.showcase-shell[data-showcase="haru-weather"] .weather-row { display: grid; grid-template-columns: 1fr; gap: .35rem; margin: 1.5rem 0; padding: 1.5rem; background: var(--ui-panel); border-left: 4px solid var(--ui-accent); }
+.showcase-shell[data-showcase="haru-weather"] .weather-row strong { font: 650 clamp(1.8rem, 4vw, 3rem)/1.15 var(--font-display); letter-spacing: -.04em; }
+.showcase-shell[data-showcase="haru-weather"] .weather-row span { color: var(--ui-muted); }
+.showcase-shell[data-showcase="haru-weather"] .showcase-table-scroll { max-width: 100%; overflow-x: auto; }
+.showcase-shell[data-showcase="haru-weather"] .showcase-table { min-width: 540px; }
+.showcase-shell[data-showcase="haru-weather"] .weather-graph { height: 130px; align-items: end; gap: .6rem; padding: 1rem 0 1.8rem; border-bottom: 1px solid var(--ui-line); }
+.showcase-shell[data-showcase="haru-weather"] .weather-graph span { position: relative; display: block; height: var(--bar); background: linear-gradient(0deg, #326998, #93cdf4); border-radius: 3px 3px 0 0; }
+.showcase-shell[data-showcase="haru-weather"] .weather-graph small { position: absolute; top: calc(100% + .3rem); left: 50%; transform: translateX(-50%); font-size: .7rem; }
+
+/* Dami: money scans as a ledger, with a visual chart as supporting evidence. */
+.showcase-shell[data-showcase="dami"] { --ui-surface: #fff2ec; --ui-panel: #fffaf7; --ui-ink: #3b241f; --ui-muted: #775a52; --ui-line: #e8c9ba; --ui-accent: #85452f; }
+.showcase-shell[data-showcase="dami"] .dami-totals { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; margin: 1.5rem 0 2rem; }
+.showcase-shell[data-showcase="dami"] .dami-totals > div { display: grid; align-content: start; gap: .5rem; min-width: 0; min-height: 112px; padding: 1rem; border: 1px solid var(--ui-line); background: var(--ui-panel); }
+.showcase-shell[data-showcase="dami"] .dami-totals span { color: var(--ui-muted); font-size: .82rem; }
+.showcase-shell[data-showcase="dami"] .dami-totals strong { font: 650 clamp(1.1rem, 2.2vw, 1.9rem)/1.2 var(--font-display); letter-spacing: -.03em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.showcase-shell[data-showcase="dami"] .dami-totals small { color: var(--ui-muted); font-size: .72rem; }
+.showcase-shell[data-showcase="dami"] .dami-totals [data-state="over"] { border-color: #ad3021; color: #ad3021; }
+.showcase-shell[data-showcase="dami"] #dami-category, .showcase-shell[data-showcase="dami"] #dami-allocation { max-width: 22rem; }
+.showcase-shell[data-showcase="dami"] .showcase-table td:last-child, .showcase-shell[data-showcase="dami"] .showcase-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.showcase-shell[data-showcase="dami"] .showcase-table [data-selected="true"] { background: color-mix(in srgb, var(--ui-accent) 10%, transparent); }
+.showcase-shell[data-showcase="dami"] .dami-chart { display: grid; gap: .75rem; margin-top: 2rem; }
+.showcase-shell[data-showcase="dami"] .dami-chart > div { display: grid; grid-template-columns: 5rem minmax(0, 1fr) 5rem; gap: .75rem; align-items: center; font-size: .85rem; }
+.showcase-shell[data-showcase="dami"] .dami-chart i { display: block; height: 12px; background: var(--ui-accent); border-radius: 999px; }
+.showcase-shell[data-showcase="dami"] .dami-chart strong { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* The Genesis task is intentionally smaller than each detail specimen. */
+.showcase-shell[data-mode="genesis"] { box-shadow: none; border-radius: 6px; }
+.genesis-interface .showcase-shell { background: var(--ui-surface); color: var(--ui-ink); }
+.showcase-shell[data-mode="genesis"] .showcase-fieldset { padding: 1rem; }
+.showcase-shell[data-mode="genesis"] .concept-title { font-size: 1.25rem; margin-bottom: .75rem; }
+.showcase-shell[data-mode="genesis"] .mixer-row { padding: .25rem 0; grid-template-columns: 4.5rem minmax(0, 1fr) 2.5rem 4.5rem; gap: .4rem; }
+.showcase-shell[data-mode="genesis"] .mixer-row button { padding-inline: .2rem; font-size: .75rem; }
+.showcase-shell[data-mode="genesis"] .showcase-split { grid-template-columns: minmax(8rem, .7fr) minmax(0, 1.3fr); min-height: 0; }
+.showcase-shell[data-mode="genesis"] .namu-library, .showcase-shell[data-mode="genesis"] .namu-editor { padding: .75rem; }
+.showcase-shell[data-mode="genesis"] #namu-body { min-height: 100px; }
+.showcase-shell[data-mode="genesis"] .namu-link-row { display: none; }
+.showcase-shell[data-mode="genesis"] .focus-clock { font-size: 4.5rem; }
+.showcase-shell[data-mode="genesis"] .dami-totals { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: .75rem 0; }
+.showcase-shell[data-mode="genesis"] .dami-totals > div { min-height: 0; padding: .6rem; }
+.showcase-shell[data-mode="genesis"] .dami-totals strong { font-size: 1.15rem; }
+.showcase-shell[data-mode="genesis"] .weather-row { padding: .8rem; margin: .6rem 0; }
+.showcase-shell[data-mode="genesis"] .weather-row strong { font-size: 1.5rem; }
+
+html[data-theme="dark"] .showcase-shell[data-showcase="namu"] { --ui-surface: #26213d; --ui-panel: #302a48; --ui-ink: #f4efff; --ui-muted: #c9c1df; --ui-line: #625b80; --ui-accent: #b8a7ff; }
+html[data-theme="dark"] .showcase-shell[data-showcase="haru-weather"] { --ui-surface: #14314a; --ui-panel: #1d3e58; --ui-ink: #e6f5ff; --ui-muted: #b7d3e6; --ui-line: #51738c; --ui-accent: #90caff; }
+html[data-theme="dark"] .showcase-shell[data-showcase="dami"] { --ui-surface: #3d2824; --ui-panel: #4b322b; --ui-ink: #fff1e9; --ui-muted: #e1c1b3; --ui-line: #8b6253; --ui-accent: #ffb89f; }
+html[data-theme="dark"] .showcase-shell[data-showcase="namu"] .namu-library { background: #26213d; }
+html[data-theme="dark"] .showcase-shell[data-showcase="namu"] .namu-link-row button { color: #ffb4ab; }
+html[data-theme="dark"] .showcase-shell[data-showcase="goyo"] .instrument-actions button:first-child { color: #211c43; }
+html[data-theme="dark"] .showcase-shell button[aria-pressed="true"] { color: #101322; }
+
+@media (max-width: 720px) {
+  .showcase-shell[data-showcase="namu"] .showcase-split, .showcase-shell[data-mode="genesis"] .showcase-split { grid-template-columns: 1fr; }
+  .showcase-shell[data-showcase="namu"] .namu-library { border-right: 0; border-bottom: 1px solid var(--ui-line); }
+  .showcase-shell[data-showcase="namu"] .namu-create { grid-template-columns: 1fr 1fr; }
+  .showcase-shell[data-showcase="namu"] .namu-create-title, .showcase-shell[data-showcase="namu"] .namu-create input, .showcase-shell[data-showcase="namu"] .namu-create textarea { grid-column: 1/-1; }
+  .showcase-shell[data-showcase="dami"] .dami-totals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 430px) {
+  .showcase-shell[data-showcase="namu"] .namu-create { grid-template-columns: 1fr; }
+  .showcase-shell[data-showcase="sori"] .mixer-row, .showcase-shell[data-mode="genesis"] .mixer-row { grid-template-columns: minmax(0, 1fr) 3rem 4.5rem; }
+  .showcase-shell[data-showcase="sori"] .mixer-row label { grid-column: 1/-1; }
+  .showcase-shell[data-showcase="goyo"] .focus-clock { font-size: clamp(4.5rem, 20vw, 6rem); }
+  .showcase-shell[data-showcase="dami"] .dami-totals strong { font-size: 1.2rem; }
+  .showcase-shell[data-showcase="namu"] .namu-link-row { grid-template-columns: 1fr; }
+}

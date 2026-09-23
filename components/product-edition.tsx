@@ -1,6 +1,5 @@
 import Link from "@/components/site-link";
 import Image from "next/image";
-import { Plus } from "lucide-react";
 import type { Product, Release } from "@/lib/publishing/types";
 import {
   formatDate,
@@ -11,7 +10,6 @@ import { Direction } from "./publisher-mark";
 import { ApplicationInstrument } from "./application-instrument";
 import { BrandSlot } from "./brand-slot";
 import { ProductGlyph } from "./brand/product-glyph";
-import { HaruloMark } from "./brand/harulo-mark";
 
 export function ProductIcon({ product }: { product: Product }) {
   return (
@@ -53,81 +51,21 @@ export function ProductMedia({ product }: { product: Product }) {
 export function ProductEdition({
   product,
   prefix = "",
-  initiallyOpen = false,
+  variant = "catalog",
 }: {
   product: Product;
   prefix?: string;
-  initiallyOpen?: boolean;
+  variant?: "home" | "catalog" | "related";
 }) {
   return (
-    <article
-      className="product-edition"
-      data-tone={product.tone}
-      data-systems="03 06 11 12 14 18"
-    >
-      <details className="edition-disclosure" open={initiallyOpen || undefined}>
-        <summary
-          className="edition-spine"
-          aria-label={`Toggle ${product.name} edition`}
-        >
-          <span className="edition-number">
-            <HaruloMark />
-            {product.edition}
-          </span>
-          <h3 className="edition-spine-title">
-            {product.name}
-            {product.koreanName && <span lang="ko">{product.koreanName}</span>}
-          </h3>
-          <span className="edition-spine-meta">
-            {product.category}
-            <br />
-            {product.provenance === "showcase"
-              ? "INTERACTIVE CONCEPT"
-              : product.version
-                ? `v${product.version}`
-                : statusLabels[product.status]}{" "}
-            / {product.provenance === "showcase" ? "NOT AVAILABLE" : statusLabels[product.status]}
-          </span>
-          <span className="edition-toggle">
-            <Plus aria-hidden="true" />
-          </span>
-        </summary>
-        <div className="edition-interior">
-          <div className="edition-info">
-            <ProductIcon product={product} />
-            <span className="eyebrow">{product.category}</span>
-            <p>{product.tagline}</p>
-            <div className="edition-meta metadata">
-              <span>{product.platforms.join(" / ")}</span>
-              <span>
-                {product.provenance === "showcase"
-                  ? "INTERACTIVE CONCEPT"
-                  : product.version
-                    ? `VERSION ${product.version}`
-                    : statusLabels[product.status]}{" "}
-                / {product.provenance === "showcase" ? "NOT AVAILABLE" : statusLabels[product.status].toUpperCase()}
-              </span>
-            </div>
-            <Link
-              className="text-link"
-              href={`${prefix}/software/${product.slug}`}
-              aria-label={`Explore ${product.name}`}
-            >
-              Explore {product.name}
-              <Direction />
-            </Link>
-          </div>
-          <div className="edition-media" data-publication={product.slug}>
-            <ProductMedia product={product} />
-          </div>
-        </div>
-        <div className="edition-imprint">
-          <span>
-            <HaruloMark /> {product.provenance === "showcase" ? "HARULO STUDIO / SHOWCASE STUDY" : `A HARULO STUDIO EDITION / ${product.edition}`}
-          </span>
-            <span>{product.provenance === "showcase" ? "SHOWCASE → SPECIMEN" : "PUBLICATION → APPLICATION"}</span>
-        </div>
-      </details>
+    <article className="product-edition edition-card" data-tone={product.tone} data-variant={variant} data-publication={product.slug}>
+      <span className="edition-number">{product.edition}</span>
+      <div className="edition-card-main">
+        <div className="edition-card-title"><ProductIcon product={product} /><h3>{product.name}{product.koreanName && <span lang="ko">{product.koreanName}</span>}</h3></div>
+        <p>{product.tagline}</p>
+      </div>
+      <div className="edition-card-side"><span>{product.category}</span><span>{product.provenance === "showcase" ? "Interactive concept" : statusLabels[product.status]}</span></div>
+      <Link className="edition-card-link" href={`${prefix}/software/${product.slug}`} aria-label={`Explore ${product.name}`}>Explore <Direction /></Link>
     </article>
   );
 }

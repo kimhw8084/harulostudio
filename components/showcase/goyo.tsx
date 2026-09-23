@@ -81,7 +81,7 @@ const format = (ms: number) => {
   return `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
 };
 
-export function GoyoSpecimen() {
+export function GoyoSpecimen({ mode = "detail" }: { mode?: "genesis" | "detail" }) {
   const [state, dispatch] = useReducer(focusReducer, initialFocusState);
   useEffect(() => {
     if (state.phase !== "running") return;
@@ -90,8 +90,8 @@ export function GoyoSpecimen() {
   }, [state.phase]);
   const reset = () => dispatch({ type: "RESET" });
   return (
-    <ShowcaseShell name="Goyo">
-      <p className="concept-title">A calmer place for attention.</p>
+    <ShowcaseShell name="Goyo" kind="goyo" mode={mode}>
+      <p className="concept-title">Focus session</p>
       <label className="concept-label" htmlFor="goyo-intention">Today’s intention</label>
       <Input id="goyo-intention" value={state.intention} maxLength={120} onChange={(event) => dispatch({ type: "SET_INTENTION", value: event.target.value })} placeholder="One small thing" />
       <div className="weather-switches" aria-label="Focus duration">
@@ -101,16 +101,15 @@ export function GoyoSpecimen() {
       <p className="focus-state" role="status">
         {state.phase === "running" ? "Focus is in progress." : state.phase === "paused" ? "Paused. Your remaining time is held." : state.phase === "complete" ? "Session complete. Take the next small step." : "Choose a length, then begin."}
       </p>
-      <label className="checkbox-row">
+      {mode === "detail" && <label className="checkbox-row">
         <input type="checkbox" checked={state.quietMode} onChange={(event) => dispatch({ type: "TOGGLE_QUIET", value: event.target.checked })} />
         Quiet mode (simulated)
-      </label>
+      </label>}
       <div className="instrument-actions">
         {state.phase === "running" ? <Button type="button" onClick={() => dispatch({ type: "PAUSE", now: Date.now() })}>Pause session</Button> : <Button type="button" onClick={() => dispatch({ type: "START", now: Date.now() })} disabled={state.phase === "complete"}>Start session</Button>}
-        <Button type="button" variant="ghost" onClick={() => dispatch({ type: "PREVIEW_COMPLETE" })}>Preview completion</Button>
-        <Button type="button" variant="ghost" onClick={reset}>Reset</Button>
+        {mode === "detail" && <Button type="button" variant="ghost" onClick={() => dispatch({ type: "PREVIEW_COMPLETE" })}>Preview completion</Button>}
       </div>
-      <ShowcaseFoot onReset={reset} />
+      {mode === "detail" && <ShowcaseFoot onReset={reset} />}
     </ShowcaseShell>
   );
 }

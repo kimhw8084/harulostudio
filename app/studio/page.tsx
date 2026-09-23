@@ -16,7 +16,7 @@ export default function Studio() {
       <div className="page-width">
         <PageIntro
           eyebrow="Independent software publisher"
-          title="A day is a good place to begin."
+          title="Harulo Studio."
           description="Harulo designs, builds, publishes and maintains its own software. One maker, with a belief that small improvements to ordinary life are worth the care."
         />
       </div>

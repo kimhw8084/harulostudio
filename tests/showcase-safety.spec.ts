@@ -25,7 +25,7 @@ test.describe("showcase provenance boundary", () => {
     await page.goto("/software/sori");
     const body = await page.locator("body").innerText();
     expect(body).toMatch(/Interactive concept/i);
-    expect(body).toMatch(/not available/i);
+    expect(body).toMatch(/not released software/i);
     expect(body).not.toMatch(/Latest version|Release channels|Designed, built and published by Harulo Studio|Download details/i);
   });
 });

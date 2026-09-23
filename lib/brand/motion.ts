@@ -24,21 +24,38 @@ export const REST: BrandPose = {
 };
 
 export const motion = {
-  micro: 160,
-  hover: 240,
-  settle: 480,
-  publish: 640,
-  open: 560,
-  collapse: 420,
-  orbit: 1800,
-  transition: 560,
-  study: 1800,
+  micro: 140,
+  hover: 180,
+  control: 220,
+  settle: 320,
+  genesisOpen: 560,
+  genesisClose: 420,
+  genesisSwitch: 220,
+  pageContinuity: 360,
+  theme: 220,
+  finalReturn: 520,
   ease: {
     open: "cubic-bezier(.22,.78,.18,1)",
     settle: "cubic-bezier(.16,1,.3,1)",
     publish: "cubic-bezier(.65,0,.2,1)",
   },
 } as const;
+
+/** CSS durations are emitted from this module rather than independently tuned. */
+export const motionStyles = `:root {
+  --motion-interface: ${motion.micro}ms;
+  --motion-hover: ${motion.hover}ms;
+  --motion-control: ${motion.control}ms;
+  --motion-settle: ${motion.settle}ms;
+  --motion-open: ${motion.genesisOpen}ms;
+  --motion-collapse: ${motion.genesisClose}ms;
+  --motion-switch: ${motion.genesisSwitch}ms;
+  --motion-transition: ${motion.pageContinuity}ms;
+  --motion-theme: ${motion.theme}ms;
+  --motion-return: ${motion.finalReturn}ms;
+  --motion-publish: ${motion.settle}ms;
+  --motion-assemble: ${motion.genesisOpen}ms;
+}`;
 
 export const ease = (t: number) => 1 - Math.pow(1 - Math.max(0, Math.min(1, t)), 4);
 const mix = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -60,6 +77,7 @@ export function interpolatePose(a: BrandPose, b: BrandPose, t: number): BrandPos
 
 export function ringPath(ring: Ring) {
   const rx = Math.min(ring.rx, ring.width / 2, ring.height / 2);
-  const ry = rx;
-  return `M ${ring.x + rx} ${ring.y} H ${ring.x + ring.width - rx} A ${rx} ${ry} 0 1 1 ${ring.x + rx} ${ring.y + ring.height} A ${rx} ${ry} 0 1 1 ${ring.x + rx} ${ring.y}`;
+  const right = ring.x + ring.width;
+  const bottom = ring.y + ring.height;
+  return `M ${ring.x + rx} ${ring.y} H ${right - rx} A ${rx} ${rx} 0 0 1 ${right} ${ring.y + rx} V ${bottom - rx} A ${rx} ${rx} 0 0 1 ${right - rx} ${bottom} H ${ring.x + rx} A ${rx} ${rx} 0 0 1 ${ring.x} ${bottom - rx} V ${ring.y + rx} A ${rx} ${rx} 0 0 1 ${ring.x + rx} ${ring.y} Z`;
 }

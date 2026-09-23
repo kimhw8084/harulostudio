@@ -13,7 +13,7 @@ const initial: Note[] = [
 ];
 const normalize = (value: string) => value.normalize("NFKC").toLocaleLowerCase();
 
-export function NamuSpecimen() {
+export function NamuSpecimen({ mode = "detail" }: { mode?: "genesis" | "detail" }) {
   const [notes, setNotes] = useState<Note[]>(initial);
   const [selected, setSelected] = useState("today");
   const [notice, setNotice] = useState("");
@@ -72,9 +72,9 @@ export function NamuSpecimen() {
     URL.revokeObjectURL(url);
   };
   return (
-    <ShowcaseShell name="Namu">
+    <ShowcaseShell name="Namu" kind="namu" mode={mode}>
       <div className="showcase-split">
-        <div>
+        <div className="namu-library">
           <label className="concept-label" htmlFor="namu-search">Search notes</label>
           <Input id="namu-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search title or body" />
           <ul className="specimen-items" aria-label="Namu note list">
@@ -82,12 +82,12 @@ export function NamuSpecimen() {
           </ul>
           <p className="metadata">{visible.length} of {notes.length} notes · limit 8</p>
         </div>
-        <div>
+        <div className="namu-editor">
           {current ? <>
             <label className="concept-label" htmlFor="namu-title">Selected note</label>
             <Input id="namu-title" value={current.title} onChange={(event) => updateCurrent("title", event.target.value)} />
             <Textarea id="namu-body" aria-label="Selected note body" value={current.body} onChange={(event) => updateCurrent("body", event.target.value)} maxLength={1600} />
-            <div className="instrument-actions">
+            <div className="namu-link-row">
               <label className="concept-label" htmlFor="namu-link">Link to</label>
               <select id="namu-link" value={links[current.id] ?? ""} onChange={(event) => setLinks((value) => ({ ...value, [current.id]: event.target.value }))}>
                 <option value="">No linked note</option>
@@ -99,14 +99,15 @@ export function NamuSpecimen() {
           </> : <p className="empty-publication">No notes yet. Create a first thought.</p>}
         </div>
       </div>
-      <div className="instrument-actions">
+      {mode === "detail" && <div className="namu-create">
+        <p className="namu-create-title">New note</p>
         <Input aria-label="New note title" placeholder="New note title" value={draftTitle} onChange={(event) => setDraftTitle(event.target.value)} onCompositionStart={() => { composing.current = true; }} onCompositionEnd={() => { composing.current = false; }} onKeyDown={(event) => { if (event.key === "Enter" && !composing.current) create(); }} />
         <Textarea aria-label="New note body" placeholder="A note in progress" value={draftBody} onChange={(event) => setDraftBody(event.target.value)} maxLength={1600} />
         <Button type="button" onClick={create}>Create note</Button>
         <Button type="button" variant="ghost" onClick={exportMarkdown}>Export Markdown</Button>
-      </div>
+      </div>}
       <p className="metadata" role="status" aria-live="polite">{notice}</p>
-      <ShowcaseFoot onReset={reset} />
+      {mode === "detail" && <ShowcaseFoot onReset={reset} />}
     </ShowcaseShell>
   );
 }

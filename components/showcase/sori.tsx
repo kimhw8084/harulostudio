@@ -18,7 +18,7 @@ const initial: Channel[] = [
   { id: "system", label: "System", level: 45, muted: false, remembered: 45 },
 ];
 
-export function SoriSpecimen() {
+export function SoriSpecimen({ mode = "detail" }: { mode?: "genesis" | "detail" }) {
   const [channels, setChannels] = useState(initial.map((item) => ({ ...item })));
   const [output, setOutput] = useState("Studio speakers");
   const [quiet, setQuiet] = useState(false);
@@ -36,9 +36,9 @@ export function SoriSpecimen() {
       : { ...channel, muted: true, remembered: channel.level });
   };
   return (
-    <ShowcaseShell name="Sori">
-      <p className="concept-title">A little more control.</p>
-      <p className="showcase-note">Audio behavior is simulated; this does not control operating-system audio.</p>
+    <ShowcaseShell name="Sori" kind="sori" mode={mode}>
+      <p className="concept-title">Channels and output</p>
+      {mode === "detail" && <p className="showcase-note">Audio behavior is simulated; this does not control operating-system audio.</p>}
       {channels.map((channel) => (
         <div className="mixer-row" key={channel.id}>
           <label htmlFor={`sori-${channel.id}`}>{channel.label}</label>
@@ -73,7 +73,7 @@ export function SoriSpecimen() {
         <option>Display audio</option>
       </select>
       <label className="check-row"><input type="checkbox" checked={quiet} onChange={(event) => setQuiet(event.target.checked)} /> Quiet mode (temporary)</label>
-      <ShowcaseFoot onReset={reset} />
+      {mode === "detail" && <ShowcaseFoot onReset={reset} />}
     </ShowcaseShell>
   );
 }

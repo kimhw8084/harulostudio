@@ -9,11 +9,11 @@ import { resolveChannels, quietScene, type SceneMaterial } from "@/lib/brand/sce
 export function HaruloEnvironment({ material = "flow" }: { material?: SceneMaterial }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const scene = useBrandScene();
-  const { theme, reduced, paused } = useExperience();
+  const { theme, reduced } = useExperience();
   useEffect(() => {
     const element = canvas.current;
     const context = element?.getContext("2d", { alpha: true });
-    if (!element || !context || !scene?.subscribe || reduced || paused) return;
+    if (!element || !context || !scene?.subscribe || reduced) return;
     let width = 0;
     let height = 0;
     let active = false;
@@ -120,7 +120,7 @@ export function HaruloEnvironment({ material = "flow" }: { material?: SceneMater
     const visibility = () => draw();
     document.addEventListener("visibilitychange", visibility);
     return () => { unsubscribe(); resize.disconnect(); observer.disconnect(); document.removeEventListener("visibilitychange", visibility); context.clearRect(0, 0, width, height); };
-  }, [scene, material, theme, reduced, paused]);
+  }, [scene, material, theme, reduced]);
   return (
     <div className={`harulo-environment environment-${material}`} aria-hidden="true" data-environment={material}>
       <svg className="environment-static" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid slice">

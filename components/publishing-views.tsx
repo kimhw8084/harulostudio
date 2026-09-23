@@ -58,16 +58,6 @@ export function PageIntro({
   );
 }
 
-export function ReturnSourceAnchors({ page }: { page: "software" | "studio" | "press" | "privacy" | "product-detail" }) {
-  return (
-    <span className={`return-source-map return-source-map-${page}`} aria-hidden="true">
-      <span id={`${page}-return-aperture`} className="return-source-aperture" />
-      <span id={`${page}-return-primary`} className="return-source-primary" />
-      <span id={`${page}-return-secondary`} className="return-source-secondary" />
-      <span id={`${page}-return-signal`} className="return-source-signal" />
-    </span>
-  );
-}
 export function EmptyPublication({
   title,
   children,
@@ -176,7 +166,6 @@ export function CatalogView({
         title={catalog.edition === "showcase" ? brandCopy.catalog : "Software for everyday life."}
         description={catalog.edition === "showcase" ? "Interactive concepts showing how Harulo software can be introduced, explored and maintained. These are not currently available products." : "Thoughtful tools, published with care. Find something that makes a small part of your day a little better."}
       />
-      {catalog.edition === "showcase" && <ReturnSourceAnchors page="software" />}
       {catalog.edition === "showcase" && <p className="showcase-disclosure page-disclosure">SHOWCASE PUBLICATION · INTERACTIVE CONCEPT · NOT CURRENTLY AVAILABLE</p>}
       {!all.length ? (
         <EmptyPublication title="The first edition is still ahead.">
@@ -246,6 +235,7 @@ export function SoftwareCatalogView({ query = {} }: { query?: Query }) {
   const verified = filterProducts(allVerified, query);
   const showcase = filterProducts(allShowcase, query);
   const platformOptions = [...new Set([...allVerified, ...allShowcase].flatMap((product) => product.platforms))].sort();
+  const showFilters = allVerified.length + allShowcase.length >= 8 || Boolean(queryValue(query, "q") || queryValue(query, "platform"));
   return (
     <main id="main" tabIndex={-1} className="content-page page-width">
       <PageIntro
@@ -253,8 +243,7 @@ export function SoftwareCatalogView({ query = {} }: { query?: Query }) {
         title={brandCopy.catalog}
         description="Published software when it is ready; interactive concepts while the work is still becoming."
       />
-      <ReturnSourceAnchors page="software" />
-      <form className="filters" method="get" action="/software">
+      {showFilters && <form className="filters" method="get" action="/software">
         <label>Search <Input name="q" defaultValue={queryValue(query, "q")} placeholder="Name, category or purpose" /></label>
         <label>Platform <NativeSelect name="platform" defaultValue={queryValue(query, "platform")}>
           <NativeSelectOption value="">All platforms</NativeSelectOption>
@@ -262,7 +251,7 @@ export function SoftwareCatalogView({ query = {} }: { query?: Query }) {
         </NativeSelect></label>
         <Button type="submit">Filter</Button>
         <Link href="/software">Reset</Link>
-      </form>
+      </form>}
       {verified.length > 0 && (
         <section className="catalog-section" aria-labelledby="verified-software-title">
           <div className="section-heading">
@@ -279,7 +268,7 @@ export function SoftwareCatalogView({ query = {} }: { query?: Query }) {
       <section className="catalog-section" aria-labelledby="showcase-software-title">
         <div className="section-heading">
             <p className="eyebrow">SHOWCASE STUDIES</p>
-          <h2 id="showcase-software-title">{brandCopy.catalog}</h2>
+          <h2 id="showcase-software-title">Showcase studies</h2>
         </div>
         <p className="showcase-disclosure page-disclosure">
           Interactive concept — not released software.
@@ -419,7 +408,6 @@ export function ProductView({
     .slice(0, 2);
   return (
     <main id="main" tabIndex={-1} className="content-page page-width">
-      <ReturnSourceAnchors page="product-detail" />
       <div className="detail-breadcrumb">
         <Link href={`${prefix}/software`}>Software</Link> / {product.name}
       </div>
@@ -430,9 +418,9 @@ export function ProductView({
           <p className="product-tagline">{product.tagline}</p>
           <p className="product-description">{product.description}</p>
           <div className="product-detail-meta">
-            <span className="status-label">{product.provenance === "showcase" ? "Showcase publication" : statusLabels[product.status]}</span>
+            <span className="status-label">{product.provenance === "showcase" ? "Interactive concept" : statusLabels[product.status]}</span>
             <span className="metadata">
-              {product.provenance === "showcase" ? "INTERACTIVE CONCEPT" : product.version && `v${product.version}`}<br />
+              {product.provenance === "showcase" ? null : product.version && `v${product.version}`}<br />
               {product.platforms.join(" / ")}
             </span>
           </div>
@@ -466,26 +454,11 @@ export function ProductView({
             </p>
           )}
         </div>
-        <div
-          className="product-detail-art"
-          data-tone={product.tone}
-          data-publication={product.slug}
-        >
-          {product.provenance !== "verified" ? (
-            <SoftwareXRay compact product={product}>
-              <ProductMedia product={product} />
-            </SoftwareXRay>
-          ) : (
-            <ProductMedia product={product} />
-          )}
-        </div>
       </section>
-      {catalog.edition !== "live" && (
-        <p className="resource-note">
-          Showcase publication. The interface, capabilities and platform notes
-          are illustrative. No software is available to download.
-        </p>
-      )}
+      <section className="product-workspace" aria-label={`${product.name} interactive concept`} data-tone={product.tone} data-publication={product.slug}>
+        {product.provenance !== "verified" ? <SoftwareXRay product={product}><ProductMedia product={product} /></SoftwareXRay> : <ProductMedia product={product} />}
+      </section>
+      {catalog.edition !== "live" && <p className="resource-note product-truth">Not released software. The sample runs locally in this page.</p>}
       <section className="detail-section detail-grid">
         <h2>
           Made for
@@ -629,7 +602,7 @@ export function ProductView({
           </div>
           <div className="publisher-shelf">
             {related.map((p) => (
-              <ProductEdition key={p.id} product={p} prefix={prefix} />
+              <ProductEdition key={p.id} product={p} prefix={prefix} variant="related" />
             ))}
           </div>
         </section>

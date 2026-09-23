@@ -28,7 +28,7 @@ const locations = {
 type Location = keyof typeof locations;
 type Period = keyof (typeof locations)[Location];
 
-export function HaruWeatherSpecimen() {
+export function HaruWeatherSpecimen({ mode = "detail" }: { mode?: "genesis" | "detail" }) {
   const [location, setLocation] = useState<Location>("Seoul");
   const [period, setPeriod] = useState<Period>("Morning");
   const [commute, setCommute] = useState("08:10–09:00");
@@ -39,8 +39,8 @@ export function HaruWeatherSpecimen() {
   const commuteMessage = commutePoint.rain >= 40 ? `Rain is most likely near ${commutePoint.hour}.` : `A clearer window near ${commutePoint.hour}.`;
   const reset = () => { setLocation("Seoul"); setPeriod("Morning"); setCommute("08:10–09:00"); };
   return (
-    <ShowcaseShell name="Haru Weather">
-      <p className="concept-title">The day you are about to have.</p>
+    <ShowcaseShell name="Haru Weather" kind="haru-weather" mode={mode}>
+      <p className="concept-title">Forecast window</p>
       <p className="showcase-note">Fictional sample forecasts. No live weather or location access.</p>
       <div className="weather-switches" aria-label="Saved example locations">
         {(Object.keys(locations) as Location[]).map((name) => <Button key={name} type="button" variant="ghost" aria-pressed={location === name} onClick={() => setLocation(name)}>{name}</Button>)}
@@ -51,9 +51,9 @@ export function HaruWeatherSpecimen() {
       <label className="showcase-select-label" htmlFor="commute-window">Commute window</label>
       <select id="commute-window" value={commute} onChange={(event) => setCommute(event.target.value)}><option>08:10–09:00</option><option>12:00–12:45</option><option>18:00–18:45</option></select>
       <p className="weather-row"><strong>{summary}</strong><span>Commute {commute} · {commuteMessage}</span></p>
-      <table className="showcase-table"><caption>Hourly fictional sample for {location}, {period}</caption><thead><tr><th scope="col">Hour</th>{weather.map((point) => <th scope="col" key={point.hour}>{point.hour}</th>)}</tr></thead><tbody><tr><th scope="row">Temperature</th>{weather.map((point) => <td key={point.hour}>{point.temperature}°</td>)}</tr><tr><th scope="row">Rain</th>{weather.map((point) => <td key={point.hour}>{point.rain}%</td>)}</tr></tbody></table>
-      <div className="weather-graph" role="img" aria-label={`${summary}. Temperature bars are paired with the table below.`}>{weather.map((point) => <span key={point.hour} style={{ "--bar": `${Math.max(10, point.temperature * 3)}%` } as CSSProperties} />)}</div>
-      <ShowcaseFoot onReset={reset} />
+      {mode === "detail" && <><div className="showcase-table-scroll" role="region" aria-label="Hourly weather table" tabIndex={0}><table className="showcase-table"><caption>Hourly fictional sample for {location}, {period}</caption><thead><tr><th scope="col">Hour</th>{weather.map((point) => <th scope="col" key={point.hour}>{point.hour}</th>)}</tr></thead><tbody><tr><th scope="row">Temperature</th>{weather.map((point) => <td key={point.hour}>{point.temperature}°</td>)}</tr><tr><th scope="row">Rain</th>{weather.map((point) => <td key={point.hour}>{point.rain}%</td>)}</tr></tbody></table></div>
+      <div className="weather-graph" role="img" aria-label={`${summary}. Temperature bars are paired with the table above.`}>{weather.map((point) => <span key={point.hour} style={{ "--bar": `${Math.max(10, point.temperature * 3)}%` } as CSSProperties}><small>{point.hour}</small></span>)}</div>
+      <ShowcaseFoot onReset={reset} /></>}
     </ShowcaseShell>
   );
 }

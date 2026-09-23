@@ -15,7 +15,7 @@ test("scene coordinate calculation changes after scroll without a resize", async
   await expect.poll(() => Number(scene.evaluate((element) => getComputedStyle(element).getPropertyValue("--scene-progress")))).not.toBe(before);
   const afterScroll = Number(await scene.evaluate((element) => getComputedStyle(element).getPropertyValue("--scene-progress")));
   await page.setViewportSize({ width: 900, height: 700 });
-  await page.locator(".edition-disclosure summary").first().click();
+  await page.locator(".edition-card-link").first().scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollTo(0, 1200));
   await expect.poll(() => Number(scene.evaluate((element) => getComputedStyle(element).getPropertyValue("--scene-progress")))).not.toBe(afterScroll);
   if (testInfo.project.name === "chromium") {
@@ -42,21 +42,16 @@ test("meaning environment has a real layout and motion fallback", async ({ page 
   expect(dimensions.height).toBeGreaterThan(0);
 });
 
-test("flow and membrane environments wake only from semantic interaction", async ({ page }, testInfo) => {
+test("publisher pages keep reactive environments out of working controls", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "chromium", "Canvas interaction evidence is pinned to Chromium normal motion.");
   await page.goto("/");
-  const flow = page.locator('[data-environment="flow"]');
-  await expect.poll(() => flow.locator("canvas").evaluate((node) => (node as HTMLCanvasElement).width)).toBeGreaterThan(0);
-  const flowScene = page.locator(".hero-scene");
-  await flowScene.scrollIntoViewIfNeeded();
-  await flowScene.dispatchEvent("pointermove", { pointerType: "mouse", clientX: 300, clientY: 200 });
-  await expect.poll(() => flowScene.evaluate((element) => getComputedStyle(element).getPropertyValue("--field-dx"))).not.toBe("0px");
+  await expect(page.locator('[data-environment="flow"]')).toHaveCount(0);
 
   await page.goto("/software/sori");
-  const membrane = page.locator('[data-environment="membrane"]');
-  await expect.poll(() => membrane.locator("canvas").evaluate((node) => (node as HTMLCanvasElement).width)).toBeGreaterThan(0);
-  const membraneScene = membrane.locator("xpath=ancestor::div[contains(@class,'brand-scene')]");
-  await membraneScene.scrollIntoViewIfNeeded();
-  await membraneScene.dispatchEvent("pointermove", { pointerType: "mouse", clientX: 500, clientY: 280 });
-  await expect.poll(() => membraneScene.evaluate((element) => element.dataset.active)).toBe("true");
+  await expect(page.locator('[data-environment="membrane"]')).toHaveCount(0);
+  const slider = page.getByRole("slider", { name: "Music" });
+  const before = await slider.boundingBox();
+  await page.mouse.move((before?.x ?? 0) + 120, (before?.y ?? 0) + 15);
+  const after = await slider.boundingBox();
+  expect(after).toEqual(before);
 });

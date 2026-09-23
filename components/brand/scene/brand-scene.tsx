@@ -31,7 +31,7 @@ export function BrandScene({
   const input = useRef({ ...quietScene, pointer: { x: 0, y: 0 } });
   const listeners = useRef(new Set<(value: BrandChannels) => void>());
   const invalidate = useRef<() => void>(() => {});
-  const { paused, reduced, theme } = useExperience();
+  const { reduced, theme } = useExperience();
   const update = useCallback((values: Partial<SceneInput>) => {
     Object.assign(input.current, values);
     invalidate.current();
@@ -53,7 +53,7 @@ export function BrandScene({
     const scheduler = getBrandScheduler();
     if (!element || !scheduler) return;
     const coarse = matchMedia("(pointer: coarse)").matches;
-    const level: SceneQuality = paused ? "static" : reduced ? "reduced" : quality ?? (coarse || innerWidth < 768 ? "balanced" : "full");
+    const level: SceneQuality = reduced ? "reduced" : quality ?? (coarse || innerWidth < 768 ? "balanced" : "full");
     element.dataset.quality = level;
     let visible = false;
     let bounds: DOMRect | null = null;
@@ -133,6 +133,6 @@ export function BrandScene({
       window.removeEventListener("harulo:theme-change", onThemeChange);
       invalidate.current = () => {};
     };
-  }, [paused, reduced, quality, theme, emit]);
+  }, [reduced, quality, theme, emit]);
   return <Context.Provider value={{ update, emit, subscribe }}><div ref={node} className={`brand-scene ${className}`} data-systems={systems} data-quality="static">{children}</div></Context.Provider>;
 }

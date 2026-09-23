@@ -1,24 +1,22 @@
 import { expect, test } from "@playwright/test";
 
-test("Sori X-Ray overlays actual controls without intercepting the specimen", async ({ page }) => {
+test("inspection is secondary and leaves Sori controls usable", async ({ page }) => {
   await page.goto("/software/sori");
-  const xray = page.locator(".software-xray").first();
-  const tabs = xray.getByRole("tab");
-  await expect(tabs).toHaveCount(4);
-  await expect(xray.locator(".xray-overlay")).toHaveCount(0);
-  await xray.getByRole("tab", { name: "Keyboard" }).click();
-  const keyboard = xray.locator(".xray-overlay");
-  await expect(keyboard).toBeVisible();
-  await expect(keyboard).toHaveAttribute("aria-hidden", "true");
-  await expect(keyboard).toHaveCSS("pointer-events", "none");
-  await expect(keyboard).toContainText("Actual focus targets");
-  await xray.getByRole("tab", { name: "Accessibility" }).click();
-  await expect(xray.locator(".xray-overlay")).toContainText("Actual semantic controls");
-  await xray.getByRole("tab", { name: "Data boundary" }).click();
-  await expect(xray.locator(".xray-overlay")).toContainText("USER ACTION → LOCAL REDUCER → VISIBLE RESULT");
-  await xray.getByRole("tab", { name: "Interface" }).click();
-  await expect(xray.locator(".xray-overlay")).toHaveCount(0);
+  const xray = page.locator(".software-xray");
+  const disclosure = xray.locator(".xray-inspection");
   const slider = xray.getByRole("slider", { name: "Music" });
+  await expect(disclosure).not.toHaveAttribute("open", "");
   await slider.fill("42");
+  await disclosure.locator("summary").click();
+  await expect(xray.getByRole("tab")).toHaveCount(4);
+  await xray.getByRole("tab", { name: "Keyboard" }).click();
+  await expect(xray.locator(".xray-badges span").first()).toBeVisible();
+  await expect(xray.locator(".xray-reading")).toContainText("Music");
+  await expect(xray.locator(".xray-badges")).toHaveCSS("pointer-events", "none");
+  await xray.getByRole("tab", { name: "Accessibility" }).click();
+  await expect(xray.locator(".xray-reading")).toContainText("Accessible controls");
+  await xray.getByRole("tab", { name: "Data boundary" }).click();
+  await expect(xray.locator(".xray-reading")).toContainText("USER ACTION → LOCAL STATE → VISIBLE RESULT");
+  await disclosure.locator("summary").click();
   await expect(slider).toHaveValue("42");
 });
