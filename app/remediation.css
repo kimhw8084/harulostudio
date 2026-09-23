@@ -94,6 +94,10 @@ html[data-theme="dark"] [data-tone="plum"] { --edition: #292849; --edition-ink: 
 .product-workspace .software-xray { width: min(100%, 1040px); margin: auto; }
 .product-truth { max-width: 68ch; margin: 1rem 0 2rem; font-size: .9rem; }
 .detail-section { padding-block: clamp(3rem, 5vw, 5rem); margin-top: 0; }
+.detail-grid > h2 { font-size: clamp(1.8rem, 3vw, 2.75rem); }
+.related-software { padding-block: clamp(2.5rem, 4vw, 3.5rem); }
+.related-software .section-heading { margin-bottom: 1.25rem; }
+.related-software .section-heading h2 { font-size: clamp(1.75rem, 3vw, 2.5rem); }
 .software-xray { min-height: 0; padding: 0; margin: 0; background: transparent; border: 0; }
 .xray-stage { position: relative; }
 .xray-specimen { position: relative; }
@@ -168,8 +172,8 @@ html[data-theme="dark"] [data-tone="plum"] { --edition: #292849; --edition-ink: 
   .genesis-stage[data-open="true"] .genesis-mark { position: relative; width: 90px; height: 90px; margin: 0 auto .5rem; opacity: 1; }
   .genesis-stage[data-open="true"] .genesis-mark { left: auto; transform: none; }
   .genesis-stage[data-open="true"] .genesis-interface { max-width: none; }
-  .genesis-interface [role="tablist"] { overflow-x: auto; flex-wrap: nowrap; justify-content: flex-start; scrollbar-width: thin; }
-  .genesis-interface [role="tab"] { flex: none; }
+  .genesis-interface [role="tablist"] { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; gap: .25rem; }
+  .genesis-interface [role="tab"] { min-width: 0; min-height: 48px; padding: .35rem .25rem; white-space: normal; line-height: 1.2; }
   .genesis-controls { gap: .5rem; }
   .genesis-copy { font-size: .82rem; }
   .genesis-toggle { padding-inline: .65rem; font-size: .82rem; }

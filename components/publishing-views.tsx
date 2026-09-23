@@ -460,11 +460,7 @@ export function ProductView({
       </section>
       {catalog.edition !== "live" && <p className="resource-note product-truth">Not released software. The sample runs locally in this page.</p>}
       <section className="detail-section detail-grid">
-        <h2>
-          Made for
-          <br />
-          <em>the everyday.</em>
-        </h2>
+        <h2>What it does</h2>
         <div className="feature-grid">
           {product.features.map((f) => (
             <div key={f.title}>
@@ -498,7 +494,7 @@ export function ProductView({
         </section>
       )}
       <section className="detail-section detail-grid">
-        <h2>The details.</h2>
+        <h2>Details</h2>
         <div>
           <dl className="facts-list">
             <div>
@@ -594,7 +590,7 @@ export function ProductView({
         </div>
       </section>
       {related.length > 0 && (
-        <section className="detail-section">
+        <section className="detail-section related-software">
           <div className="section-heading">
             <h2>
               Also from <em>Harulo.</em>

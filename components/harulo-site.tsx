@@ -28,7 +28,7 @@ export function ContactSection() {
   );
 }
 
-export function StudioStory({ full = false }: { full?: boolean }) {
+export function StudioStory() {
   return (
     <BrandScene className="meaning-scene" systems="03 10 18 23">
       <HaruloEnvironment material="day-next" />
@@ -36,7 +36,6 @@ export function StudioStory({ full = false }: { full?: boolean }) {
         <div className="story-index metadata">02 / THE DIRECTION</div>
         <div className="story-copy">
           <h2 id="story-title">{brandCopy.meaningLiteral}</h2>
-          {full && <p>Harulo Studio designs, builds, publishes and maintains independent software.</p>}
           <p className="meaning-poetic">{brandCopy.meaningPoetic}</p>
         </div>
         <div className="korean-direction" lang="ko"><span>하루</span><ArrowRight aria-hidden="true" /><span>로</span></div>

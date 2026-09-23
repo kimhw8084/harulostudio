@@ -20,7 +20,7 @@ export default function Studio() {
           description="Harulo designs, builds, publishes and maintains its own software. One maker, with a belief that small improvements to ordinary life are worth the care."
         />
       </div>
-      <StudioStory full />
+      <StudioStory />
       <MakingSection />
       <ContactSection />
     </main>

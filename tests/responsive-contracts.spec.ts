@@ -56,6 +56,31 @@ test("Genesis and inspection let the page own vertical scrolling", async ({ page
   await noPageOverflow(page);
 });
 
+test("Genesis keeps every concept selector visible and touch sized on small phones", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "chromium", "Small-phone selector geometry is checked in Chromium.");
+  for (const width of [320, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto("/");
+    await page.locator(".genesis-toggle").click();
+    await expect(page.locator(".genesis-stage")).toHaveAttribute("data-phase", "open");
+    const list = page.locator('.genesis-interface [role="tablist"]');
+    const listBox = await list.boundingBox();
+    expect(listBox).not.toBeNull();
+    const tabs = list.getByRole("tab");
+    await expect(tabs).toHaveCount(5);
+    for (let index = 0; index < 5; index += 1) {
+      const tab = tabs.nth(index);
+      const box = await tab.boundingBox();
+      expect(box).not.toBeNull();
+      expect(box!.height).toBeGreaterThanOrEqual(44);
+      expect(box!.x).toBeGreaterThanOrEqual(listBox!.x - 1);
+      expect(box!.x + box!.width).toBeLessThanOrEqual(listBox!.x + listBox!.width + 1);
+      expect(box!.y + box!.height).toBeLessThanOrEqual(listBox!.y + listBox!.height + 1);
+    }
+    await noPageOverflow(page);
+  }
+});
+
 test("larger text and forced colors retain access to primary controls", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "chromium", "Browser-specific reflow and forced-colors geometry is checked in Chromium.");
   await page.setViewportSize({ width: 390, height: 844 });

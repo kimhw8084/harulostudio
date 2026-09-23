@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import { mkdir, writeFile, rename } from "node:fs/promises";
 import path from "node:path";
 
-const root = path.resolve("work/golden-ui-candidate");
+const root = path.resolve(process.env.HARULO_CAPTURE_DIR || "work/golden-ui-candidate");
 const screenshots = path.join(root, "screenshots");
 const motion = path.join(root, "motion");
 const base = process.env.HARULO_CAPTURE_URL || "http://127.0.0.1:8788";
