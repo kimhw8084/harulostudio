@@ -5,7 +5,39 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import type { Product } from "@/lib/publishing/types";
 
 type Target = { label: string; x: number; y: number };
-type Group = { id: string; label: string };
+type InspectionGroup = { elementId: string; label: string };
+
+const inspectionGroups: Record<string, InspectionGroup[]> = {
+  sori: [
+    { elementId: "sori-inspection-channels", label: "Channels" },
+    { elementId: "sori-inspection-output", label: "Output" },
+    { elementId: "sori-inspection-quiet", label: "Quiet mode" },
+  ],
+  namu: [
+    { elementId: "namu-inspection-library", label: "Library" },
+    { elementId: "namu-inspection-editor", label: "Editor" },
+    { elementId: "namu-inspection-relationships", label: "Relationships" },
+    { elementId: "namu-inspection-creation", label: "Creation" },
+  ],
+  goyo: [
+    { elementId: "goyo-inspection-intention", label: "Intention" },
+    { elementId: "goyo-inspection-duration", label: "Duration" },
+    { elementId: "goyo-inspection-clock", label: "Clock and status" },
+    { elementId: "goyo-inspection-actions", label: "Actions" },
+  ],
+  "haru-weather": [
+    { elementId: "weather-inspection-location", label: "Location" },
+    { elementId: "weather-inspection-period", label: "Period" },
+    { elementId: "weather-inspection-commute", label: "Commute" },
+    { elementId: "weather-inspection-forecast", label: "Forecast" },
+  ],
+  dami: [
+    { elementId: "dami-inspection-totals", label: "Totals" },
+    { elementId: "dami-inspection-planning", label: "Planning inputs" },
+    { elementId: "dami-inspection-ledger", label: "Ledger" },
+    { elementId: "dami-inspection-chart", label: "Chart" },
+  ],
+};
 
 const dataPaths: Record<string, [string, string, string]> = {
   sori: ["Music volume or mute", "channel.level and channel.muted", "Channel percentage and button state"],
@@ -35,7 +67,6 @@ export function SoftwareXRay({ product, children }: { product: Product; children
   const [layer, setLayer] = useState("interface");
   const [open, setOpen] = useState(false);
   const [targets, setTargets] = useState<Target[]>([]);
-  const [groups, setGroups] = useState<Group[]>([]);
   const specimen = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
 
@@ -55,10 +86,6 @@ export function SoftwareXRay({ product, children }: { product: Product; children
         const rect = control.getBoundingClientRect();
         return { label: accessibleName(control), x: Math.max(0, rect.left - outer.left), y: Math.max(0, rect.top - outer.top) };
       }));
-      setGroups(Array.from(root.querySelectorAll<HTMLElement>("[data-inspection-group]")).filter((element) => element.getClientRects().length > 0).map((element) => ({
-        id: element.id,
-        label: element.dataset.inspectionGroup || element.getAttribute("aria-label") || "Group",
-      })));
     };
     const schedule = () => { if (!frameId) frameId = requestAnimationFrame(read); };
     read();
@@ -84,6 +111,7 @@ export function SoftwareXRay({ product, children }: { product: Product; children
   }, [open, layer, product]);
 
   const path = dataPaths[product.slug];
+  const groups = inspectionGroups[product.slug] ?? [];
   return <div className="software-xray" data-layer={open ? layer : "closed"}>
     <div className="xray-stage" ref={stage}>
       <div className="xray-specimen" ref={specimen}>{children}</div>
@@ -102,7 +130,7 @@ export function SoftwareXRay({ product, children }: { product: Product; children
           <div className="xray-reading">
             <TabsContent value="interface"><h2>{product.name} controls</h2><p>The working concept remains available above. Inspection does not reset it.</p></TabsContent>
             <TabsContent value="keyboard"><h2>Focus order</h2><p>Tab and Shift + Tab move between these controls. Arrow keys adjust sliders.</p><ol>{targets.map((target, index) => <li key={index}><span>{index + 1}</span>{target.label}</li>)}</ol></TabsContent>
-            <TabsContent value="accessibility"><h2>Semantic groups</h2><ul>{groups.map((group) => <li key={group.id}>{group.label}</li>)}</ul><p>Named controls and their current states remain available in the working interface.</p></TabsContent>
+            <TabsContent value="accessibility"><h2>Semantic groups</h2><ul>{groups.map((group) => <li key={group.elementId}>{group.label}</li>)}</ul><p>Named controls and their current states remain available in the working interface.</p></TabsContent>
             <TabsContent value="data"><h2>Local state path</h2>{path && <p className="xray-data-path">{path[0]} <span aria-hidden="true">→</span> {path[1]} <span aria-hidden="true">→</span> {path[2]}</p>}<p>Reloading clears the sample. No account, storage service, or sync is connected.</p></TabsContent>
           </div>
         </Tabs>
