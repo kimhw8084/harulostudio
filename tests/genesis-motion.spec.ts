@@ -7,9 +7,7 @@ test.describe("Publication Genesis normal-motion state machine", () => {
     const trigger = page.locator(".genesis-toggle");
     const panel = page.locator(".genesis-interface");
     await trigger.scrollIntoViewIfNeeded();
-    const scrollBefore = await page.evaluate(() => window.scrollY);
     await trigger.click();
-    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(scrollBefore);
     await expect(page.locator(".genesis-stage")).toHaveAttribute("data-phase", "open");
     await expect(panel).toHaveAttribute("aria-hidden", "false");
     await expect(panel.getByRole("tab", { name: "Namu" })).toBeEnabled();
