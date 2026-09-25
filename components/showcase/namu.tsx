@@ -74,7 +74,7 @@ export function NamuSpecimen({ mode = "detail" }: { mode?: "genesis" | "detail" 
   return (
     <ShowcaseShell name="Namu" kind="namu" mode={mode}>
       <div className="showcase-split">
-        <div className="namu-library">
+        <div className="namu-library" id="namu-inspection-library" role="group" aria-label="Library" data-inspection-group="Library">
           <label className="concept-label" htmlFor="namu-search">Search notes</label>
           <Input id="namu-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search title or body" />
           <ul className="specimen-items" aria-label="Namu note list">
@@ -82,12 +82,12 @@ export function NamuSpecimen({ mode = "detail" }: { mode?: "genesis" | "detail" 
           </ul>
           <p className="metadata">{visible.length} of {notes.length} notes · limit 8</p>
         </div>
-        <div className="namu-editor">
+        <div className="namu-editor" id="namu-inspection-editor" role="group" aria-label="Editor" data-inspection-group="Editor">
           {current ? <>
             <label className="concept-label" htmlFor="namu-title">Selected note</label>
             <Input id="namu-title" value={current.title} onChange={(event) => updateCurrent("title", event.target.value)} />
             <Textarea id="namu-body" aria-label="Selected note body" value={current.body} onChange={(event) => updateCurrent("body", event.target.value)} maxLength={1600} />
-            <div className="namu-link-row">
+            <div className="namu-link-row" id="namu-inspection-relationships" role="group" aria-label="Relationships" data-inspection-group="Relationships">
               <label className="concept-label" htmlFor="namu-link">Link to</label>
               <select id="namu-link" value={links[current.id] ?? ""} onChange={(event) => setLinks((value) => ({ ...value, [current.id]: event.target.value }))}>
                 <option value="">No linked note</option>
@@ -99,7 +99,7 @@ export function NamuSpecimen({ mode = "detail" }: { mode?: "genesis" | "detail" 
           </> : <p className="empty-publication">No notes yet. Create a first thought.</p>}
         </div>
       </div>
-      {mode === "detail" && <div className="namu-create">
+      {mode === "detail" && <div className="namu-create" id="namu-inspection-creation" role="group" aria-label="Creation" data-inspection-group="Creation">
         <p className="namu-create-title">New note</p>
         <Input aria-label="New note title" placeholder="New note title" value={draftTitle} onChange={(event) => setDraftTitle(event.target.value)} onCompositionStart={() => { composing.current = true; }} onCompositionEnd={() => { composing.current = false; }} onKeyDown={(event) => { if (event.key === "Enter" && !composing.current) create(); }} />
         <Textarea aria-label="New note body" placeholder="A note in progress" value={draftBody} onChange={(event) => setDraftBody(event.target.value)} maxLength={1600} />

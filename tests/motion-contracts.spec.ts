@@ -79,10 +79,19 @@ test.describe("motion and geometry contracts", () => {
   });
 
   test("final return is finite, local, and absent from utility pages", async ({ page }, testInfo) => {
+    if (testInfo.project.name !== "chromium-reduced") {
+      await page.addInitScript(() => { (window as Window & { __HARULO_TEST_HOLD_RETURN__?: boolean }).__HARULO_TEST_HOLD_RETURN__ = true; });
+    }
     await page.goto("/");
     const signature = page.locator(".home-final-return");
     await signature.scrollIntoViewIfNeeded();
+    if (testInfo.project.name !== "chromium-reduced") {
+      await expect(signature).toHaveAttribute("data-progress", "0.000");
+      await expect(signature.locator('[data-harulo-pieces="4"]')).toHaveAttribute("data-resting", "false");
+      await page.evaluate(() => window.dispatchEvent(new Event("harulo:test-return-release")));
+    }
     await expect(signature).toHaveAttribute("data-complete", "true");
+    await expect(signature.locator('[data-harulo-pieces="4"]')).toHaveAttribute("data-resting", "true");
     const mark = await signature.locator(".harulo-mark").boundingBox();
     const section = await signature.boundingBox();
     expect(mark && section && mark.width <= section.width && mark.height <= section.height).toBeTruthy();

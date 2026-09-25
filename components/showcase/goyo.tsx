@@ -92,23 +92,23 @@ export function GoyoSpecimen({ mode = "detail" }: { mode?: "genesis" | "detail" 
   return (
     <ShowcaseShell name="Goyo" kind="goyo" mode={mode}>
       <p className="concept-title">Focus session</p>
-      <label className="concept-label" htmlFor="goyo-intention">Today’s intention</label>
-      <Input id="goyo-intention" value={state.intention} maxLength={120} onChange={(event) => dispatch({ type: "SET_INTENTION", value: event.target.value })} placeholder="One small thing" />
-      <div className="weather-switches" aria-label="Focus duration">
+      <div id="goyo-inspection-intention" role="group" aria-label="Intention" data-inspection-group="Intention"><label className="concept-label" htmlFor="goyo-intention">Today’s intention</label>
+      <Input id="goyo-intention" value={state.intention} maxLength={120} onChange={(event) => dispatch({ type: "SET_INTENTION", value: event.target.value })} placeholder="One small thing" /></div>
+      <div className="weather-switches" id="goyo-inspection-duration" role="group" aria-label="Duration" data-inspection-group="Duration">
         {[5, 15, 25].map((value) => <Button key={value} type="button" variant="ghost" aria-pressed={state.durationMs === durationFor(value)} disabled={state.phase === "running"} onClick={() => dispatch({ type: "SET_DURATION", minutes: value })}>{value} min</Button>)}
       </div>
-      <output className="focus-clock" aria-live="polite">{format(state.remainingMs)}</output>
+      <div id="goyo-inspection-clock" role="group" aria-label="Clock and status" data-inspection-group="Clock and status"><output className="focus-clock" aria-live="polite">{format(state.remainingMs)}</output>
       <p className="focus-state" role="status">
         {state.phase === "running" ? "Focus is in progress." : state.phase === "paused" ? "Paused. Your remaining time is held." : state.phase === "complete" ? "Session complete. Take the next small step." : "Choose a length, then begin."}
-      </p>
+      </p></div>
       {mode === "detail" && <label className="checkbox-row">
         <input type="checkbox" checked={state.quietMode} onChange={(event) => dispatch({ type: "TOGGLE_QUIET", value: event.target.checked })} />
         Quiet mode (simulated)
       </label>}
-      <div className="instrument-actions">
+      <div className="instrument-actions" id="goyo-inspection-actions" role="group" aria-label="Actions" data-inspection-group="Actions">
         {state.phase === "running" ? <Button type="button" onClick={() => dispatch({ type: "PAUSE", now: Date.now() })}>Pause session</Button> : <Button type="button" onClick={() => dispatch({ type: "START", now: Date.now() })} disabled={state.phase === "complete"}>Start session</Button>}
-        {mode === "detail" && <Button type="button" variant="ghost" onClick={() => dispatch({ type: "PREVIEW_COMPLETE" })}>Preview completion</Button>}
       </div>
+      {mode === "detail" && <details className="goyo-showcase-tools"><summary>Showcase tools</summary><Button type="button" variant="ghost" onClick={() => dispatch({ type: "PREVIEW_COMPLETE" })}>Preview completion</Button></details>}
       {mode === "detail" && <ShowcaseFoot onReset={reset} />}
     </ShowcaseShell>
   );

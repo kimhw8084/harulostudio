@@ -25,6 +25,9 @@ export function FooterReturn() {
     let started = 0;
     let elapsed = 0;
     let complete = false;
+    // The visual harness can hold the local SOURCE pose before its section enters view.
+    // The flag is set before hydration and released with a single event.
+    let held = Boolean((window as Window & { __HARULO_TEST_HOLD_RETURN__?: boolean }).__HARULO_TEST_HOLD_RETURN__);
     const tick = (time: number) => {
       frame = 0;
       if (document.hidden) { started = 0; return; }
@@ -36,17 +39,19 @@ export function FooterReturn() {
       else complete = true;
     };
     const visible = () => {
-      if (!document.hidden && !complete && elapsed > 0 && !frame) frame = requestAnimationFrame(tick);
+      if (!held && !document.hidden && !complete && node.getBoundingClientRect().top < innerHeight && !frame) frame = requestAnimationFrame(tick);
     };
+    const release = () => { held = false; visible(); };
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !complete && !frame) frame = requestAnimationFrame(tick);
+      if (entry.isIntersecting && !held && !complete && !frame) frame = requestAnimationFrame(tick);
     }, { threshold: 0.35 });
     observer.observe(node);
     document.addEventListener("visibilitychange", visible);
-    return () => { observer.disconnect(); document.removeEventListener("visibilitychange", visible); cancelAnimationFrame(frame); };
+    window.addEventListener("harulo:test-return-release", release);
+    return () => { observer.disconnect(); document.removeEventListener("visibilitychange", visible); window.removeEventListener("harulo:test-return-release", release); cancelAnimationFrame(frame); };
   }, [reduced]);
   const value = reduced ? 1 : progress;
-  return <section className="home-final-return" ref={section} aria-label="Harulo closing signature" data-complete={value >= 1}>
+  return <section className="home-final-return" ref={section} aria-label="Harulo closing signature" data-complete={value >= 1} data-progress={value.toFixed(3)}>
     <div><p className="eyebrow">TODAY / TOWARD</p><h2>{brandCopy.closing}</h2></div>
     <HaruloMark pose={value >= 1 ? REST : interpolatePose(SOURCE, REST, ease(value))} title="Harulo Studio" />
   </section>;

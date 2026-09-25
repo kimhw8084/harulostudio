@@ -39,7 +39,7 @@ export function SoriSpecimen({ mode = "detail" }: { mode?: "genesis" | "detail" 
     <ShowcaseShell name="Sori" kind="sori" mode={mode}>
       <p className="concept-title">Channels and output</p>
       {mode === "detail" && <p className="showcase-note">Audio behavior is simulated; this does not control operating-system audio.</p>}
-      {channels.map((channel) => (
+      <div id="sori-inspection-channels" role="group" aria-label="Channels" data-inspection-group="Channels">{channels.map((channel) => (
         <div className="mixer-row" key={channel.id}>
           <label htmlFor={`sori-${channel.id}`}>{channel.label}</label>
           <input
@@ -65,14 +65,16 @@ export function SoriSpecimen({ mode = "detail" }: { mode?: "genesis" | "detail" 
             {channel.muted ? "Unmute" : "Mute"}
           </Button>
         </div>
-      ))}
-      <label className="showcase-select-label" htmlFor="sori-output">Output device (example)</label>
-      <select id="sori-output" value={output} onChange={(event) => setOutput(event.target.value)}>
-        <option>Studio speakers</option>
-        <option>Reading headphones</option>
-        <option>Display audio</option>
-      </select>
-      <label className="check-row"><input type="checkbox" checked={quiet} onChange={(event) => setQuiet(event.target.checked)} /> Quiet mode (temporary)</label>
+      ))}</div>
+      <div id="sori-inspection-output" role="group" aria-label="Output" data-inspection-group="Output">
+        <label className="showcase-select-label" htmlFor="sori-output">Output device (example)</label>
+        <select id="sori-output" value={output} onChange={(event) => setOutput(event.target.value)}>
+          <option>Studio speakers</option>
+          <option>Reading headphones</option>
+          <option>Display audio</option>
+        </select>
+      </div>
+      <div id="sori-inspection-quiet" role="group" aria-label="Quiet mode" data-inspection-group="Quiet mode"><label className="check-row"><input type="checkbox" checked={quiet} onChange={(event) => setQuiet(event.target.checked)} /> Quiet mode (temporary)</label></div>
       {mode === "detail" && <ShowcaseFoot onReset={reset} />}
     </ShowcaseShell>
   );

@@ -8,13 +8,14 @@
 .showcase-shell :is(input, textarea, select, button):focus-visible { outline: 3px solid var(--ui-accent); outline-offset: 2px; }
 .showcase-shell button { min-height: 44px; padding: .55rem .85rem; border-radius: 6px; font-size: .9rem; }
 .showcase-shell button[aria-pressed="true"] { background: var(--ui-accent); border-color: var(--ui-accent); color: #fff; }
-.showcase-shell .weather-switches { gap: .5rem; margin: .75rem 0 1.25rem; }
+.showcase-shell .mixer-row { display: grid; border-bottom: 1px solid var(--ui-line); }
+.showcase-shell .weather-switches { display: flex; flex-wrap: wrap; gap: .5rem; margin: .75rem 0 1.25rem; }
 .showcase-shell .weather-switches button { border: 1px solid var(--ui-line); color: var(--ui-ink); background: var(--ui-panel); }
 .showcase-shell .weather-switches button[aria-pressed="true"] { background: var(--ui-accent); color: #fff; border-color: var(--ui-accent); }
 .showcase-shell .check-row, .showcase-shell .checkbox-row { display: flex; align-items: center; gap: .75rem; min-height: 44px; margin-top: 1rem; font-size: .92rem; cursor: pointer; }
 .showcase-shell input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--ui-accent); }
 .showcase-shell .instrument-actions { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; margin-top: 1.5rem; }
-.showcase-shell .concept-foot { border-top: 1px solid var(--ui-line); padding-top: 1rem; margin-top: 2rem; color: var(--ui-muted); font: .8rem/1.4 var(--font-body); }
+.showcase-shell .concept-foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; border-top: 1px solid var(--ui-line); padding-top: 1rem; margin-top: 2rem; color: var(--ui-muted); font: .8rem/1.4 var(--font-body); }
 .showcase-shell .concept-foot button { color: var(--ui-ink); border: 1px solid var(--ui-line); background: transparent; }
 .showcase-shell .metadata { color: var(--ui-muted); font-size: .78rem; }
 .showcase-shell .showcase-table { width: 100%; border-collapse: collapse; margin-top: 2rem; font-size: .9rem; font-variant-numeric: tabular-nums; }
@@ -67,6 +68,9 @@
 .showcase-shell[data-showcase="goyo"] .instrument-actions button:first-child { min-width: 150px; background: #b8a7ff; color: #211c43; border: 1px solid #b8a7ff; }
 .showcase-shell[data-showcase="goyo"] .instrument-actions button:not(:first-child) { background: transparent; color: var(--ui-muted); border: 1px solid var(--ui-line); }
 .showcase-shell[data-showcase="goyo"] .checkbox-row { justify-content: center; }
+.showcase-shell[data-showcase="goyo"] .goyo-showcase-tools { width: max-content; max-width: 100%; margin: 1.25rem auto 0; color: var(--ui-muted); font-size: .82rem; }
+.showcase-shell[data-showcase="goyo"] .goyo-showcase-tools summary { display: flex; align-items: center; min-height: 44px; cursor: pointer; text-decoration: underline; text-underline-offset: .25rem; }
+.showcase-shell[data-showcase="goyo"] .goyo-showcase-tools button { margin-top: .3rem; background: transparent; color: var(--ui-muted); border: 1px solid var(--ui-line); }
 
 /* Haru Weather: readable forecast before graph decoration. */
 .showcase-shell[data-showcase="haru-weather"] { --ui-surface: #dff2ff; --ui-panel: #f8fcff; --ui-ink: #102b45; --ui-muted: #45627a; --ui-line: #accfe6; --ui-accent: #255d91; }
@@ -76,20 +80,26 @@
 .showcase-shell[data-showcase="haru-weather"] .weather-row span { color: var(--ui-muted); }
 .showcase-shell[data-showcase="haru-weather"] .showcase-table-scroll { max-width: 100%; overflow-x: auto; }
 .showcase-shell[data-showcase="haru-weather"] .showcase-table { min-width: 540px; }
-.showcase-shell[data-showcase="haru-weather"] .weather-graph { height: 130px; align-items: end; gap: .6rem; padding: 1rem 0 1.8rem; border-bottom: 1px solid var(--ui-line); }
-.showcase-shell[data-showcase="haru-weather"] .weather-graph span { position: relative; display: block; height: var(--bar); background: linear-gradient(0deg, #326998, #93cdf4); border-radius: 3px 3px 0 0; }
-.showcase-shell[data-showcase="haru-weather"] .weather-graph small { position: absolute; top: calc(100% + .3rem); left: 50%; transform: translateX(-50%); font-size: .7rem; }
+.showcase-shell[data-showcase="haru-weather"] .weather-graph { display: flex; height: 145px; align-items: end; gap: .6rem; margin-top: 1.5rem; padding: 1rem 0 2.8rem; border-bottom: 1px solid var(--ui-line); }
+.showcase-shell[data-showcase="haru-weather"] .weather-graph span { position: relative; display: block; flex: 1; height: var(--bar); background: linear-gradient(0deg, #326998, #93cdf4); border-radius: 3px 3px 0 0; }
+.showcase-shell[data-showcase="haru-weather"] .weather-graph i { position: absolute; top: calc(100% + .35rem); left: 50%; width: var(--rain-size); height: var(--rain-size); transform: translateX(-50%); border-radius: 50%; background: var(--ui-accent); opacity: var(--rain-opacity); }
+.showcase-shell[data-showcase="haru-weather"] .weather-graph small { position: absolute; top: calc(100% + 1.1rem); left: 50%; transform: translateX(-50%); font-size: .7rem; }
+.showcase-shell[data-showcase="haru-weather"] .weather-legend { margin-top: .5rem; color: var(--ui-muted); font-size: .78rem; }
 
 /* Dami: money scans as a ledger, with a visual chart as supporting evidence. */
 .showcase-shell[data-showcase="dami"] { --ui-surface: #fff2ec; --ui-panel: #fffaf7; --ui-ink: #3b241f; --ui-muted: #775a52; --ui-line: #e8c9ba; --ui-accent: #85452f; }
-.showcase-shell[data-showcase="dami"] .dami-totals { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; margin: 1.5rem 0 2rem; }
+.showcase-shell[data-showcase="dami"] .dami-totals { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); gap: .6rem; margin: 1.5rem 0 2rem; }
 .showcase-shell[data-showcase="dami"] .dami-totals > div { display: grid; align-content: start; gap: .5rem; min-width: 0; min-height: 112px; padding: 1rem; border: 1px solid var(--ui-line); background: var(--ui-panel); }
 .showcase-shell[data-showcase="dami"] .dami-totals span { color: var(--ui-muted); font-size: .82rem; }
 .showcase-shell[data-showcase="dami"] .dami-totals strong { font: 650 clamp(1.1rem, 2.2vw, 1.9rem)/1.2 var(--font-display); letter-spacing: -.03em; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .showcase-shell[data-showcase="dami"] .dami-totals small { color: var(--ui-muted); font-size: .72rem; }
 .showcase-shell[data-showcase="dami"] .dami-totals [data-state="over"] { border-color: #ad3021; color: #ad3021; }
 .showcase-shell[data-showcase="dami"] #dami-category, .showcase-shell[data-showcase="dami"] #dami-allocation { max-width: 22rem; }
+.showcase-shell[data-showcase="dami"] .dami-money-input { position: relative; width: min(100%, 22rem); }
+.showcase-shell[data-showcase="dami"] .dami-money-input > span { position: absolute; z-index: 1; left: .8rem; top: 50%; transform: translateY(-50%); color: var(--ui-muted); font-weight: 650; }
+.showcase-shell[data-showcase="dami"] .dami-money-input input { padding-left: 2rem; font-variant-numeric: tabular-nums; }
 .showcase-shell[data-showcase="dami"] .showcase-table td:last-child, .showcase-shell[data-showcase="dami"] .showcase-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.showcase-shell[data-showcase="dami"] .showcase-table-scroll { max-width: 100%; overflow-x: auto; }
 .showcase-shell[data-showcase="dami"] .showcase-table [data-selected="true"] { background: color-mix(in srgb, var(--ui-accent) 10%, transparent); }
 .showcase-shell[data-showcase="dami"] .dami-chart { display: grid; gap: .75rem; margin-top: 2rem; }
 .showcase-shell[data-showcase="dami"] .dami-chart > div { display: grid; grid-template-columns: 5rem minmax(0, 1fr) 5rem; gap: .75rem; align-items: center; font-size: .85rem; }
@@ -108,7 +118,7 @@
 .showcase-shell[data-mode="genesis"] #namu-body { min-height: 100px; }
 .showcase-shell[data-mode="genesis"] .namu-link-row { display: none; }
 .showcase-shell[data-mode="genesis"] .focus-clock { font-size: 4.5rem; }
-.showcase-shell[data-mode="genesis"] .dami-totals { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: .75rem 0; }
+.showcase-shell[data-mode="genesis"] .dami-totals { grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr)); margin: .75rem 0; }
 .showcase-shell[data-mode="genesis"] .dami-totals > div { min-height: 0; padding: .6rem; }
 .showcase-shell[data-mode="genesis"] .dami-totals strong { font-size: 1.15rem; }
 .showcase-shell[data-mode="genesis"] .weather-row { padding: .8rem; margin: .6rem 0; }
@@ -127,13 +137,16 @@ html[data-theme="dark"] .showcase-shell button[aria-pressed="true"] { color: #10
   .showcase-shell[data-showcase="namu"] .namu-library { border-right: 0; border-bottom: 1px solid var(--ui-line); }
   .showcase-shell[data-showcase="namu"] .namu-create { grid-template-columns: 1fr 1fr; }
   .showcase-shell[data-showcase="namu"] .namu-create-title, .showcase-shell[data-showcase="namu"] .namu-create input, .showcase-shell[data-showcase="namu"] .namu-create textarea { grid-column: 1/-1; }
-  .showcase-shell[data-showcase="dami"] .dami-totals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 430px) {
   .showcase-shell[data-showcase="namu"] .namu-create { grid-template-columns: 1fr; }
-  .showcase-shell[data-showcase="sori"] .mixer-row, .showcase-shell[data-mode="genesis"] .mixer-row { grid-template-columns: minmax(0, 1fr) 3rem 4.5rem; }
+  .showcase-shell[data-showcase="sori"] .mixer-row, .showcase-shell[data-mode="genesis"] .mixer-row { grid-template-columns: minmax(0, 1fr) max-content; }
   .showcase-shell[data-showcase="sori"] .mixer-row label { grid-column: 1/-1; }
+  .showcase-shell[data-showcase="sori"] .mixer-row button { grid-column: 1/-1; width: 100%; }
   .showcase-shell[data-showcase="goyo"] .focus-clock { font-size: clamp(4.5rem, 20vw, 6rem); }
   .showcase-shell[data-showcase="dami"] .dami-totals strong { font-size: 1.2rem; }
+  .showcase-shell[data-showcase="dami"] .dami-chart > div { grid-template-columns: minmax(0, 1fr) auto; }
+  .showcase-shell[data-showcase="dami"] .dami-chart i { grid-column: 1/-1; grid-row: 2; }
+  .showcase-shell[data-showcase="dami"] .dami-chart strong { grid-column: 2; grid-row: 1; }
   .showcase-shell[data-showcase="namu"] .namu-link-row { grid-template-columns: 1fr; }
 }

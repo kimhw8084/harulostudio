@@ -23,6 +23,14 @@ export const REST: BrandPose = {
   secondary: { ...HARULO.secondary },
 };
 
+const curves = {
+  open: [0.22, 0.78, 0.18, 1],
+  genesis: [0.45, 0, 0.55, 1],
+  settle: [0.16, 1, 0.3, 1],
+  publish: [0.65, 0, 0.2, 1],
+} as const;
+const cssCurve = (points: readonly number[]) => `cubic-bezier(${points.join(",")})`;
+
 export const motion = {
   micro: 140,
   hover: 180,
@@ -35,9 +43,10 @@ export const motion = {
   theme: 220,
   finalReturn: 520,
   ease: {
-    open: "cubic-bezier(.22,.78,.18,1)",
-    settle: "cubic-bezier(.16,1,.3,1)",
-    publish: "cubic-bezier(.65,0,.2,1)",
+    open: cssCurve(curves.open),
+    genesis: cssCurve(curves.genesis),
+    settle: cssCurve(curves.settle),
+    publish: cssCurve(curves.publish),
   },
 } as const;
 
@@ -55,9 +64,26 @@ export const motionStyles = `:root {
   --motion-return: ${motion.finalReturn}ms;
   --motion-publish: ${motion.settle}ms;
   --motion-assemble: ${motion.genesisOpen}ms;
+  --ease-open: ${motion.ease.open};
+  --ease-genesis: ${motion.ease.genesis};
+  --ease-settle: ${motion.ease.settle};
+  --ease-publish: ${motion.ease.publish};
 }`;
 
-export const ease = (t: number) => 1 - Math.pow(1 - Math.max(0, Math.min(1, t)), 4);
+/** Solve the same cubic Bézier that CSS uses for Genesis geometry. */
+export const ease = (t: number) => {
+  const progress = Math.max(0, Math.min(1, t));
+  const [x1, y1, x2, y2] = curves.genesis;
+  const bezier = (u: number, a: number, b: number) => 3 * (1 - u) ** 2 * u * a + 3 * (1 - u) * u ** 2 * b + u ** 3;
+  let low = 0;
+  let high = 1;
+  for (let step = 0; step < 16; step += 1) {
+    const middle = (low + high) / 2;
+    if (bezier(middle, x1, x2) < progress) low = middle;
+    else high = middle;
+  }
+  return bezier((low + high) / 2, y1, y2);
+};
 const mix = (a: number, b: number, t: number) => a + (b - a) * t;
 const mixShape = <T extends Record<string, number>>(a: T, b: T, t: number): T => {
   const result = {} as T;

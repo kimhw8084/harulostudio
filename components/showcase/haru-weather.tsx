@@ -42,17 +42,17 @@ export function HaruWeatherSpecimen({ mode = "detail" }: { mode?: "genesis" | "d
     <ShowcaseShell name="Haru Weather" kind="haru-weather" mode={mode}>
       <p className="concept-title">Forecast window</p>
       <p className="showcase-note">Fictional sample forecasts. No live weather or location access.</p>
-      <div className="weather-switches" aria-label="Saved example locations">
+      <div className="weather-switches" id="weather-inspection-location" role="group" aria-label="Location" data-inspection-group="Location">
         {(Object.keys(locations) as Location[]).map((name) => <Button key={name} type="button" variant="ghost" aria-pressed={location === name} onClick={() => setLocation(name)}>{name}</Button>)}
       </div>
-      <div className="weather-switches" aria-label="Day period">
+      <div className="weather-switches" id="weather-inspection-period" role="group" aria-label="Period" data-inspection-group="Period">
         {(["Morning", "Afternoon", "Evening"] as Period[]).map((value) => <Button key={value} type="button" variant="ghost" aria-pressed={period === value} onClick={() => setPeriod(value)}>{value}</Button>)}
       </div>
-      <label className="showcase-select-label" htmlFor="commute-window">Commute window</label>
+      <div id="weather-inspection-commute" role="group" aria-label="Commute" data-inspection-group="Commute"><label className="showcase-select-label" htmlFor="commute-window">Commute window</label>
       <select id="commute-window" value={commute} onChange={(event) => setCommute(event.target.value)}><option>08:10–09:00</option><option>12:00–12:45</option><option>18:00–18:45</option></select>
-      <p className="weather-row"><strong>{summary}</strong><span>Commute {commute} · {commuteMessage}</span></p>
-      {mode === "detail" && <><div className="showcase-table-scroll" role="region" aria-label="Hourly weather table" tabIndex={0}><table className="showcase-table"><caption>Hourly fictional sample for {location}, {period}</caption><thead><tr><th scope="col">Hour</th>{weather.map((point) => <th scope="col" key={point.hour}>{point.hour}</th>)}</tr></thead><tbody><tr><th scope="row">Temperature</th>{weather.map((point) => <td key={point.hour}>{point.temperature}°</td>)}</tr><tr><th scope="row">Rain</th>{weather.map((point) => <td key={point.hour}>{point.rain}%</td>)}</tr></tbody></table></div>
-      <div className="weather-graph" role="img" aria-label={`${summary}. Temperature bars are paired with the table above.`}>{weather.map((point) => <span key={point.hour} style={{ "--bar": `${Math.max(10, point.temperature * 3)}%` } as CSSProperties}><small>{point.hour}</small></span>)}</div>
+      <p className="weather-row"><strong>{summary}</strong><span>Commute {commute} · {commuteMessage}</span></p></div>
+      {mode === "detail" && <><div id="weather-inspection-forecast" role="group" aria-label="Forecast" data-inspection-group="Forecast"><div className="showcase-table-scroll" role="region" aria-label="Hourly weather table" tabIndex={0}><table className="showcase-table"><caption>Hourly fictional sample for {location}, {period}</caption><thead><tr><th scope="col">Hour</th>{weather.map((point) => <th scope="col" key={point.hour}>{point.hour}</th>)}</tr></thead><tbody><tr><th scope="row">Temperature</th>{weather.map((point) => <td key={point.hour}>{point.temperature}°</td>)}</tr><tr><th scope="row">Rain</th>{weather.map((point) => <td key={point.hour}>{point.rain}%</td>)}</tr></tbody></table></div>
+      <div className="weather-graph" role="img" aria-label={`${summary}. Temperature bars and rain dots are paired with the table above.`}>{weather.map((point) => <span key={point.hour} style={{ "--bar": `${Math.max(10, point.temperature * 3)}%`, "--rain-opacity": String(.35 + point.rain / 100 * .65), "--rain-size": `${Math.round(6 + point.rain / 100 * 10)}px` } as CSSProperties}><small>{point.hour}</small><i title={`${point.rain}% rain chance`} /></span>)}</div><p className="weather-legend">Bars show temperature · Dots show rain chance</p></div>
       <ShowcaseFoot onReset={reset} /></>}
     </ShowcaseShell>
   );

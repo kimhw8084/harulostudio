@@ -64,6 +64,7 @@ test.describe("five local showcase application contracts", () => {
     await page.getByRole("button", { name: "Pause session" }).click();
     await expect(page.getByRole("button", { name: "Start session" })).toBeVisible();
     await expect(page.locator(".focus-state")).toContainText("Paused");
+    await page.locator(".goyo-showcase-tools summary").click();
     await page.getByRole("button", { name: "Preview completion" }).click();
     await expect(page.locator(".focus-state")).toContainText("Session complete");
     await expect(page.locator(".focus-clock")).toHaveText("00:00");

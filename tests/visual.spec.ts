@@ -43,9 +43,16 @@ test.describe("reviewed visual checkpoints @visual", () => {
     for (const layer of ["Keyboard", "Accessibility"]) { await page.getByRole("tab", { name: layer }).click(); await expect(page).toHaveScreenshot(`sori-xray-${layer.toLowerCase()}.png`, { fullPage: true, animations: "disabled" }); }
   });
   test("final return start and end", async ({ page }) => {
-    await page.goto("/"); const footer = page.locator(".home-final-return"); await expect(footer).toBeVisible();
-    await expect(page).toHaveScreenshot("final-return-start.png", { fullPage: false, animations: "disabled" });
-    await footer.scrollIntoViewIfNeeded(); await expect(footer).toHaveAttribute("data-complete", "true", { timeout: 5000 });
-    await expect(page).toHaveScreenshot("final-return-end.png", { fullPage: false, animations: "disabled" });
+    await page.addInitScript(() => { (window as Window & { __HARULO_TEST_HOLD_RETURN__?: boolean }).__HARULO_TEST_HOLD_RETURN__ = true; });
+    await page.goto("/");
+    const footer = page.locator(".home-final-return");
+    await footer.scrollIntoViewIfNeeded();
+    await expect(footer).toHaveAttribute("data-progress", "0.000");
+    await expect(footer.locator('[data-harulo-pieces="4"]')).toHaveAttribute("data-resting", "false");
+    await expect(footer).toHaveScreenshot("final-return-start.png", { animations: "disabled" });
+    await page.evaluate(() => window.dispatchEvent(new Event("harulo:test-return-release")));
+    await expect(footer).toHaveAttribute("data-complete", "true", { timeout: 5000 });
+    await expect(footer.locator('[data-harulo-pieces="4"]')).toHaveAttribute("data-resting", "true");
+    await expect(footer).toHaveScreenshot("final-return-end.png", { animations: "disabled" });
   });
 });

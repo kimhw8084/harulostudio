@@ -1,0 +1,43 @@
+name: Harulo Golden UI candidate evidence
+
+on:
+  push:
+    branches: [golden-ui-final-convergence]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  candidate-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Capture source-frozen visual and motion evidence
+        run: |
+          mkdir -p work
+          npm run start -- --port 8788 > work/candidate-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..90}; do
+            if curl -fsS http://127.0.0.1:8788/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:8788/ > /dev/null
+          node scripts/capture-golden-ui-candidate.mjs
+      - if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: harulo-golden-ui-candidate
+          path: |
+            work/golden-ui-candidate/
+            work/candidate-server.log
+          if-no-files-found: warn

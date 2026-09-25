@@ -7,9 +7,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { Moon, Sun } from "lucide-react";
 import { migrateTheme, type Theme } from "@/lib/brand/themes";
 import { Button } from "@/components/ui/button";
+import { HaruloMark } from "@/components/brand/harulo-mark";
 
 type Preferences = {
   ready: boolean;
@@ -111,7 +111,8 @@ export function ExperienceProvider({
   );
 }
 export function ThemeControl() {
-  const { ready, theme, setTheme } = useExperience();
+  const { ready, theme, reduced, setTheme } = useExperience();
+  const [signal, setSignal] = useState(0);
   return (
     <Button
       className="theme-button control-button"
@@ -120,9 +121,9 @@ export function ThemeControl() {
       disabled={!ready}
       aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
       title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      onClick={() => { setTheme(theme === "dark" ? "light" : "dark"); setSignal((value) => value + 1); }}
     >
-      {theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
+      <HaruloMark key={signal} className={signal && !reduced ? "theme-register" : ""} />
       <span>{theme === "dark" ? "Dark mode" : "Light mode"}</span>
     </Button>
   );
